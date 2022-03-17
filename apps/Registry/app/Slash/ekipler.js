@@ -1,52 +1,24 @@
-const { SlashCommand, ApplicationCommandPermissionType } = require('slash-create');
-const low = require('lowdb');
-const Discord = require('discord.js');
+const { ApplicationCommand, MessageEmbed } = require('discord.js');
 const { stripIndent } = require('common-tags');
 const gangs = require('../../../../../MODELS/Datalake/gang');
 const IDS = require('../../../../../BASE/personels.json');
 
-module.exports = class RegistryCommand extends SlashCommand {
-    constructor(creator) {
-        super(creator, {
+module.exports = class AFKCommand extends ApplicationCommand {
+    constructor(client, data, guild, guildId) {
+        super(client, data = {
             name: 'ekipler',
             description: 'Sunucunun ekip bilgilerini verir',
-            deferEphemeral: false,
             defaultPermission: false,
-            guildIDs: [IDS.guild],
-            permissions: {
-                [IDS.guild]: [
-                    {
-                        type: ApplicationCommandPermissionType.ROLE,
-                        id: IDS.commands,
-                        permission: true
-                    },
-                    {
-                        type: ApplicationCommandPermissionType.ROLE,
-                        id: IDS.owner,
-                        permission: true
-                    },
-                    {
-                        type: ApplicationCommandPermissionType.ROLE,
-                        id: IDS.root,
-                        permission: true
-                    }
-                ]
-            },
-            throttling: {
-                duration: 60,
-                usages: 1
-            }
-        });
-
+            guildId: [guildId],
+            permissions: [
+                "booster"
+            ]
+        }, guild, guildId);
         this.filePath = __filename;
     }
 
     async run(ctx) {
         const client = ctx.creator.client;
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const channels = await low(client.adapters('channels'));
-        const emojis = await low(client.adapters('emojis'));
         const guild = client.guilds.cache.get(ctx.guildID);
         const ekipler = await gangs.find();
         const ekipDatas = ekipler.map(ekip => stripIndent`
@@ -55,7 +27,7 @@ module.exports = class RegistryCommand extends SlashCommand {
         • Tagdaki Üye: ${guild.roles.cache.get(ekip.roleID).members.array().filter(m => m.user.username.includes(client.config.tag)).length}
         • Sesteki Üye: ${guild.voiceStates.cache.filter(state => state.channel && state.member.roles.cache.has(ekip.roleID)).size}
         `).join("\n●▬▬▬▬▬▬▬●\n");
-        const embed = new Discord.MessageEmbed().setDescription(ekipDatas).setTitle(guild.name).setThumbnail(guild.iconURL()).setColor('#7bf3e3');
+        const embed = new MessageEmbed().setDescription(ekipDatas).setTitle(guild.name).setThumbnail(guild.iconURL()).setColor('#7bf3e3');
         await ctx.send({
             embeds: [embed]
         }).then(msg => {

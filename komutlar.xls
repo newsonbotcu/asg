@@ -1,9 +1,9 @@
 Bot                         |  tür:?komut                   |  Komut
 ===========================================================================================
 Guard_5                     ->  root only
-Guard_5                     |  slash:sudo                   |  eval
+Guard_5                     |  slash:sudo                   |  eval                         #
 Guard_5                     |  slash:sudo                   |  özelperm
-Guard_5                     |  slash:sudo                   |  dağıtıcılar
+Guard_5                     |  slash:sudo                   |  dağıtıcılar                  #
 Guard_4                     ->  Kuruculara açık
 Guard_4                     |  slash:owner                  |  ekip
 Guard_4                     |  slash:kanal                  |  limit
@@ -11,8 +11,8 @@ Guard_4                     |  slash:kanal                  |  kilit
 Moderator                   ->  Yetkililere açık
 Moderator                   |  slash:kayıt                  |  düzelt
 Moderator                   |  slash:kayıt                  |  isimler
-Moderator                   |  slash:kayıt                  |  kayıt
-Moderator                   |  user                         |  kayıtsız
+Moderator                   |  slash:kayıt                  |  kayıt                        #
+Moderator                   |  user                         |  kayıtsız                     #
 Moderator                   |  slash:sayım                  |  rolbilgi
 Moderator                   |  slash:sayım                  |  yetkili ses
 Moderator                   |  slash:sayım                  |  yoklama
@@ -31,7 +31,7 @@ Registry                    ->  Herkese açık
 Registry                    |  slash:sunucu                 |  link
 Registry                    |  slash:sunucu                 |  tag
 Registry                    |  slash:sunucu                 |  bilgi
-Registry                    |  slash:afk                    |  afk
+Registry                    |  slash:afk                    |  afk                          # 
 Registry                    |  slash:yardım                 |  yardım
 ===================================================================================
 Events                      |  Eglence                      |  bozdur

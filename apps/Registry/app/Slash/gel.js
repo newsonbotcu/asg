@@ -5,7 +5,7 @@ const IDS = require('../../../../../BASE/personels.json');
 module.exports = class HelloCommand extends SlashCommand {
     constructor(creator) {
         super(creator, {
-            name: 'gel',
+            name: 'çek',
             description: 'Kullanıcıyı yanınıza çekmek için izin alır',
             options: [
                 {

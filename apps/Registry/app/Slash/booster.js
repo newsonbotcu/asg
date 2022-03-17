@@ -15,11 +15,9 @@ module.exports = class AFKCommand extends ApplicationCommand {
             ],
             defaultPermission: false,
             guildId: [guildId],
-            permissions =[{
-                id: "booster",
-                type: "ROLE",
-                permission: true
-            }],
+            permissions: [
+                "booster"
+            ]
         }, guild, guildId);
         this.filePath = __filename;
     }

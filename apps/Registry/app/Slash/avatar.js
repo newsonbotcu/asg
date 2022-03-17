@@ -18,16 +18,16 @@ module.exports = class AFKCommand extends ApplicationCommand {
         this.filePath = __filename;
     }
 
-    async run(ctx) {
-        const client = ctx.creator.client;
-        const userID = Object.values(ctx.options)[0] || ctx.member.user.id;
-        const mentioned = client.guilds.cache.get(ctx.guildID).members.cache.get(userID);
+    async run(intg) {
+        const client = intg.creator.client;
+        const userID = Object.values(intg.options)[0] || intg.member.user.id;
+        const mentioned = client.guilds.cache.get(intg.guildID).members.cache.get(userID);
         const errEmbed = new MessageEmbed().setDescription(`${emojis.get("kullaniciyok").value()} Kullanıcı bulunamadı!`).setColor('#2f3136')
-        if (!mentioned) return ctx.send({
+        if (!mentioned) return intg.send({
             embeds: [errEmbed]
         });
         const embed = new MessageEmbed().setColor('#2f3136').setImage(mentioned.user.displayAvatarURL({ dynamic: true, size: 4096 }))
-        await ctx.send({
+        await intg.send({
             embeds: [embed]
         });
     }

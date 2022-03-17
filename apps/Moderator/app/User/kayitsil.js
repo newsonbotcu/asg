@@ -7,13 +7,7 @@ module.exports = class Kayitsil extends ApplicationCommand {
             type: "USER",
             default_permission: false
         });
-        this.permissions = client.config.staff.slice(1).map(o => {
-            return {
-                id: o,
-                type: "ROLE",
-                permission: true
-            }
-        });
+        this.permissions = client.config.staff.slice(0);
     }
     async run(client, intg) {
         const roles = await low(client.adapters("roles"));
