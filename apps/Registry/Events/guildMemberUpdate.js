@@ -13,7 +13,6 @@ class GuildMemberUpdate {
             const data = rolesData[index];
             roles[data._id] = data.value;
         }
-
         const memberDb = await client.models.members.findOne({ _id: cur.user.id });
         if (prev && prev.roles.cache.has(roles["booster"]) && !cur.roles.cache.has(roles["booster"])) {
             const pointed = client.config.tag.some(t => target.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
