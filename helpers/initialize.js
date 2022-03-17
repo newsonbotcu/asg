@@ -38,7 +38,7 @@ class Initialize {
     }
 
     /**
-     * @param {Client} client
+     * @param {Tantoony} client
      */
     hello(client) {
         client = client || this.client;

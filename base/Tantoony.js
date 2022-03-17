@@ -1,7 +1,5 @@
 const { Client, Collection } = require('discord.js');
-const FileSync = require('lowdb/adapters/FileSync');
 const { EventEmitter } = require('events');
-const Lowdb = require('lowdb');
 
 class Tantoony extends Client {
     constructor(options, name) {
@@ -13,12 +11,11 @@ class Tantoony extends Client {
         this.logger = require("../helpers/logger");
         this.functions = require("../helpers/functions");
         this.extention = new EventEmitter();
-        this.adapters = file => new FileSync(`../../base/_${file}.json`);
         (() => {
             require('dotenv').config({ path: __dirname + '/.env' });
             this.login(process.env[this.config.vars[name]]);
         })();
-        this.mongoLogin();
+        this.mongoLogin(); 
         this.responders = new Collection();
         this.cmdCoodown = new Object();
         this.leaves = new Map();
@@ -79,7 +76,6 @@ class Tantoony extends Client {
     }
 
     async load_int(intName, intType, client) {
-        const roles = Lowdb(this.adapters('roles'));
         const props = new (require(`../apps/${this.name}/src/${intType}/${intName}`))(client, {}, client.guild, this.config.apps);
         client.responders.set(`${intType}:${props.name}`, props);
         if (props.name) try {
@@ -87,9 +83,17 @@ class Tantoony extends Client {
             props.id = cmd.id;
             this.logger.log(`Loading "${intType}" Integration in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
             client.responders.set(`${intType}:${cmd.name}`, props);
-            client.guild.commands.permissions.set({
+            const markedRoles = await this.models.marked_ids.find({ type: "ROLE" });
+            const prm = props.permissions.map(p => markedRoles.find(rD => rD._id === p).value);
+            if (prm.length !== 0) client.guild.commands.permissions.set({
                 command: cmd.id,
-                permissions: props.permissions.map(p =>  p)
+                permissions: prm.map(pm => {
+                    return {
+                        id: prm,
+                        type: "ROLE",
+                        permission: true
+                    }
+                })
             });
             return false;
         } catch (e) {

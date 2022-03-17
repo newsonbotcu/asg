@@ -1,39 +1,46 @@
 module.exports = {
     mongoDB: {
-        auth: "admin",
-        user: "Tantoony",
-        name: "Atolye",
-        env_key: "mongo_pass",
+        auth: "XXXXXXXXXXXXXXXX",
+        user: "XXXXXXXXXXXXXXXX",
+        name: "XXXXXXXXXXXXXXXX",
+        env_key: "XXXXXXXXXXXXXXXX",
         port: 27017
     },
-    owner: "942697809080111145",
-    server: "933036847117008916",
-    prefix: '.',
+    owner: "XXXXXXXXXXXXXXXX",
+    server: "XXXXXXXXXXXXXXXX",
+    prefix: 'XXXXXXXXXXXXXXXX',
     status: {
-        name: "Equipto & Nickatina",
+        name: "XXXXXXXXXXXXXXXX",
         type: "LISTENING"
     },
-    staff: ["943049626439794688"],
+    staff: [
+        "registry",
+        "ability",
+        "muter",
+        "",
+        "XXXXXXXXXXXXXXXX",
+        "XXXXXXXXXXXXXXXX"
+    ],
     cdStatus: {
-        name: "Bağırın bu sizin sonunuz olacak :)",
+        name: "XXXXXXXXXXXXXXXX",
         type: "LISTENING"
     },
-    tag: ['⍙'],
-    extag: '•',
-    dis: '',
+    tag: [],
+    extag: 'XXXXXXXXXXXXXXXX',
+    dis: 'XXXXXXXXXXXXXXXX',
     vars: {
         Moderator: "XXXXXXXXXXXXXXXX",
         Registry: "XXXXXXXXXXXXXXXX",
-        Generic: "kachi",
-        Guard_1: "kachi",
-        Guard_2: "kachi",
-        Guard_3: "kachi",
-        Guard_4: "kachi",
-        Guard_5: "kachi",
+        Generic: "XXXXXXXXXXXXXXXX",
+        Guard_1: "XXXXXXXXXXXXXXXX",
+        Guard_2: "XXXXXXXXXXXXXXXX",
+        Guard_3: "XXXXXXXXXXXXXXXX",
+        Guard_4: "XXXXXXXXXXXXXXXX",
+        Guard_5: "XXXXXXXXXXXXXXXX",
         calm_down: [
-            "1",
-            "2",
-            "3"
+            "XXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXX"
         ],
         SES: [
             "XXXXXXXXXXXXXXXXXXXXXXXXXX",

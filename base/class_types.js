@@ -40,6 +40,7 @@ class ButtonCMD {
         };
     }
 }
+
 class DefaultCMD {
     constructor(client, {
         name = null,

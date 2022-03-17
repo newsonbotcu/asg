@@ -1,5 +1,4 @@
 const low = require('lowdb');
-const { closeall } = require("../../../HELPERS/functions");
 const children = require('child_process');
 
 class RoleCreate {
@@ -23,7 +22,7 @@ class RoleCreate {
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "role" });
-        closeall(role.guild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const exeMember = role.guild.members.cache.get(entry.executor.id);
         client.extention.emit('Jail', exeMember, client.user.id, "KDE - Rol Silme", "Perma", 0);
         const roleData = await client.models.bc_role.findOne({ _id: role.id });

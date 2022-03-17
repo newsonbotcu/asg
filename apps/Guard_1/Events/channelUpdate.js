@@ -1,6 +1,4 @@
 const low = require('lowdb');
-const { closeall } = require("../../../HELPERS/functions");
-
 class ChannelUpdate {
     constructor(client) {
         this.client = client;
@@ -72,7 +70,7 @@ class ChannelUpdate {
             client.extention.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı yeniledi. Kalan izin sayısı sınırsız`);
             return;
         }
-        await closeall(curChannel.guild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         if ((curChannel.type === 'text') || (curChannel.type === 'news')) {
             const data = await client.models.bc_text.findOne({ _id: oldChannel.id });
             await curChannel.edit({

@@ -1,5 +1,4 @@
 const low = require('lowdb');
-const { closeall } = require("../../../HELPERS/functions");
 class ChannelDelete {
     constructor(client) {
         this.client = client;
@@ -22,7 +21,7 @@ class ChannelDelete {
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "channel" });
-        await closeall(channel.guild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         let newChannel;
         if ((channel.type === 'text') || (channel.type === 'news')) {
             await client.models.bc_text.deleteOne({ _id: channel.id });

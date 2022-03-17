@@ -139,7 +139,14 @@ const mem_roles = model('backup_member', new Schema({
     roles: Array
 }, { _id: false }));
 
+const marked_ids = model('marked', new Schema({
+    _id: String,
+    type: String,
+    value: String
+}), {_id: false});
+
 module.exports = {
+    marked_ids,
     perms,
     afk,
     bc_cat,
