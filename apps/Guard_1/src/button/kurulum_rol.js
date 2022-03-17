@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
-const low = require('lowdb');
-const { ButtonCMD } = require("../../../../BASE/class_types");
+const { ButtonCMD } = require("../../../../base/utils");
 
 class RolSeçim extends Discord.BaseMessageComponent {
     constructor(client, data, guild, guildId) {

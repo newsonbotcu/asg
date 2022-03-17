@@ -38,6 +38,7 @@ module.exports = class SlashBan extends ApplicationCommand {
     }
     async run(intg) {
         if (!intg.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS) && !intg.member.roles.cache.has(client.config.staff.slice(5).map(o => o))) return;
+
         const target = intg.guild.members.cache.get(intg.options["kullanıcı"]);
         if (!target) return intg.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
 
