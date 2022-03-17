@@ -36,7 +36,7 @@ class GuildMemberUpdate {
                 await client.models.mem_roles.create({ _id: cur.user.id, roles: roleNames });
             } else {
                 await client.models.mem_roles.updateOne({ _id: cur.user.id }, { $set: { roles: roleNames } });
-                client.logger.log(`${entry.executor.username} => [${entry.changes[0].key}] ${entry.target.username} : ${entry.changes[0].new[0].name}`, "mngdb");
+                client.log(`${entry.executor.username} => [${entry.changes[0].key}] ${entry.target.username} : ${entry.changes[0].new[0].name}`, "mngdb");
             }
         }
         const cmute = await client.models.cmute.findOne({ _id: cur.user.id });

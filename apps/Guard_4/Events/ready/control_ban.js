@@ -17,7 +17,7 @@ module.exports = class {
                 await model.deleteOne({ _id: doc._id });
             }
         });
-        client.logger.log('Banlar OK')
+        client.log('Banlar OK')
         setInterval(async () => {
             const asdf = await model.find()
             asdf.filter(doc => doc.type === "temp").forEach(async doc => {
@@ -26,7 +26,7 @@ module.exports = class {
                     await model.deleteOne({ _id: doc._id });
                 }
             })
-            client.logger.log('Banlar OK')
+            client.log('Banlar OK')
         }, 1000 * 60 * 60);
     }
 }

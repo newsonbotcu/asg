@@ -18,7 +18,7 @@ module.exports = class {
                 await model.deleteOne({ _id: doc._id });
             }
         });
-        client.logger.log('CMUTE OK');
+        client.log('CMUTE OK');
         setInterval(async () => {
             const asdf = await model.find();
             asdf.forEach(async doc => {
@@ -27,7 +27,7 @@ module.exports = class {
                     await model.deleteOne({ _id: doc._id });
                 }
             })
-            client.logger.log('CMUTE OK');
+            client.log('CMUTE OK');
         }, 1000 * 60);
     }
 }

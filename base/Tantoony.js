@@ -5,10 +5,10 @@ class Tantoony extends Client {
     constructor(options, name) {
         super(options);
         this.name = name;
-        this.functions = require('./utils');
-        this.models = require('./db_models');
         this.config = require('./config');
-        this.logger = require("./logger");
+        this.fuctions = require('./utils').fuctions;
+        this.models = require('./utils').models;
+        this.log = require("./utils").log;
         this.extention = new EventEmitter();
         (() => {
             require('dotenv').config({ path: __dirname + '/.env' });

@@ -34,7 +34,7 @@ class Initialize {
         return [
             readdir(__dirname + '/../events/').then((files) => {
                 files.filter((e) => e.endsWith('.js')).forEach((file) => {
-                    this.client.logger.log("loading event: " + file, "load");
+                    this.client.log("loading event: " + file, "load");
                     const event = new (require(__dirname + "/../events/" + file))(this.client);
                     this.client.extention.on(file.split(".")[0], (...args) => event.run(...args));
                     delete require.cache[require.resolve(__dirname + "/../events/" + file)];
@@ -43,7 +43,7 @@ class Initialize {
             }),
             readdir(__dirname + '/../events/module/').then((files) => {
                 files.filter((e) => e.endsWith('.js')).forEach((file) => {
-                    this.client.logger.log("loading event: " + file, "load");
+                    this.client.log("loading event: " + file, "load");
                     const event = new (require(__dirname + "/../events/module/" + file))(this.client);
                     this.client.on(file.split(".")[0], (...args) => event.run(...args));
                     delete require.cache[require.resolve(__dirname + "/../events/module/" + file)];
@@ -67,13 +67,13 @@ class Initialize {
                     raw_output.filter((s) => s.endsWith('.js')).map(s => s.slice(0, s.length - ".js".length)).forEach(async (output) => {
                         const response = await client.load_int(output, intType, client);
                         if (response) {
-                            client.logger.log(response, "error");
+                            client.log(response, "error");
                         }
                     });
                 });
             });
         }).catch(reason => {
-            client.logger.log(reason, "error");
+            client.log(reason, "error");
         });
         if (client) this.client = client;
         //client.channels.cache.get(utils.get("lastCrush").value()).send("**TEKRAR ONLINE!**");
@@ -81,21 +81,21 @@ class Initialize {
     }
 
     async loader() {
-        this.client.on("error", (e) => client.logger.log(e, "error"));
-        this.client.on("warn", (info) => client.logger.log(info, "warn"));
+        this.client.on("error", (e) => client.log(e, "error"));
+        this.client.on("warn", (info) => client.log(info, "warn"));
         const elements = await readdir(__dirname + `/../apps/${this.client.name}/Events/`);
-        this.client.logger.log(`Loading ${elements.length} events in ${this.client.name}...`, "category");
+        this.client.log(`Loading ${elements.length} events in ${this.client.name}...`, "category");
         await elements.forEach(async (element) => {
             if (element.endsWith(".js")) {
-                this.client.logger.log(`Loading Event: ${element.split(".")[0]}`, "load");
+                this.client.log(`Loading Event: ${element.split(".")[0]}`, "load");
                 const event = new (require(__dirname + `/../apps/${this.client.name}/Events/${element}`))(this.client);
                 this.client.on(element.split(".")[0], (...args) => event.run(...args));
                 delete require.cache[require.resolve(__dirname + `/../apps/${this.client.name}/Events/${element}`)];
             } else {
                 const detaileds = await readdir(__dirname + `/../apps/${this.client.name}/Events/${element}/`);
-                this.client.logger.log(`Loading ${detaileds.length} details of the event ${element} in ${this.client.name}...`, "category");
+                this.client.log(`Loading ${detaileds.length} details of the event ${element} in ${this.client.name}...`, "category");
                 detaileds.forEach((detail) => {
-                    this.client.logger.log(`Loading Event: ${detail.split(".")[0]}`, "load");
+                    this.client.log(`Loading Event: ${detail.split(".")[0]}`, "load");
                     const event = new (require(__dirname + `/../apps/${this.client.name}/Events/${element}/${detail}`))(this.client);
                     this.client.on(element.split(".")[0], (...args) => event.run(...args));
                     delete require.cache[require.resolve(__dirname + `/../apps/${this.client.name}/Events/${element}/${detail}`)];

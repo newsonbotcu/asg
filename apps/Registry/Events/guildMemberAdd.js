@@ -1,5 +1,4 @@
 const low = require("lowdb");
-const { checkDays, rain } = require('../../../HELPERS/functions');
 const { stripIndents } = require('common-tags');
 
 class GuildMemberAdd {
@@ -67,7 +66,7 @@ class GuildMemberAdd {
                 return await member.roles.add([roles.get("prisoner").value(), roles.get("karantina").value()]);
             }
         }
-        if (checkDays(member.user.createdAt) < 7) return await member.roles.add([roles.get("suspicious").value(), roles.get("karantina").value()]);
+        if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add([roles.get("suspicious").value(), roles.get("karantina").value()]);
         
         if (registered && !utils.get("taglıAlım").value()) return await member.roles.add(roles.get(registered.sex).value());
         await member.roles.add(roles.get("welcome").value());

@@ -11,7 +11,7 @@ class Ready {
      * @returns {Promise<void>}
      */
     async run(client) {
-        client.logger.log(`${client.user.tag}, ${client.users.cache.size} kişi için hizmet vermeye hazır!`, "ready");
+        client.log(`${client.user.tag}, ${client.users.cache.size} kişi için hizmet vermeye hazır!`, "ready");
         client.user.setPresence({ activity: client.config.status, status: "idle" });
         //client = this.client.handler.hello(client);
         const utiller = await low(this.client.adapters('utils'));
@@ -28,13 +28,13 @@ class Ready {
             if (!system) {
                 try {
                     await client.models.members.create({ _id: mem.user.id, roles: mem.roles.cache.map(r => r.name).array() });
-                    this.client.logger.log(` [KİTAPLIĞA EKLENDİ] : ${mem.user.username}`, "mngdb");
+                    this.client.log(` [KİTAPLIĞA EKLENDİ] : ${mem.user.username}`, "mngdb");
                 } catch (error) {
                     throw error;
                 }
             }
         });
-        await this.client.logger.log(` [KAYITLAR TAMAMLANDI] `, "mngdb");
+        await this.client.log(` [KAYITLAR TAMAMLANDI] `, "mngdb");
     }
 }
 module.exports = Ready;

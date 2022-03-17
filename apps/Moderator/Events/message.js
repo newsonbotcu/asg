@@ -116,7 +116,7 @@ module.exports = class {
         }
         let time = uCooldown[cmd.info.name] || 0;
         if (time && (time > Date.now())) return message.channel.send(`${emojis.get("time").value()} Komutu tekrar kullanabilmek için lütfen **${Math.ceil((time - Date.now()) / 1000)}** saniye bekle!`);
-        client.logger.log(`[(${message.author.id})] ${message.author.username} ran command [${cmd.info.name}]`, "cmd");
+        client.log(`[(${message.author.id})] ${message.author.username} ran command [${cmd.info.name}]`, "cmd");
         try {
             cmd.run(client, message, args);
         } catch (e) {
