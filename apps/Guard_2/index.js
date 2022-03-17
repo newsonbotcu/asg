@@ -8,3 +8,6 @@ const client = new Tantoony({
 }, __dirname.split('/').pop());
 process.on("warning", (warn) => { client.logger.log(warn, "varn") });
 process.on("beforeExit", () => { console.log('Bitiriliyor...'); });
+process.on("message", (packet) => {
+    console.log(packet);
+});

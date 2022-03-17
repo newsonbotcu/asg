@@ -1,5 +1,6 @@
 const low = require('lowdb');
 const children = require('child_process');
+const pm2 = require('pm2');
 
 class RoleCreate {
     constructor(client) {
@@ -15,7 +16,7 @@ class RoleCreate {
         if (entry.createdTimestamp <= Date.now() - 5000) return;
         if (entry.executor.id === client.user.id) return;
         const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "delete", effect: "role" });
-        if ((permission && (permission.count > 0)) || utils.get("root").value().includes(entry.executor.id)) {
+        if ((permission && (permission.count > 0))) {
             if (permission) await client.models.perms.updateOne({ user: entry.executor.id, type: "delete", effect: "role" }, { $inc: { count: -1 } });
             await client.models.bc_role.deleteOne({ _id: role.id });
             client.extention.emit('Logger', 'Guard', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
@@ -72,9 +73,13 @@ class RoleCreate {
                 }
             });
         }
-        if (utils.get("ohal").value()) return;
         client.extention.emit('Logger', 'KDE', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi`);
-        await utils.set("ohal", true).write();
+        let ohal = false;
+        pm2.list((err, list) => {
+            if (err) return;
+            ohal = list.map(item => item.name).filter(item => item.startsWith("CD")).length > 0;
+        });
+        if (ohal) return;
         let cdDone = 0;
         for (let index = 1; index < client.config.vars.calm_down.length + 1; index++) {
             let ls = children.exec(`pm2 start /home/${process.env.patched}/INTERNAL/BASE/calm_down.js --name "CD${index}" -- ${index}; pm2 logs CD${index}`);

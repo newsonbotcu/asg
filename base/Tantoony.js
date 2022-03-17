@@ -5,11 +5,10 @@ class Tantoony extends Client {
     constructor(options, name) {
         super(options);
         this.name = name;
-        this.defaly = require('./class_types');
+        this.functions = require('./utils');
         this.models = require('./db_models');
-        this.config = require('../helpers/config');
-        this.logger = require("../helpers/logger");
-        this.functions = require("../helpers/functions");
+        this.config = require('./config');
+        this.logger = require("./logger");
         this.extention = new EventEmitter();
         (() => {
             require('dotenv').config({ path: __dirname + '/.env' });
@@ -29,7 +28,7 @@ class Tantoony extends Client {
         this.banlimit = new Object();
         this.voicecutLimit = new Object();
 
-        this.handler = new (require('../helpers/initialize'))(this);
+        this.handler = new (require('./initialize'))(this);
     };
 
     mongoLogin() {

@@ -1,5 +1,4 @@
 const { ApplicationCommand, MessageEmbed } = require('discord.js');
-const low = require('lowdb');
 
 module.exports = class SlashSet extends ApplicationCommand {
     constructor(client, data, guild, guildId) {

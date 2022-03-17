@@ -1,4 +1,3 @@
-const low = require('lowdb');
 class ChannelDelete {
     constructor(client) {
         this.client = client;
@@ -6,12 +5,11 @@ class ChannelDelete {
     async run(channel) {
         const client = this.client;
         if (channel.guild.id !== client.config.server) return;
-        const utils = await low(client.adapters('utils'));
         const entry = await client.fetchEntry("CHANNEL_DELETE");
         if (entry.createdTimestamp <= Date.now() - 5000) return;
         if (entry.executor.id === client.user.id) return;
         const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "delete", effect: "channel" });
-        if ((permission && (permission.count > 0)) || utils.get("root").value().includes(entry.executor.id)) {
+        if ((permission && (permission.count > 0))) {
             if (permission) await client.models.perms.updateOne({ user: entry.executor.id, type: "delete", effect: "channel" }, { $inc: { count: -1 } });
             if ((channel.type === 'text') || (channel.type === 'news')) await client.models.bc_text.deleteOne({ _id: channel.id });
             if (channel.type === 'voice') await client.models.bc_voice.deleteOne({ _id: channel.id });

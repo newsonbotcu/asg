@@ -1,4 +1,3 @@
-const low = require('lowdb');
 class RoleCreate {
     constructor(client) {
         this.client = client;
@@ -8,11 +7,10 @@ class RoleCreate {
         const client = this.client;
         if (role.guild.id !== client.config.server) return;
         const entry = await client.fetchEntry("ROLE_CREATE");
-        const utils = await low(client.adapters('utils'));
         if (entry.createdTimestamp <= Date.now() - 5000) return;
         if (entry.executor.id === client.user.id) return;
         const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "create", effect: "role" });
-        if ((permission && (permission.count > 0)) || utils.get("root").value().includes(entry.executor.id)) {
+        if ((permission && (permission.count > 0))) {
             if (permission) await client.models.perms.updateOne({ user: entry.executor.id, type: "create", effect: "role" }, { $inc: { count: -1 } });
             await client.models.bc_role({
                 _id: role.id,
