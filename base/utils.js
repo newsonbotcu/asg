@@ -434,7 +434,6 @@ exports.models = {
 }
 
 exports.fuctions = {
-    comparedate,
     checkDays,
     checkHours,
     checkMins,

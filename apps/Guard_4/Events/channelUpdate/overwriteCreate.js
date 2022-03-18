@@ -1,6 +1,4 @@
-const low = require('lowdb');
-const { closeall } = require("../../../../HELPERS/functions");
-const { CliEvent } = require('../../../base/utils');
+const { CliEvent } = require('../../../../base/utils');
 class OverwriteCreate extends CliEvent {
     constructor(client) {
         super(client);
@@ -10,13 +8,12 @@ class OverwriteCreate extends CliEvent {
     async run(oldChannel, curChannel) {
         const client = this.client;
         if (curChannel.guild.id !== client.config.server) return;
-        const utils = await low(client.adapters('utils'));
         const entry = await curChannel.guild.fetchAuditLogs({ type: "CHANNEL_OVERWRITE_CREATE" }).then(logs => logs.entries.first());
         if (entry.createdTimestamp <= Date.now() - 1000) return;
         if (entry.executor.id === client.user.id) return;
         if (entry.target.id !== curChannel.id) return;
         const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        if ((permission && (permission.count > 0)) || utils.get("root").value().includes(entry.executor.id)) {
+        if ((permission && (permission.count > 0))) {
             if (permission) await client.models.perms.updateOne({
                 user: entry.executor.id,
                 type: "overwrite",
@@ -30,7 +27,7 @@ class OverwriteCreate extends CliEvent {
             return;
         }
         await client.models.perms.deleteOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        await closeall(curChannel.guild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const overwrits = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
         const exeMember = curChannel.guild.members.cache.get(entry.executor.id);
         client.extention.emit('Jail', exeMember, client.user.id, "KDE - İzin Oluşturma", "Perma", 0);

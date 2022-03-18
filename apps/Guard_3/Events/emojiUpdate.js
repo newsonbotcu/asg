@@ -1,4 +1,3 @@
-const low = require('lowdb');
 const { CliEvent } = require('../../../base/utils');
 class EmojiUpdate extends CliEvent {
     constructor(client) {
@@ -10,11 +9,10 @@ class EmojiUpdate extends CliEvent {
         const client = this.client;
         if (curEmoji.guild.id !== client.config.server) return;
         const entry = await client.fetchEntry("EMOJI_UPDATE");
-        const utils = await low(client.adapters('utils'));
         if (entry.createdTimestamp <= Date.now() - 5000) return;
         if (entry.executor.id === client.user.id) return;
         const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "update", effect: "emoji" });
-        if ((permission && (permission.count > 0)) || utils.get("root").value().includes(entry.executor.id)) {
+        if ((permission && (permission.count > 0))) {
             if (permission) await client.models.perms.updateOne({
                 user: entry.executor.id,
                 type: "update",

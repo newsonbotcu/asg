@@ -1,4 +1,3 @@
-const low = require('lowdb');
 const children = require('child_process');
 const pm2 = require('pm2');
 const { CliEvent } = require('../../../base/utils');
@@ -12,8 +11,6 @@ class RoleDelete extends CliEvent {
         const client = this.client;
         if (role.guild.id !== client.config.server) return;
         const entry = await client.fetchEntry("ROLE_DELETE");
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
         if (entry.createdTimestamp <= Date.now() - 5000) return;
         if (entry.executor.id === client.user.id) return;
         const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "delete", effect: "role" });
@@ -38,8 +35,7 @@ class RoleDelete extends CliEvent {
                 permissions: roleData.bitfield
             }
         });
-        const rolePath = await client.getPath(roles.value(), role.id);
-        if (rolePath) roles.set(rolePath, newRole.id).write();
+        if (rolePath) await this.client.models.marked_ids.updateOne({ value: role.id }, { $set: { value: newRole.id } });
         await client.models.bc_role.deleteOne({ _id: role.id });
         await client.models.bc_role.create({
             _id: newRole.id,
@@ -95,7 +91,7 @@ class RoleDelete extends CliEvent {
                 if (code === 0) {
                     if (cdDone === client.config.vars.calm_down.length) {
                         cdDone = 0;
-                        await utils.set("ohal", false).write();
+                        console.log('Done!');
                     }
                 } else console.log(`CD${index} just started!`);
             });

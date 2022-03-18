@@ -1,6 +1,5 @@
-const { closeall } = require("../../../../HELPERS/functions");
 const Discord = require('discord.js');
-const { CliEvent } = require('../../../base/utils');
+const { CliEvent } = require('../../../../base/utils');
 class OverwriteUpdate extends CliEvent {
     constructor(client) {
         super(client);
@@ -32,7 +31,7 @@ class OverwriteUpdate extends CliEvent {
             return;
         }
         await client.models.perms.deleteOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        await closeall(curChannel.guild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const overwrits = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
         const options = [];
         await overwrits.overwrites.forEach(data => {

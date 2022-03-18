@@ -1,18 +1,16 @@
-const low = require('lowdb');
 const { comparedate } = require('../../../../HELPERS/functions');
 const VoiceRecords = require('../../../../MODELS/StatUses/stat_voice');
 const vmutes = require('../../../../MODELS/Moderation/mod_vmute');
 const channelXp = require('../../../../MODELS/Economy/xp_channel');
-class VoiceStateUpdate {
+const { CliEvent } = require('../../../../base/utils');
+class VoiceStateUpdate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     }
     async run(prev, cur) {
+        this.data = await this.init();
         const client = this.client;
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
         const vmute = await vmutes.findOne({ _id: cur.member.user.id });
         if (vmute && !cur.serverMute) {
             await cur.setMute(true);
@@ -31,10 +29,10 @@ class VoiceStateUpdate {
                     uCount = this.client.trollcounts[cur.member.user.id];
                 };
                 let count = uCount[cur.channel.id] || 0;
-                if (count === 3) await cur.guild.channels.cache.get(channels.get("stat-warn").value()).send(`${emojis.get("voicespamwarn").value()} ${cur.member} Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
+                if (count === 3) await cur.guild.channels.cache.get(this.data.channels["stat-warn"]).send(`${cur.member} Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
                 if (count === 7) {
                     client.extention.emit("vMute", cur.member, this.client.user.id, "MIC-BUG", 5);
-                    await cur.guild.channels.cache.get(channels.get("stat-warn").value()).send(`${emojis.get("voicespam").value()} ${cur.member} Mikrofonunu çok fazla açıp kapattığın için 5 dakika mutelendin!`);
+                    await cur.guild.channels.cache.get(this.data.channels["stat-warn"]).send(`${cur.member} Mikrofonunu çok fazla açıp kapattığın için 5 dakika mutelendin!`);
                 }
                 this.client.trollcounts[cur.member.user.id][cur.channel.id] = count + 1;
             }
@@ -45,7 +43,7 @@ class VoiceStateUpdate {
             const yeniEntry = {
                 _id: cur.member.user.id,
                 created: new Date(),
-                type: client.getPath(channels.value(), cur.channel.parentID),
+                type: client.getPath(this.data.channels, cur.channel.parentID),
                 channelID: cur.channel.id,
                 selfMute: cur.selfMute,
                 serverMute: cur.serverMute,
@@ -90,7 +88,7 @@ class VoiceStateUpdate {
             const yeniEntry = {
                 _id: cur.member.user.id,
                 created: new Date(),
-                type: client.getPath(channels.value(), cur.channel.parentID),
+                type: client.getPath(this.data.channels, cur.channel.parentID),
                 channelID: cur.channel.id,
                 selfMute: cur.selfMute,
                 serverMute: cur.serverMute,

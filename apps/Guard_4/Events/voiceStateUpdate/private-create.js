@@ -1,30 +1,25 @@
-const low = require('lowdb');
-const { miniNum } = require('../../../../HELPERS/functions');
-const private_channels = require('../../../../MODELS/Base/private_channels');
-
-class VoiceStateUpdate {
+const { CliEvent } = require('../../../../base/utils');
+class VoiceStateUpdate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     }
     async run(prev, cur) {
+        this.data = this.init();
         const client = this.client;
         const leaves = client.leaves;
         const deleteChnl = client.deleteChnl;
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
         if (prev && prev.channel && cur && cur.channel && (cur.channel.id === prev.channel.id)) return;
-        const privChannels = await private_channels.find();
-        const channel = client.guild.channels.cache.get(channels.get("oda_olustur").value());
-        const gaming = client.guild.channels.cache.get(channels.get("game_lobby").value());
+        const privChannels = await client.models.priv_chnl.find();
+        const channel = client.guild.channels.cache.get(this.data.channels["oda_olustur"]);
+        const gaming = client.guild.channels.cache.get(this.data.channels["game_lobby"]);
         if (prev.channel && privChannels.some(c => c._id === prev.channel.id)) {
             let tyype;
             switch (prev.channel.parentID) {
-                case channels.get("gaming").value():
+                case this.data.channels["oda_olustur"]:
                     tyype = "gaming";
                     break;
-                case channels.get("oda_olustur").value():
+                case this.data.channels["game_lobby"]:
                     tyype = "private";
                     break;
                 default:
@@ -35,7 +30,7 @@ class VoiceStateUpdate {
                 const myChannel = prev.guild.channels.cache.get(myChannelData._id);
                 if (prev.channel.members.size === 0) {
                     const deleteTimeout = setTimeout(async () => {
-                        await private_channels.deleteOne({ _id: prev.channel.id });
+                        await client.models.priv_chnl.deleteOne({ _id: prev.channel.id });
                         await prev.channel.delete();
                         deleteChnl.delete(myChannel.id);
                     }, 60000);
@@ -55,11 +50,11 @@ class VoiceStateUpdate {
             let type;
             let creatorChannel;
             switch (cur.channel.id) {
-                case channels.get("gaming").value():
+                case this.data.channels["gaming"]:
                     type = "gaming";
                     creatorChannel = gaming;
                     break;
-                case channels.get("oda_olustur").value():
+                case this.data.channels["oda_olustur"]:
                     type = "private";
                     creatorChannel = channel;
                     break;
@@ -72,11 +67,11 @@ class VoiceStateUpdate {
                 leaves.delete(myChannelData._id);
             }
             if ((cur.channel.id === channel.id) || (cur.channel.id === gaming.id)) {
-                const oldData = await private_channels.findOne({ owner: cur.member.user.id, type: type });
-                const privDatas = await private_channels.find({ type: type });
+                const oldData = await client.models.priv_chnl.findOne({ owner: cur.member.user.id, type: type });
+                const privDatas = await client.models.priv_chnl.find({ type: type });
                 if (oldData) return await cur.member.voice.setChannel(oldData._id);
                 const nueva = await creatorChannel.clone({
-                    name: (type === "private" ? "Bigard" : "Game Room") + miniNum(privDatas.length + 1),
+                    name: (type === "private" ? "Bigard" : "Game Room") + client.functions.miniNum(privDatas.length + 1),
                     userLimit: 1,
                     permissionOverwrites: [
                         {
@@ -90,13 +85,13 @@ class VoiceStateUpdate {
                             deny: []
                         },
                         {
-                            id: roles.get("musicbots").value(),
+                            id: this.data.roles["musicbots"],
                             allow: ["CONNECT", "MOVE_MEMBERS"],
                             deny: []
                         }
                     ]
                 });
-                await private_channels.create({ _id: nueva.id, type: type, owner: cur.member.user.id });
+                await client.models.priv_chnl.create({ _id: nueva.id, type: type, owner: cur.member.user.id });
                 await cur.member.voice.setChannel(nueva.id);
             }
         }

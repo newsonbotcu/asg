@@ -1,6 +1,5 @@
-const { closeall } = require("../../../../HELPERS/functions");
 const Discord = require('discord.js');
-const { CliEvent } = require('../../../base/utils');
+const { CliEvent } = require('../../../../base/utils');
 class OverwriteDelete extends CliEvent {
     constructor(client) {
         super(client);
@@ -31,7 +30,7 @@ class OverwriteDelete extends CliEvent {
             return client.extention.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_OVERWRITE_DELETE", `${curChannel.name} isimli kanalda izin sildi. Kalan izin sayısı ${permission.count - 1}`);
         }
         await client.models.perms.deleteOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        await closeall(curChannel.guild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const overwrits = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
         const data = overwrits.overwrites.find(o => o.id === entry.changes[0].old);
         const options = {};

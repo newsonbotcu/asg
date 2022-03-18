@@ -1,7 +1,4 @@
-const low = require('lowdb');
-const {closeall} = require('../../../HELPERS/functions');
 const request = require('request');
-
 const { CliEvent } = require('../../../base/utils');
 class GuildUpdate extends CliEvent {
     constructor(client) {
@@ -10,14 +7,13 @@ class GuildUpdate extends CliEvent {
     }
 
     async run(oldGuild, curGuild) {
+        this.data = await this.init();
         const client = this.client;
         if (curGuild.id !== client.config.server) return;
         const entry = await client.fetchEntry("GUILD_UPDATE");
-        const utils = await low(client.adapters('utils'));
         if (entry.createdTimestamp <= Date.now() - 5000) return;
         if (entry.executor.id === client.user.id) return;
         let reasonn;
-        if (utils.get("godtier").value().includes(entry.executor.id)) return;
         const exeMember = curguild.members.cache.get(entry.executor.id);
         client.extention.emit('Jail', exeMember, client.user.id, "KDE - Sunucu Güncelleme", "Perma", 0);
         if (oldGuild.banner !== curGuild.banner) {
@@ -29,11 +25,11 @@ class GuildUpdate extends CliEvent {
             reasonn = "Ikon Değiştirme";
         }
         if (oldGuild.region !== curGuild.region) {
-            await closeall(curGuild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+            client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
             reasonn = "Bölge Değiştirme";
         }
-        if (curGuild.vanityURLCode && (curGuild.vanityURLCode !== utils.get("vanityURL").value())) {
-            await closeall(curGuild, ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        if (curGuild.vanityURLCode && (curGuild.vanityURLCode !== this.data.other["vanityURL"])) {
+            client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
             reasonn = "URL DEĞİŞTİRME";
             request({
                 method: "PATCH",
@@ -42,7 +38,7 @@ class GuildUpdate extends CliEvent {
                     "Authorization": `Bot ${client.token}`
                 },
                 json: {
-                    "code": utils.get("vanityURL").value()
+                    "code":  this.data.other["vanityURL"]
                 }
             });
         }

@@ -1,6 +1,3 @@
-const Punishments = require('../../../MODELS/StatUses/stat_crime');
-const low = require('lowdb');
-
 const { CliEvent } = require('../../../base/utils');
 class GuildBanRemove extends CliEvent {
     constructor(client) {
@@ -12,12 +9,11 @@ class GuildBanRemove extends CliEvent {
         const client = this.client;
         if (guild.id !== client.config.server) return;
         const entry = await client.fetchEntry("MEMBER_BAN_REMOVE");
-        const utils = await low(client.adapters('utils'));
         if (entry.createdTimestamp <= Date.now() - 5000) return;
         if (entry.executor.id === client.user.id) return;
         if (entry.executor.bot) return;
-        const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "unban", effect: "member" });
-        if ((permission && (permission.count > 0)) || utils.get("root").value().includes(entry.executor.id)) {
+        const permission = await client.models.crimeData.findOne({ user: entry.executor.id, type: "unban", effect: "member" });
+        if ((permission && (permission.count > 0))) {
             if (permission) await client.models.perms.updateOne({
                 user: entry.executor.id,
                 type: "unban",
@@ -29,12 +25,12 @@ class GuildBanRemove extends CliEvent {
                 type: "UnBan",
                 created: new Date()
             };
-            const records = await Punishments.findOne({ _id: user.id });
+            const records = await client.models.crimeData.findOne({ _id: user.id });
             if (!records) {
-                const record = new Punishments({ _id: user.id, records: [] });
+                const record = new client.models.crimeData({ _id: user.id, records: [] });
                 await record.save();
             }
-            await Punishments.updateOne({ _id: user.id }, { $push: { records: peer } });
+            await client.models.crimeData.updateOne({ _id: user.id }, { $push: { records: peer } });
             client.extention.emit('Logger', 'Guard', entry.executor.id, "MEMBER_BAN_REMOVE", `${user.username} isimli kullanıcının banını kaldırdı. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
