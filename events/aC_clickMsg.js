@@ -1,9 +1,12 @@
-module.exports = class {
+const { CliEvent } = require('../base/utils');
+class MsgCmdHandler extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     }
     async run(interaction) {
         const client = this.client;
+        this.data = await this.init();
         if (interaction.guild && (interaction.guild.id !== client.config.server)) return;
         let cmd = `Message:${interaction.name}`;
         console.log(cmd);
@@ -18,7 +21,7 @@ module.exports = class {
         let time = uCooldown[`Message:${interaction.name}`] || 0;
         if (time && (time > Date.now())) return;
         try {
-            cmd.run(client, int);
+            cmd.run(client, interaction, this.data);
         } catch (e) {
             console.log(e);
         }
@@ -26,3 +29,5 @@ module.exports = class {
 
     }
 }
+
+module.exports = MsgCmdHandler;

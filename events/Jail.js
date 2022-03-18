@@ -1,16 +1,17 @@
-const low = require('lowdb');
+const { CliEvent } = require('../base/utils');
 
-class JailEvent {
+class JailEvent extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     };
 
     async run(member, executor, reason, type, duration, note) {
         const client = this.client;
-        const roles = await low(client.adapters('roles'));
-        const memberRoles = member.roles.cache.map(c => c).filter(r => r.id !== roles.get("booster").value());
+        this.data = await this.init();
+        const memberRoles = member.roles.cache.map(c => c).filter(r => r.id !== this.data.roles["booster"]);
         await member.roles.remove(memberRoles);
-        await member.roles.add(roles.get("prisoner").value());
+        await member.roles.add(this.data.roles["prisoner"]);
         let deletedRoles = await memberRoles.map(r => r.name);
         const Jail = await this.client.models.jail.findOne({ _id: member.user.id });
         if (!Jail) {

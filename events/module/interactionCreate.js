@@ -1,5 +1,7 @@
-class InteractionCreate {
+const { CliEvent } = require('../../base/utils');
+class InteractionCreate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     }
     async run(interaction) {

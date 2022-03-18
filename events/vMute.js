@@ -1,7 +1,9 @@
-class PermaBanEvent {
+const { CliEvent } = require('../base/utils');
+class PermaBanEvent extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
     async run(member, executor, reason, duration) {
         const client = this.client;
         const voice = member.voice;

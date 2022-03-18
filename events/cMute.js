@@ -1,14 +1,14 @@
-const low = require('lowdb');
-
-class PermaBanEvent {
+const { CliEvent } = require('../base/utils');
+class CMute extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
 
     async run(member, executor, reason, duration) {
+        this.data = await this.init();
         const client = this.client;
-        const roles = await low(client.adapters('roles'));
-        await member.roles.add(roles.get("muted").value());
+        await member.roles.add(this.data.roles["muted"]);
         const mute = await client.models.cmute.findOne({ _id: member.user.id });
         if (!mute) {
             await client.models.cmute.create({
@@ -23,4 +23,4 @@ class PermaBanEvent {
 
     }
 }
-module.exports = PermaBanEvent;
+module.exports = CMute;

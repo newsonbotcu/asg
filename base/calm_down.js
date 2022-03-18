@@ -1,6 +1,7 @@
 const client = new (require('./Tantoony'))({
     fetchAllMembers: true
 }, `CD_${process.argv.pop()}`);
+const pm2 = require('pm2');
 client.on('ready', async () => {
     client.user.setPresence({ status: client.config.cdStatus });
     const guild = client.guilds.cache.get(client.config.server);
@@ -9,9 +10,8 @@ client.on('ready', async () => {
     let i = 0;
     setInterval(async () => {
         const member = array[i];
-        if (i === array.length && !member) {
-            return require('child_process').exec(`pm2 delete CD${process.argv.pop()}`);
-        }
+        if (i === array.length && !member) return pm2.delete(`CD${process.argv.pop()}`);
+        
         let rolesDataOfMember = await this.client.models.members.findOne({ _id: member.user.id });
         if (rolesDataOfMember) {
             const newRoles = await rolesDataOfMember.roles.filter((roleName) => guild.roles.cache.map(role => role.name).includes(roleName)).map((roleName) => guild.roles.cache.find(role => role.name === roleName).id);

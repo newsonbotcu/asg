@@ -1,9 +1,9 @@
-
-class Record {
+const { CliEvent } = require('../base/utils');
+class Record extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
-
+    }
     async run(user, executor, reason, punish, type, duration) {
         const peer = {
             reason: reason,

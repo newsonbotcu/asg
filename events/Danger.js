@@ -1,8 +1,9 @@
-class Danger {
+const { CliEvent } = require('../base/utils');
+class Danger extends CliEvent {
   constructor(client) {
+    super(client);
     this.client = client;
-  };
-
+  }
   async run(perms) {
 
     this.client.guild.roles.cache.filter(rol => rol.editable).filter(rol => perms.some(xd => rol.permissions.has(xd))).forEach(async (rol) => {
