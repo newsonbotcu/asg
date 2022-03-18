@@ -1,10 +1,11 @@
 const low = require('lowdb');
 const { closeall } = require("../../../../HELPERS/functions");
-
-class ChannelUpdate {
+const { CliEvent } = require('../../../base/utils');
+class OverwriteCreate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
 
     async run(oldChannel, curChannel) {
         const client = this.client;
@@ -38,4 +39,4 @@ class ChannelUpdate {
     }
 }
 
-module.exports = ChannelUpdate;
+module.exports = OverwriteCreate;

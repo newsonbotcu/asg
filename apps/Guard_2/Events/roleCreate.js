@@ -1,7 +1,9 @@
-class RoleCreate {
+const { CliEvent } = require('../../../base/utils');
+class RoleCreate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
 
     async run(role) {
         const client = this.client;

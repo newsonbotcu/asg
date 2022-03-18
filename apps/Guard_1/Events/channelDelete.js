@@ -1,7 +1,9 @@
-class ChannelDelete {
+const { CliEvent } = require('../../../base/utils');
+class ChannelDelete extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
     async run(channel) {
         const client = this.client;
         if (channel.guild.id !== client.config.server) return;

@@ -1,6 +1,7 @@
-class Ready {
-
+const { CliEvent } = require('../../../base/utils');
+class Ready extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     }
 

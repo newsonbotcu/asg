@@ -70,6 +70,27 @@ function log(content, type = "log") {
     }
 }
 
+class CliEvent {
+    constructor(client) {
+        this.client = client;
+        (() => {
+            this.init().then((res) => {
+                this.data = res;
+            })
+        })()
+    }
+
+    async init() {
+        const idConf = await this.client.models.marked_ids.find();
+        return {
+            roles: idConf.filter(item => item.type === "ROLE"),
+            channels: idConf.filter(item => item.type === "CHANNEL"),
+            emojis: idConf.filter(item => item.type === "EMOJI"),
+            other: idConf.filter(item => item.type === "OTHER")
+        }
+    }
+}
+
 class ButtonCMD {
     constructor(client, {
         name = null,
@@ -386,6 +407,7 @@ const marked_ids = model('marked', new Schema({
 module.exports = {
     ButtonCMD,
     DefaultCMD,
+    CliEvent,
     log
 }
 

@@ -1,7 +1,9 @@
-class ChannelUpdate {
+const { CliEvent } = require('../../../base/utils');
+class ChannelUpdate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
     async run(oldChannel, curChannel) {
         const client = this.client.hello(this.client);
         if (curChannel.guild.id !== client.config.server) return;

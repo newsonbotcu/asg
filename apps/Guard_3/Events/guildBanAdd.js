@@ -1,11 +1,12 @@
 const Punishments = require('../../../MODELS/StatUses/stat_crime');
 const low = require('lowdb');
 const { checkDays } = require('../../../HELPERS/functions');
-
-class GuildBanAdd {
+const { CliEvent } = require('../../../base/utils');
+class GuildBanAdd extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
 
     async run(guild, user) {
         const client = this.client;

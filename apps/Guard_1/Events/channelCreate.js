@@ -1,5 +1,7 @@
-class ChannnelCreate {
+const { CliEvent } = require('../../../base/utils');
+class ChannnelCreate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     }
     async run(channel) {

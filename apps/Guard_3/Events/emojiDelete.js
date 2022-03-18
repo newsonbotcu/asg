@@ -1,10 +1,11 @@
 const low = require('lowdb');
 
-class EmojiDelete {
+const { CliEvent } = require('../../../base/utils');
+class EmojiDelete extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
-
+    }
     async run(emoji) {
         const client = this.client;
         if (emoji.guild.id !== client.config.server) return;

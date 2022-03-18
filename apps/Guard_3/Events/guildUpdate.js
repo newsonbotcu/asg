@@ -2,10 +2,12 @@ const low = require('lowdb');
 const {closeall} = require('../../../HELPERS/functions');
 const request = require('request');
 
-class GuildUpdate {
+const { CliEvent } = require('../../../base/utils');
+class GuildUpdate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
 
     async run(oldGuild, curGuild) {
         const client = this.client;

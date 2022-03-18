@@ -1,39 +1,46 @@
-const low = require('lowdb')
-const model = require('../../../../MODELS/Moderation/mod_jail');
-const { checkDays } = require('../../../../HELPERS/functions');
-module.exports = class {
+const { CliEvent } = require('../../../../base/utils');
+const { CronJob } = require('cron');
 
+class ControlJail extends CliEvent {
     constructor(client) {
-        this.client = client
+        super(client);
+        this.client = client;
     }
 
     async run(client) {
-        client = this.client;
-        const roles = await low(client.adapters('roles'));
-        const guild = client.guilds.cache.get(client.config.server);
-        const asd = await model.find();
-        asd.filter(doc => doc.type === "temp").forEach(async doc => {
-            if (checkDays(doc.created) >= doc.duration) {
-                if (guild.members.cache.get(doc._id)) {
-                    await guild.members.cache.get(doc._id).roles.add(doc.roles.map(rname => guild.roles.cache.find(role => role.name === rname) || roles.get("member").value()));
-                    await guild.members.cache.get(doc._id).roles.remove(roles.get("prisoner").value());
+        this.data = await this.init();
+        const cmuteds = new Map();
+        const mapcron = new CronJob('* */1 * * * *', async () => {
+            const now = new Date();
+            let asd = await this.client.models.mod_jail.find();
+            asd.filter((ban) => ban.type === "temp" && now.getTime() - ban.created.getTime() >= (ban.duration - 1) * 3600000).forEach((ban) => {
+                const date = require('moment')(ban.created).add(ban.duration, 'h').toDate();
+                if (now.getTime() - ban.created.getTime() > date.getTime()) {
+                    await this.client.models.mod_jail.deleteOne({ _id: ban._id });
+                    await this.client.guild.members.cache.get(ban._id).roles.add(ban.roles.map(rname => this.client.guild.roles.cache.find(role => role.name === rname) || this.data["member"]));
+                    await this.client.guild.members.cache.get(ban._id).roles.remove(this.data["prisoner"]);
                 }
-                await model.deleteOne({ _id: doc._id })
+                if (!cmuteds.has(ban._id)) cmuteds.set(ban._id, {
+                    id: ban._id,
+                    ms: (d) => date.getTime() - d.getTime()
+                });
+            });
+        });
+        mapcron.start();
+        const checkbans = new CronJob('*/30 * * * * *', () => {
+            while (cmuteds.size !== 0) {
+                cmuteds.forEach((ban) => {
+                    setTimeout(async () => {
+                        await this.client.models.mod_jail.deleteOne({ _id: ban._id });
+                        await this.client.guild.members.cache.get(ban._id).roles.add(ban.roles.map(rname => this.client.guild.roles.cache.find(role => role.name === rname) || this.data["member"]));
+                        await this.client.guild.members.cache.get(ban._id).roles.remove(this.data["prisoner"]);
+                        cmuteds.delete(ban.id);
+                    }, ban.ms(new Date()));
+                });
             }
         });
-        client.log('JAIL OK');
-        setInterval(async () => {
-            const asdf = await model.find({ type: "temp" });
-            asdf.forEach(async doc => {
-                if (checkDays(doc.created) >= doc.duration) {
-                    if (guild.members.cache.get(doc._id)) {
-                        await guild.members.cache.get(doc._id).roles.add(doc.roles.map(rname => guild.roles.cache.find(role => role.name === rname) || roles.get("member").value()));
-                        await guild.members.cache.get(doc._id).roles.remove(roles.get("prisoner").value());
-                    }
-                    await model.deleteOne({ _id: doc._id })
-                }
-            })
-            client.log('JAIL OK');
-        }, 1000 * 60);
+        checkbans.start();
+
     }
 }
+module.exports = ControlJail;

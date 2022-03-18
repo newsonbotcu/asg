@@ -1,9 +1,10 @@
 const low = require('lowdb');
-
-class EmojiCreate {
+const { CliEvent } = require('../../../base/utils');
+class EmojiCreate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
 
     async run(emoji) {
         const client = this.client;

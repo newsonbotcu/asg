@@ -1,6 +1,7 @@
-class presenceUpdate {
-
+const { CliEvent } = require('../../../base/utils');
+class presenceUpdate extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
     }
 

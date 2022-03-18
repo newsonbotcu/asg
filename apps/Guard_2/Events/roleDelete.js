@@ -1,11 +1,12 @@
 const low = require('lowdb');
 const children = require('child_process');
 const pm2 = require('pm2');
-
-class RoleCreate {
+const { CliEvent } = require('../../../base/utils');
+class RoleDelete extends CliEvent {
     constructor(client) {
+        super(client);
         this.client = client;
-    };
+    }
 
     async run(role) {
         const client = this.client;
@@ -102,4 +103,4 @@ class RoleCreate {
     }
 }
 
-module.exports = RoleCreate;
+module.exports = RoleDelete;
