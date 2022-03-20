@@ -1,20 +1,16 @@
 const { Client, Collection } = require('discord.js');
-const { EventEmitter } = require('events');
-
 class Tantoony extends Client {
     constructor(options, name) {
         super(options);
         this.name = name;
         this.config = require('./config');
-        this.fuctions = require('./utils').fuctions;
-        this.models = require('./utils').models;
         this.log = require("./utils").log;
-        this.extention = new EventEmitter();
+        this.handler = new (require('./handler'))(this);
         (() => {
             require('dotenv').config({ path: __dirname + '/.env' });
             this.login(process.env[this.config.vars[name]]);
         })();
-        this.mongoLogin(); 
+        this.mongoLogin();
         this.responders = new Collection();
         this.cmdCoodown = new Object();
         this.leaves = new Map();
@@ -27,8 +23,6 @@ class Tantoony extends Client {
         this.stats = new Object();
         this.banlimit = new Object();
         this.voicecutLimit = new Object();
-
-        this.handler = new (require('./initialize'))(this);
     };
 
     mongoLogin() {
@@ -75,10 +69,10 @@ class Tantoony extends Client {
     }
 
     async load_int(intName, intType, client) {
-        const props = new (require(`../apps/${this.name}/src/${intType}/${intName}`))(client, {}, client.guild, this.config.apps);
+        const props = new (require(`../apps/${this.name}/src/${intType}/${intName}`))(client);
         client.responders.set(`${intType}:${props.name}`, props);
         if (props.name) try {
-            const cmd = await client.guild.commands.create(props, this.config.apps);
+            const cmd = await client.guild.commands.create(props);
             props.id = cmd.id;
             this.logger.log(`Loading "${intType}" Integration in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
             client.responders.set(`${intType}:${cmd.name}`, props);

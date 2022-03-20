@@ -14,7 +14,7 @@ class UserUpdate {
         const channels = await low(client.adapters('channels'));
         const member = guild.members.cache.get(newUser.id);
         if (!utils.get("forbidden").value().some(tag => oldUser.username.includes(tag)) && utils.get("forbidden").value().some(tag => newUser.username.includes(tag))) {
-            client.extention.emit('Jail', member, this.client.user.id, "Yasaklı Tag", "Perma", 1)
+            client.handler.emit('Jail', member, this.client.user.id, "Yasaklı Tag", "Perma", 1)
             const embed = new Discord.MessageEmbed().setColor('#2f3136').setTitle("Yasaklı Tag Alındı").setThumbnail(newUser.displayAvatarURL())
                 .setDescription(`${member} kullanıcısı **${utils.get("forbidden").value().find(tag => !oldUser.username.includes(tag) && newUser.username.includes(tag))}* tagını aldığından dolayı hapise atıldı!`);
             await guild.channels.cache.get(channels.get("ast-ytag").value()).send(embed);

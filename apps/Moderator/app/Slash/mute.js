@@ -53,7 +53,7 @@ module.exports = class SlashMute extends ApplicationCommand {
         if (intg.member.roles.highest.rawPosition <= target.roles.highest.rawPosition) return await intg.reply(`${emojis.get("missingPerms").value()} Bunu yapmak için yeterli yetkiye sahip değilsin`, {
             ephemeral: true
         });
-        await client.extention.emit(intg.options["tür"], target, intg.user.id, intg.options["sebep"], intg.options["süre"]);
+        await client.handler.emit(intg.options["tür"], target, intg.user.id, intg.options["sebep"], intg.options["süre"]);
 
 
     }

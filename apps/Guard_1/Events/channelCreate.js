@@ -39,15 +39,15 @@ class ChannnelCreate extends CliEvent {
                     position: channel.position
                 });
             }
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_CREATE", `${channel.name} isimli kanalı açtı. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_CREATE", `${channel.name} isimli kanalı açtı. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "create", effect: "channel" });
-        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         await channel.delete(`${entry.executor.username} Tarafından oluşturulmaya çalışıldı`);
         const exeMember = channel.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Kanal Oluşturma", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_CREATE", `${channel.name} isimli kanalı sildi`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Kanal Oluşturma", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_CREATE", `${channel.name} isimli kanalı sildi`);
     }
 }
 module.exports = ChannnelCreate;

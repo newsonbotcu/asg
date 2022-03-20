@@ -17,11 +17,11 @@ class ChannelDelete extends CliEvent {
             if (channel.type === 'voice') await client.models.bc_voice.deleteOne({ _id: channel.id });
             if (channel.type === 'category') await client.models.bc_cat.deleteOne({ _id: channel.id });
             await client.models.overwrites.deleteOne({ _id: channel.id });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_DELETE", `${entry.executor.username} ${channel.name} isimli kanalı sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_DELETE", `${entry.executor.username} ${channel.name} isimli kanalı sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "channel" });
-        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         let newChannel;
         if ((channel.type === 'text') || (channel.type === 'news')) {
             await client.models.bc_text.deleteOne({ _id: channel.id });
@@ -88,8 +88,8 @@ class ChannelDelete extends CliEvent {
         await client.models.bc_ovrts.deleteOne({ _id: channel.id });
         await client.models.bc_ovrts.create({ _id: newChannel.id, overwrites: overwritesData.overwrites });
         const exeMember = channel.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Kanal Silme", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_DELETE", `${channel.name} isimli kanalı sildi`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Kanal Silme", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_DELETE", `${channel.name} isimli kanalı sildi`);
     }
 }
 module.exports = ChannelDelete;

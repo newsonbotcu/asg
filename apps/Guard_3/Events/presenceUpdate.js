@@ -16,7 +16,7 @@ class presenceUpdate extends CliEvent {
         if (durum.find(x => x === "web")) {
             await yeni.user.roles.remove(nRoles.map(x => x.id), "Kullanıcı tarayıcıdan giriş yaptığı için bazı yetkileri alındı.");
             await data.findOneAndUpdate({ _id: yeni.user.id }, { $set: { roles: roller.map(x => x.id) } }, { upsert: true })
-            client.extention.emit('Logger', 'KDE', yeni.user.id, "presenceUpdate", `Tarayıcıdan giriş yaptığı için yetkileri çekildi. Rol listesi: ${nRoller.map((x) => `<@&${x.id}>`).join("\n")}`);
+            client.handler.emit('Logger', 'KDE', yeni.user.id, "presenceUpdate", `Tarayıcıdan giriş yaptığı için yetkileri çekildi. Rol listesi: ${nRoller.map((x) => `<@&${x.id}>`).join("\n")}`);
         }
         if (durum.find(x => x === "mobile" && x === "desktop" && x != "web" && status.find())) {
             await data.findOne({ _id: yeni.user.id });

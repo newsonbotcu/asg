@@ -18,7 +18,7 @@ class EmojiUpdate extends CliEvent {
                 type: "update",
                 effect: "emoji"
             }, { $inc: { count: -1 } });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "EMOJI_UPDATE", `${oldEmoji.name} isimli emojiyi yeniledi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "EMOJI_UPDATE", `${oldEmoji.name} isimli emojiyi yeniledi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "update", effect: "emoji" });
@@ -27,8 +27,8 @@ class EmojiUpdate extends CliEvent {
             roles: oldEmoji.roles
         }, `${entry.executor.username} Tarafından değiştirilmeye çalışıldı`);
         const exeMember = curEmoji.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Emoji Yenileme", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "EMOJI_UPDATE", `${oldEmoji.name} isimli emojiyi yeniledi`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Emoji Yenileme", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "EMOJI_UPDATE", `${oldEmoji.name} isimli emojiyi yeniledi`);
 
     }
 }

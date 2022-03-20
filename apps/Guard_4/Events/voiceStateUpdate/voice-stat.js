@@ -31,7 +31,7 @@ class VoiceStateUpdate extends CliEvent {
                 let count = uCount[cur.channel.id] || 0;
                 if (count === 3) await cur.guild.channels.cache.get(this.data.channels["stat-warn"]).send(`${cur.member} Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
                 if (count === 7) {
-                    client.extention.emit("vMute", cur.member, this.client.user.id, "MIC-BUG", 5);
+                    client.handler.emit("vMute", cur.member, this.client.user.id, "MIC-BUG", 5);
                     await cur.guild.channels.cache.get(this.data.channels["stat-warn"]).send(`${cur.member} Mikrofonunu çok fazla açıp kapattığın için 5 dakika mutelendin!`);
                 }
                 this.client.trollcounts[cur.member.user.id][cur.channel.id] = count + 1;
@@ -83,7 +83,7 @@ class VoiceStateUpdate extends CliEvent {
                     }
                 }
             });
-            client.extention.emit("memberXp", cur.member);
+            client.handler.emit("memberXp", cur.member);
             if (!cur.channel) return client.stats[cur.member.user.id] = null;
             const yeniEntry = {
                 _id: cur.member.user.id,

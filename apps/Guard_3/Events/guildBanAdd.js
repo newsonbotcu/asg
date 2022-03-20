@@ -29,14 +29,14 @@ class GuildBanAdd extends CliEvent {
             const records = await client.models.crimeData.findOne({ _id: user.id });
             if (!records) await client.models.crimeData.create({ _id: user.id, records: [] });
             await client.models.crimeData.updateOne({ _id: user.id }, { $push: { records: peer } });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "MEMBER_BAN_ADD", `${user.username} kulllanıcısını banladı. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "MEMBER_BAN_ADD", `${user.username} kulllanıcısını banladı. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "ban", effect: "member" });
         await guild.members.unban(user.id, "Sağ Tık Ban");
         const exeMember = guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Sağ Tık Ban", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "MEMBER_BAN_ADD", `${user.username} isimli kullanıcıyı banladı`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Sağ Tık Ban", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "MEMBER_BAN_ADD", `${user.username} isimli kullanıcıyı banladı`);
 
     }
 }

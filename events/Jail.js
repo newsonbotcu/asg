@@ -28,7 +28,7 @@ class JailEvent extends CliEvent {
         } else {
             await this.client.models.jail.updateOne({ _id: member.user.id }, { $inc: { duration: Number(duration) || 0 } });
         }
-        client.extention.emit('Record', member.user.id, executor, reason, "Jail", type, duration);
+        client.handler.emit('Record', member.user.id, executor, reason, "Jail", type, duration);
     }
 }
 

@@ -18,7 +18,7 @@ class GuildMemberRemove {
         const entry = await member.guild.fetchAuditLogs({ type: "MEMBER_KICK" }).then(logs => logs.entries.first());
         if ((entry.target.id === member.user.id) && entry.createdTimestamp >= Date.now() - 1000) {
             const exeMember = member.guild.members.cache.get(entry.executor.id);
-            client.extention.emit("Jail", exeMember, this.client.user.id, "KDE - Üye Atma", "Perma", 1);
+            client.handler.emit("Jail", exeMember, this.client.user.id, "KDE - Üye Atma", "Perma", 1);
             return;
         }
     }

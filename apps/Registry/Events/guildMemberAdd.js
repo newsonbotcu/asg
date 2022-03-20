@@ -22,7 +22,7 @@ class GuildMemberAdd {
             } else {
                 await member.kick("Korundu");
                 const exeMember = member.guild.members.cache.get(entry.executor.id);
-                client.extention.emit("Ban", member.guild, exeMember, this.client.user.id, "* Bot Ekleme", "Perma", 1);
+                client.handler.emit("Ban", member.guild, exeMember, this.client.user.id, "* Bot Ekleme", "Perma", 1);
             }
             return;
         }

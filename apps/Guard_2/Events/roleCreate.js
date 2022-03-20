@@ -23,15 +23,15 @@ class RoleCreate extends CliEvent {
                 rawPosition: role.rawPosition,
                 bitfield: role.permissions.bitfield
             });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "ROLE_CREATE", `${role.name} isimli rolü oluşturdu. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "ROLE_CREATE", `${role.name} isimli rolü oluşturdu. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "create", effect: "role" });
-        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         await role.delete();
         const exeMember = role.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Rol Oluşturma", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "ROLE_CREATE", `${role.name} isimli rolü oluşturdu`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Rol Oluşturma", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "ROLE_CREATE", `${role.name} isimli rolü oluşturdu`);
     }
 }
 

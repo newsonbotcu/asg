@@ -1,10 +1,11 @@
-const { CliEvent } = require('../../base/utils');
-class InteractionCreate extends CliEvent {
+const { ClientEvent } = require('../../base/utils');
+class InteractionCreate extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;
     }
     async run(interaction) {
+        this.data = this.loadMarks();
         const client = this.client;
         if (interaction.guild && (interaction.guild.id !== client.config.server)) return;
         let respond;
@@ -21,7 +22,6 @@ class InteractionCreate extends CliEvent {
                         default:
                             respond = 'aC_slash';
                             break;
-
                     }
                 } else {
                     respond = 'aC_slash';
@@ -33,7 +33,7 @@ class InteractionCreate extends CliEvent {
             default:
                 break;
         }
-        client.extention.emit(respond, interaction);
+        client.handler.emit(respond, interaction, data);
         return;
     }
 }

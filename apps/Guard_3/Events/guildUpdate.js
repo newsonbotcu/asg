@@ -15,7 +15,7 @@ class GuildUpdate extends CliEvent {
         if (entry.executor.id === client.user.id) return;
         let reasonn;
         const exeMember = curguild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Sunucu Güncelleme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Sunucu Güncelleme", "Perma", 0);
         if (oldGuild.banner !== curGuild.banner) {
             await curGuild.setBanner(oldGuild.bannerURL({size: 4096}));
             reasonn = "Afiş Değiştirme";
@@ -25,11 +25,11 @@ class GuildUpdate extends CliEvent {
             reasonn = "Ikon Değiştirme";
         }
         if (oldGuild.region !== curGuild.region) {
-            client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+            client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
             reasonn = "Bölge Değiştirme";
         }
         if (curGuild.vanityURLCode && (curGuild.vanityURLCode !== this.data.other["vanityURL"])) {
-            client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+            client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
             reasonn = "URL DEĞİŞTİRME";
             request({
                 method: "PATCH",

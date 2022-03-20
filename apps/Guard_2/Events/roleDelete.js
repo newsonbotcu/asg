@@ -17,13 +17,13 @@ class RoleDelete extends CliEvent {
         if ((permission && (permission.count > 0))) {
             if (permission) await client.models.perms.updateOne({ user: entry.executor.id, type: "delete", effect: "role" }, { $inc: { count: -1 } });
             await client.models.bc_role.deleteOne({ _id: role.id });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "role" });
-        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const exeMember = role.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Rol Silme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Rol Silme", "Perma", 0);
         const roleData = await client.models.bc_role.findOne({ _id: role.id });
         const newRole = await role.guild.roles.create({
             data: {
@@ -70,7 +70,7 @@ class RoleDelete extends CliEvent {
                 }
             });
         }
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi`);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi`);
         let ohal = false;
         pm2.list((err, list) => {
             if (err) return;

@@ -18,7 +18,7 @@ class PermaBanEvent extends CliEvent {
                 created: new Date()
             });
         }
-        client.extention.emit('Record', executor, member.user.id, reason, "V-Mute", "temp", duration);
+        client.handler.emit('Record', executor, member.user.id, reason, "V-Mute", "temp", duration);
     }
 }
 module.exports = PermaBanEvent;

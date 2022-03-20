@@ -3,12 +3,16 @@ const util = require('util');
 const readdir = util.promisify(fs.readdir);
 const Tantoony = require('./Tantoony');
 const pm2 = require('pm2');
-class Initialize {
+const EventEmitter = require('events');
+class Handler extends EventEmitter {
     /**
      *@param {Tantoony} client
      */
     constructor(client) {
+        super(client)
         this.client = client;
+        this.models =(model) => require('./utils').models[model];
+        this.run = (func, ...args) => require('./utils').fuctions[func](...args);
         this.project_events();
         this.loader();
         this.lauch();
@@ -36,7 +40,7 @@ class Initialize {
                 files.filter((e) => e.endsWith('.js')).forEach((file) => {
                     this.client.log("loading event: " + file, "load");
                     const event = new (require(__dirname + "/../events/" + file))(this.client);
-                    this.client.extention.on(file.split(".")[0], (...args) => event.run(...args));
+                    this.on(file.split(".")[0], (...args) => event.run(...args));
                     delete require.cache[require.resolve(__dirname + "/../events/" + file)];
                 });
                 return;
@@ -107,4 +111,4 @@ class Initialize {
 
 }
 
-module.exports = Initialize;
+module.exports = Handler;

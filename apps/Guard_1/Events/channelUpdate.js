@@ -5,6 +5,7 @@ class ChannelUpdate extends CliEvent {
         this.client = client;
     }
     async run(oldChannel, curChannel) {
+        this.data = await this.init();
         const client = this.client.hello(this.client);
         if (curChannel.guild.id !== client.config.server) return;
         const entry = await client.fetchEntry("CHANNEL_UPDATE");
@@ -37,13 +38,13 @@ class ChannelUpdate extends CliEvent {
                         position: curChannel.position
                     });
                 }
-                client.extention.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı yeniledi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+                client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı yeniledi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
                 return;
             } else {
                 await client.models.perms.deleteOne({ user: entry.executor.id, type: "update", effect: "channel" });
             }
         }
-        client.extention.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         if ((curChannel.type === 'text') || (curChannel.type === 'news')) {
             const data = await client.models.bc_text.findOne({ _id: oldChannel.id });
             await curChannel.edit({
@@ -71,8 +72,8 @@ class ChannelUpdate extends CliEvent {
             });
         }
         const exeMember = curChannel.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Kanal Yenileme", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı sildi`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Kanal Yenileme", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı sildi`);
     }
 }
 module.exports = ChannelUpdate;

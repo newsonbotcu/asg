@@ -31,14 +31,14 @@ class GuildBanRemove extends CliEvent {
                 await record.save();
             }
             await client.models.crimeData.updateOne({ _id: user.id }, { $push: { records: peer } });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "MEMBER_BAN_REMOVE", `${user.username} isimli kullanıcının banını kaldırdı. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "MEMBER_BAN_REMOVE", `${user.username} isimli kullanıcının banını kaldırdı. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "unban", effect: "member" });
         await guild.members.ban(user.id, { reason: "Sağ Tık UnBan" });
         const exeMember = guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Sağ Tık UnBan", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "MEMBER_BAN_REMOVE", `${user.username} isimli kullanıcının banını kaldırdı`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Sağ Tık UnBan", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "MEMBER_BAN_REMOVE", `${user.username} isimli kullanıcının banını kaldırdı`);
 
     }
 }

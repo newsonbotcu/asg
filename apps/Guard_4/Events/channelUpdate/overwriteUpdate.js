@@ -27,11 +27,11 @@ class OverwriteUpdate extends CliEvent {
                 await client.models.bc_ovrts.updateOne({ _id: curChannel.id }, { $pullAll: { overwrites: document.overwrites } });
             }
             await client.models.bc_ovrts.updateOne({ _id: curChannel.id }, { overwrites: curChannel.permissionOverwrites.array() });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_OVERWRITE_UPDATE", `${curChannel.name} isimli kanalda izin yeniledi. Kalan izin sayısı ${permission.count - 1}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_OVERWRITE_UPDATE", `${curChannel.name} isimli kanalda izin yeniledi. Kalan izin sayısı ${permission.count - 1}`);
             return;
         }
         await client.models.perms.deleteOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const overwrits = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
         const options = [];
         await overwrits.overwrites.forEach(data => {
@@ -43,8 +43,8 @@ class OverwriteUpdate extends CliEvent {
         });
         console.log(options);
         const exeMember = curChannel.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - İzin Yenileme", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_OVERWRITE_UPDATE", `${entry.executor.username} ${oldChannel.name} isimli kanalın izinleriyle oynadı`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - İzin Yenileme", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_OVERWRITE_UPDATE", `${entry.executor.username} ${oldChannel.name} isimli kanalın izinleriyle oynadı`);
         await curChannel.overwritePermissions(options);
     }
 }

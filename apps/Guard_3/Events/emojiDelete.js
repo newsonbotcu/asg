@@ -17,7 +17,7 @@ class EmojiDelete extends CliEvent {
                 type: "delete",
                 effect: "emoji"
             }, { $inc: { count: -1 } });
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "EMOJI_DELETE", `${emoji.name} isimli emojiyi sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "EMOJI_DELETE", `${emoji.name} isimli emojiyi sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "emoji" });
@@ -25,8 +25,8 @@ class EmojiDelete extends CliEvent {
             reason: `${entry.executor.username} tarafından silinmiştir.`
         });
         const exeMember = emoji.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Emoji Delete", "Perma", 0);
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "EMOJI_DELETE", `${emoji.name} isimli emojiyi sildi`);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Emoji Delete", "Perma", 0);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "EMOJI_DELETE", `${emoji.name} isimli emojiyi sildi`);
     }
 }
 

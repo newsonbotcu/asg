@@ -48,6 +48,6 @@ module.exports = class SlashJail extends ApplicationCommand {
         });
         let typo = "perma";
         if (intg.options["süre"]) typo = "temp";
-        await client.extention.emit('Jail', target, intg.user.id, intg.options["sebep"], typo, intg.options["süre"], intg.options["not"]);
+        await client.handler.emit('Jail', target, intg.user.id, intg.options["sebep"], typo, intg.options["süre"], intg.options["not"]);
     }
 }

@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+const { ButtonInteraction, MessageButton, MessageSelectMenu } = require('discord.js');
+const { Schema, model, Model } = require('mongoose');
 
 function dateTimePad(value, digits) {
     let number = value
@@ -7,7 +8,6 @@ function dateTimePad(value, digits) {
     }
     return number;
 }
-
 function format(tDate) {
     return (tDate.getFullYear() + "-" +
         dateTimePad((tDate.getMonth() + 1), 2) + "-" +
@@ -22,71 +22,127 @@ function log(content, type = "log") {
     return console.log(`${date}[${type.toUpperCase()}] ~ :${content} `);
 }
 
-class CliEvent {
+class ClientEvent {
     constructor(client) {
         this.client = client;
-        (() => {
-            this.init().then((res) => {
-                this.data = res;
-            })
-        })()
+        this.data = {
+            emojis: {},
+            roles: {},
+            channels: {},
+            othe: {}
+        }
+        loadNarks();
     }
 
-    async init() {
-        const idConf = await this.client.models.marked_ids.find();
-        return {
-            roles: idConf.filter(item => item.type === "ROLE"),
-            channels: idConf.filter(item => item.type === "CHANNEL"),
-            emojis: idConf.filter(item => item.type === "EMOJI"),
-            other: idConf.filter(item => item.type === "OTHER")
-        }
+    loadMarks(type) {
+        this.client.models.marked_ids.find(type ? { type } : {}).then(docs => {
+            docs.forEach(doc => {
+                switch (doc.type) {
+                    case "ROLE":
+                        this.data.roles[doc._id] = doc.value;
+                        break;
+                    case "CHANNEL":
+                        this.data.channels[doc._id] = doc.value;
+                        break;
+                    case "EMOJI":
+                        this.data.emojis[doc._id] = doc.value;
+                        break;
+                    case "OTHER":
+                        this.data.other[doc._id] = doc.value;
+                        break;
+                    default: break;
+                }
+            });
+        });
+        return this.data;
+    }
+
+    async mount() {
+
     }
 }
 
-class ButtonCMD {
+class ButtonCommand extends MessageButton {
     constructor(client, {
         name = null,
-        description = "Açıklama Belirtilmemiş",
-        usage = "Kullanım Belirtilmemiş",
-        examples = [],
+        label = null,
+        customId = null,
+        style = "PRIMARY" | "SECONDARY" | "SUCCESS" | "DANGER" | "LINK",
+        emoji = null,
+        url = null,
+        disabled = false,
+        isconst = false,
         dirname = null,
-        category = "Diğer",
-        aliases = [],
-        cmdChannel = null,
-        accaptedPerms = [],
+        IntChannel = null,
         cooldown = 5000,
-        enabled = true,
-        ownerOnly = false,
-        rootOnly = false,
-        onTest = false,
-        adminOnly = false,
-        dmCmd = false
+        enabled = true
     }) {
         this.client = client;
-        this.config = {
+        this.props = {
+            name,
+            type,
             dirname,
+            IntChannel,
+            cooldown,
             enabled,
-            ownerOnly,
-            rootOnly,
-            onTest,
-            adminOnly,
-            dmCmd
+            isconst
         };
         this.info = {
-            name,
-            description,
-            usage,
-            examples,
-            category,
-            aliases,
-            cmdChannel,
-            accaptedPerms,
-            cooldown
+            label,
+            customId,
+            style,
+            emoji,
+            url,
+            disabled
         };
+        this.data = {
+            emojis: {},
+            roles: {},
+            channels: {},
+            other: {}
+        };
+        this.perms = [];
     }
+
+    loadMarks(type) {
+        this.client.models.marked_ids.find(type ? { type } : {}).then(docs => {
+            docs.forEach(doc => {
+                switch (doc.type) {
+                    case "ROLE":
+                        this.data.roles[doc._id] = doc.value;
+                        break;
+                    case "CHANNEL":
+                        this.data.channels[doc._id] = doc.value;
+                        break;
+                    case "EMOJI":
+                        this.data.emojis[doc._id] = doc.value;
+                        break;
+                    case "OTHER":
+                        this.data.other[doc._id] = doc.value;
+                        break;
+                    default: break;
+                }
+            });
+        });
+        return this.data;
+    }
+
+    loadPerms() {
+        this.client.models.cmd_perms.findOne({ cmd_type: "BUTTON", _id: this.customId }).then(doc => {
+            this.props.perms = doc.permissions;
+        });
+        return this.perms;
+    }
+
+
 }
 
-class DefaultCMD {
+class MenuCommand extends MessageSelectMenu {
+
+}
+
+
+class PrefixCommand {
     constructor(client, {
         name = null,
         description = "Açıklama Belirtilmemiş",
@@ -356,13 +412,6 @@ const marked_ids = model('marked', new Schema({
     value: String
 }), { _id: false });
 
-module.exports = {
-    ButtonCMD,
-    DefaultCMD,
-    CliEvent,
-    log
-}
-
 exports.models = {
     marked_ids,
     perms,
@@ -384,6 +433,14 @@ exports.models = {
     msgData,
     members
 }
+
+module.exports.Types = {
+    ButtonCMD,
+    PrefixCommand,
+    ClientEvent,
+    log
+}
+
 
 exports.fuctions = {
     checkDays,

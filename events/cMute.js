@@ -19,7 +19,7 @@ class CMute extends CliEvent {
                 created: new Date()
             });
         }
-        client.extention.emit('Record', member.user.id, executor, reason, "C-Mute", "temp", duration);
+        client.handler.emit('Record', member.user.id, executor, reason, "C-Mute", "temp", duration);
 
     }
 }

@@ -4,7 +4,8 @@ const low = require('lowdb');
 const Task_profile = require("../../../../../MODELS/Economy/Task_profile");
 const { sayi, checkDays } = require("../../../../../HELPERS/functions");
 const { stripIndent } = require("common-tags");
-class RolSeçim extends Component {
+const ButtonCommand = require("../../../../base/types/button");
+class RolSeçim extends ButtonCommand {
     constructor(client) {
         super(client, {
             name: "task_excuse",
@@ -18,7 +19,7 @@ class RolSeçim extends Component {
         });
     }
 
-    async run(ctx) {
+    async run(interaction) {
         const client = this.client;
         const utils = await low(client.adapters('utils'));
         const roles = await low(client.adapters('roles'));

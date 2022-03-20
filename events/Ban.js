@@ -19,7 +19,7 @@ class BanEvt extends CliEvent {
                 note: note
             });
         }
-        client.extention.emit('Record', user, executor, reason, "Ban", type, duration);
+        client.handler.emit('Record', user, executor, reason, "Ban", type, duration);
 
     }
 }

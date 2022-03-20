@@ -26,12 +26,12 @@ class RoleUpdate extends CliEvent {
                 await client.models.members.updateMany({ roles: oldRole.name }, { $push: { roles: curRole.name } });
                 await client.models.members.updateMany({ roles: oldRole.name }, { $pull: { roles: oldRole.name } });
             }
-            client.extention.emit('Logger', 'Guard', entry.executor.id, "ROLE_UPDATE", `${oldRole.name} isimli rolü güncelledi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
+            client.handler.emit('Logger', 'Guard', entry.executor.id, "ROLE_UPDATE", `${oldRole.name} isimli rolü güncelledi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
             return;
         }
-        client.extention.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const exeMember = curRole.guild.members.cache.get(entry.executor.id);
-        client.extention.emit('Jail', exeMember, client.user.id, "KDE - Rol Güncelleme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Rol Güncelleme", "Perma", 0);
         await client.models.perms.deleteOne({ user: entry.executor.id, type: "update", effect: "role" });
         const data = await client.models.bc_roles.findOne({ _id: curRole.id });
         await curRole.edit({
@@ -42,7 +42,7 @@ class RoleUpdate extends CliEvent {
             position: data.rawPosition,
             permissions: new Discord.Permissions(data.bitfield)
         });
-        client.extention.emit('Logger', 'KDE', entry.executor.id, "ROLE_UPDATE", `${oldRole.name} isimli rolü yeniledi`);
+        client.handler.emit('Logger', 'KDE', entry.executor.id, "ROLE_UPDATE", `${oldRole.name} isimli rolü yeniledi`);
 
     }
 }
