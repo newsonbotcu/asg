@@ -1,22 +1,15 @@
-const { MessageButton, MessageSelectMenu, ApplicationCommand } = require('discord.js');
+const {
+    MessageButton, MessageSelectMenu, ApplicationCommand, CommandInteraction,
+    ButtonInteraction, SelectMenuInteraction, UserContextMenuInteraction,
+    MessageContextMenuInteraction, Message
+} = require('discord.js');
 const { Schema, model, Types } = require('mongoose');
-function dateTimePad(value, digits) {
-    let number = value
-    while (number.toString().length < digits) {
-        number = "0" + number
-    }
-    return number;
-}
-function format(tDate) {
-    return (tDate.getFullYear() + "-" +
-        dateTimePad((tDate.getMonth() + 1), 2) + "-" +
-        dateTimePad(tDate.getDate(), 2) + " " +
-        dateTimePad(tDate.getHours(), 2) + ":" +
-        dateTimePad(tDate.getMinutes(), 2) + ":" +
-        dateTimePad(tDate.getSeconds(), 2) + "." +
-        dateTimePad(tDate.getMilliseconds(), 3))
-}
+const Tantoony = require('./Tantoony');
+
 class ClientEvent {
+    /**
+     * @param {Tantoony} client
+     */
     constructor(client, {
         name = null,
         allow = [],
@@ -24,7 +17,7 @@ class ClientEvent {
     }) {
         this.name = name;
         this.allow = allow;
-        this.audit = client.guild.fetchAuditLogs({ type: audit }).then(logs => logs.entries.first());
+        this.audit = audit;
         this.client = client;
         this.data = {
             emojis: {},
@@ -32,10 +25,11 @@ class ClientEvent {
             channels: {},
             other: {}
         }
-        loadNarks();
+        this.loadNarks();
     }
 
     loadMarks(type) {
+        this.audit = client.guild.fetchAuditLogs({ type: audit }).then(logs => logs.entries.first());
         this.client.models.marked_ids.find(type ? { type } : {}).then(docs => {
             docs.forEach(doc => {
                 switch (doc.type) {
@@ -59,11 +53,14 @@ class ClientEvent {
     }
 
     async mount() {
-        client.models.perms.findOne({ user: this.audit.executor.id, type: "overwrite", effect: "channel" });
+        client.models.exep.findOne({ user: this.audit.executor.id, type: "overwrite", effect: "channel" });
     }
 }
 
 class SlashCommand extends ApplicationCommand {
+    /**
+     * @param {Tantoony} client
+     */
     constructor(client, {
         name = null,
         description = null,
@@ -77,7 +74,7 @@ class SlashCommand extends ApplicationCommand {
     }) {
         super(client, {
             id: customId,
-            type: 1,
+            type: "CHAT_INPUT",
             application_id: client.application.id,
             guild_id: client.guild.id,
             name: name,
@@ -101,30 +98,6 @@ class SlashCommand extends ApplicationCommand {
         this.url = url;
         this.disabled = disabled;
         this.perms = [];
-        this.data = {};
-    }
-
-    loadMarks(type) {
-        this.client.models.marked_ids.find(type ? { type } : {}).then(docs => {
-            docs.forEach(doc => {
-                switch (doc.type) {
-                    case "ROLE":
-                        this.data.roles[doc._id] = doc.value;
-                        break;
-                    case "CHANNEL":
-                        this.data.channels[doc._id] = doc.value;
-                        break;
-                    case "EMOJI":
-                        this.data.emojis[doc._id] = doc.value;
-                        break;
-                    case "OTHER":
-                        this.data.other[doc._id] = doc.value;
-                        break;
-                    default: break;
-                }
-            });
-        });
-        return this.data;
     }
 
     loadPerms() {
@@ -133,9 +106,20 @@ class SlashCommand extends ApplicationCommand {
         });
         return this.perms;
     }
+    /**
+     * 
+     * @param {Tantoony} client "Extenden class for this bot"
+     * @param {CommandInteraction} interaction "the response"
+     * @param data "USEFUL!"
+     * 
+     */
+    async run(client, interaction, data) { }
 
 }
 class ButtonCommand extends MessageButton {
+    /**
+     * @param {Tantoony} client
+     */
     constructor(client, {
         name = null,
         label = null,
@@ -150,6 +134,14 @@ class ButtonCommand extends MessageButton {
         cooldown = 5000,
         enabled = true
     }) {
+        super({
+            label,
+            customId,
+            style,
+            emoji,
+            url,
+            disabled
+        })
         this.client = client;
         this.props = {
             name,
@@ -168,36 +160,7 @@ class ButtonCommand extends MessageButton {
             url,
             disabled
         };
-        this.data = {
-            emojis: {},
-            roles: {},
-            channels: {},
-            other: {}
-        };
         this.perms = [];
-    }
-
-    loadMarks(type) {
-        this.client.models.marked_ids.find(type ? { type } : {}).then(docs => {
-            docs.forEach(doc => {
-                switch (doc.type) {
-                    case "ROLE":
-                        this.data.roles[doc._id] = doc.value;
-                        break;
-                    case "CHANNEL":
-                        this.data.channels[doc._id] = doc.value;
-                        break;
-                    case "EMOJI":
-                        this.data.emojis[doc._id] = doc.value;
-                        break;
-                    case "OTHER":
-                        this.data.other[doc._id] = doc.value;
-                        break;
-                    default: break;
-                }
-            });
-        });
-        return this.data;
     }
 
     loadPerms() {
@@ -206,16 +169,155 @@ class ButtonCommand extends MessageButton {
         });
         return this.perms;
     }
+    /**
+     * 
+     * @param {Tantoony} client "Extenden class for this bot"
+     * @param {ButtonInteraction} interaction "the response"
+     * @param data "USEFUL!"
+     */
+    async run(client, interaction, data) { }
 
 
 }
 
 class MenuCommand extends MessageSelectMenu {
+    /**
+     * @param {Tantoony} client
+     */
+    constructor(client, {
+        custom_id = null,
+        options = [],
+        placeholder = null,
+        min_values = 0,
+        max_values = 0,
+        disabled = false,
+    }) {
+        super({
+            custom_id,
+            options,
+            placeholder,
+            min_values,
+            max_values,
+            disabled
+        });
+        this.client = client;
+
+    }
+    /**
+     * 
+     * @param {Tantoony} client "Extenden class for this bot"
+     * @param {SelectMenuInteraction} interaction "the response"
+     * @param data "USEFUL!"
+     */
+    async run(client, interaction, data) { }
 
 }
 
+class AppUserCommand extends ApplicationCommand {
+    /**
+     * @param {Tantoony} client
+     */
+    constructor(client, {
+        name = null,
+        description = null,
+        customId = null,
+        options = [],
+        disabled = false,
+        dirname = null,
+        IntChannel = null,
+        cooldown = 5000,
+        enabled = true
+    }) {
+        super(client, {
+            id: customId,
+            type: "USER",
+            application_id: client.application.id,
+            guild_id: client.guild.id,
+            name: name,
+            description: description,
+            options: options,
+            default_permission: false,
+        }, client.guild, client.guild.id);
+        this.client = client;
+        this.props = {
+            name,
+            dirname,
+            IntChannel,
+            cooldown,
+            enabled,
+            isconst
+        };
+        this.label = label;
+        this.customId = customId;
+        this.style = style;
+        this.emoji = emoji;
+        this.url = url;
+        this.disabled = disabled;
+        this.perms = [];
+    }
+    /**
+     * 
+     * @param {Tantoony} client "Extenden class for this bot"
+     * @param {UserContextMenuInteraction} interaction "the response"
+     * @param data "USEFUL!"
+     */
+    async run(client, interaction, data) { }
+}
 
+class AppMessageCommand extends ApplicationCommand {
+    /**
+     * @param {Tantoony} client
+     */
+    constructor(client, {
+        name = null,
+        description = null,
+        customId = null,
+        options = [],
+        disabled = false,
+        dirname = null,
+        IntChannel = null,
+        cooldown = 5000,
+        enabled = true
+    }) {
+        super(client, {
+            id: customId,
+            type: "MESSAGE",
+            application_id: client.application.id,
+            guild_id: client.guild.id,
+            name: name,
+            description: description,
+            options: options,
+            default_permission: false,
+        }, client.guild, client.guild.id);
+        this.client = client;
+        this.props = {
+            name,
+            dirname,
+            IntChannel,
+            cooldown,
+            enabled,
+            isconst
+        };
+        this.label = label;
+        this.customId = customId;
+        this.style = style;
+        this.emoji = emoji;
+        this.url = url;
+        this.disabled = disabled;
+        this.perms = [];
+    }
+    /**
+     * 
+     * @param {Tantoony} client "Extenden class for this bot"
+     * @param {MessageContextMenuInteraction} interaction "the response"
+     * @param data "USEFUL!"
+     */
+    async run(client, interaction, data) { }
+}
 class PrefixCommand {
+    /**
+     * @param {Tantoony} client
+     */
     constructor(client, {
         name = null,
         description = "Açıklama Belirtilmemiş",
@@ -256,6 +358,48 @@ class PrefixCommand {
             cooldown
         };
     }
+    /**
+     * 
+     * @param {Tantoony} client "Extenden class for this bot"
+     * @param {Message} message "the message"
+     * @param {string[]} args "USEFUL!"
+     * @param data "USEFUL!!!!!"
+     */
+    async run(client, message, args, data) {
+        return;
+    }
+
+    load(props) {
+        this.client.responders.set(`dot:${this.name}`, props);
+    }
+}
+
+module.exports = {
+    ButtonCommand,
+    PrefixCommand,
+    SlashCommand,
+    MenuCommand,
+    AppUserCommand,
+    AppMessageCommand,
+    ClientEvent
+}
+
+
+function dateTimePad(value, digits) {
+    let number = value
+    while (number.toString().length < digits) {
+        number = "0" + number
+    }
+    return number;
+}
+function format(tDate) {
+    return (tDate.getFullYear() + "-" +
+        dateTimePad((tDate.getMonth() + 1), 2) + "-" +
+        dateTimePad(tDate.getDate(), 2) + " " +
+        dateTimePad(tDate.getHours(), 2) + ":" +
+        dateTimePad(tDate.getMinutes(), 2) + ":" +
+        dateTimePad(tDate.getSeconds(), 2) + "." +
+        dateTimePad(tDate.getMilliseconds(), 3))
 }
 
 exports.models = {
@@ -267,7 +411,7 @@ exports.models = {
             value: String,
             deleted: Boolean
         })),
-        guard_exeption: model("guard_exeption", new Schema({
+        exep: model("guard_exeption", new Schema({
             _id: Types.ObjectId,
             userId: String,
             executor: String,
@@ -289,15 +433,15 @@ exports.models = {
             reason: String,
             created: Date,
             inbox: Array
-        }, { _id: false }))
-    },
-    data: {
-        cmd_perms: model("data_cnd_perms", new Schema({
+        }, { _id: false })),
+        cmd_perms: model("cnd_perms", new Schema({
             _id: Types.ObjectId,
             id: String,
             type: String,
             permission: Boolean
-        })),
+        }))
+    },
+    data: {
         roles: model("data_roles", new Schema({
             _id: Types.ObjectId,
             roleId: String,
@@ -459,16 +603,6 @@ exports.models = {
         })),
     }
 }
-
-exports.CMD = {
-    ButtonCommand,
-    PrefixCommand,
-    SlashCommand,
-    MenuCommand,
-    UserCommand,
-    ClientEvent
-}
-
 
 exports.fuctions = {
     comparedate(date) {

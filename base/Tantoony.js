@@ -10,6 +10,8 @@ class Tantoony extends Client {
             this.login(process.env[this.config.vars[name]]);
         })();
         this.mongoLogin();
+        this.models = require('./utils').models;
+        this.func = require('./utils').fuctions;
         this.handler = new (require('./handler'))(this);
         this.responders = new Collection();
         this.cmdCoodown = new Object();
