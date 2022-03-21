@@ -5,12 +5,12 @@ class Tantoony extends Client {
         this.name = name;
         this.config = require('./config');
         this.log = require("./utils").log;
-        this.handler = new (require('./handler'))(this);
         (() => {
             require('dotenv').config({ path: __dirname + '/.env' });
             this.login(process.env[this.config.vars[name]]);
         })();
         this.mongoLogin();
+        this.handler = new (require('./handler'))(this);
         this.responders = new Collection();
         this.cmdCoodown = new Object();
         this.leaves = new Map();

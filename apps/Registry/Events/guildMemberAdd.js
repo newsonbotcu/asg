@@ -1,10 +1,13 @@
 const low = require("lowdb");
 const { stripIndents } = require('common-tags');
+const { Types } = require("../../../base/utils");
 
-class GuildMemberAdd {
-
+class GuildMemberAdd extends Types.ClientEvent {
     constructor(client) {
-        this.client = client;
+        super(client, {
+            name: "GuildMemberAdd",
+            audit: "BOT_ADD"
+        })
     }
 
     async run(member) {
@@ -56,7 +59,7 @@ class GuildMemberAdd {
         const pointed = client.config.tag.some(t => member.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
         if (registered) await member.setNickname(`${pointed} ${registered.name} | ${registered.age}`).catch(e => console.error);
         if (client.config.tag.some(t => member.user.username.includes(t))) await member.roles.add(roles.get("taglı").value());
-        
+
         if (utils.get("forbidden").value().some(tag => member.user.username.includes(tag))) return await member.roles.add([roles.get("forbidden").value(), roles.get("karantina").value()]);
         const pJail = await client.models.jail.findOne({ _id: member.user.id });
         if (pJail) {
@@ -67,7 +70,7 @@ class GuildMemberAdd {
             }
         }
         if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add([roles.get("suspicious").value(), roles.get("karantina").value()]);
-        
+
         if (registered && !utils.get("taglıAlım").value()) return await member.roles.add(roles.get(registered.sex).value());
         await member.roles.add(roles.get("welcome").value());
         await member.guild.channels.cache.get(channels.get("welcome").value()).send(stripIndents`

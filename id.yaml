@@ -1,0 +1,33 @@
+roller: |
+  member
+  erkek
+  kız
+  muted
+  guest
+  prisoner
+  suspicious
+  forbidden
+  reklamcı
+
+key_config:
+  _id: mongoId
+  type: role | channel | emoji | other
+  name: string
+  key: string
+  value: string
+
+guard_exeption:
+  _id: mongoId
+  user: userId
+  case: auditType
+  until: date
+  created: date
+
+registry:
+  _id: mongoId
+  user: userId
+  executor: userId
+  gender: male | female
+  created: date
+  gone: null | date
+

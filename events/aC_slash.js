@@ -1,5 +1,5 @@
-const { CliEvent } = require('../base/utils');
-class SlashHandler extends CliEvent {
+const { Types } = require('../base/utils');
+class SlashHandler extends Types.ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;
