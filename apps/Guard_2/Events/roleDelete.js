@@ -1,7 +1,7 @@
 const children = require('child_process');
 const pm2 = require('pm2');
-const { CliEvent } = require('../../../base/utils');
-class RoleDelete extends CliEvent {
+const { ClientEvent } = require('../../../base/utils');
+class RoleDelete extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

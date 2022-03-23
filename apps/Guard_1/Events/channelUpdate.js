@@ -1,7 +1,10 @@
-const { CliEvent } = require('../../../base/utils');
-class ChannelUpdate extends CliEvent {
+const { ClientEvent } = require('../../../base/utils');
+class ChannelUpdate extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "channelUpdate",
+            audit: "CHANNEL_UPDATE"
+        });
         this.client = client;
     }
     async run(oldChannel, curChannel) {

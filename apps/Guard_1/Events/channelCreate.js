@@ -1,5 +1,5 @@
-const { CliEvent } = require('../../../base/utils');
-class ChannnelCreate extends CliEvent {
+const { ClientEvent } = require('../../../base/utils');
+class ChannnelCreate extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

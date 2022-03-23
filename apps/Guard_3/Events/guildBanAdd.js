@@ -1,5 +1,5 @@
-const { CliEvent } = require('../../../base/utils');
-class GuildBanAdd extends CliEvent {
+const { ClientEvent } = require('../../../base/utils');
+class GuildBanAdd extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

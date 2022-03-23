@@ -1,5 +1,5 @@
-const { CliEvent } = require('../../../base/utils');
-class RoleCreate extends CliEvent {
+const { ClientEvent } = require('../../../base/utils');
+class RoleCreate extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

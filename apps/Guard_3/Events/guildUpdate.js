@@ -1,6 +1,6 @@
 const request = require('request');
-const { CliEvent } = require('../../../base/utils');
-class GuildUpdate extends CliEvent {
+const { ClientEvent } = require('../../../base/utils');
+class GuildUpdate extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

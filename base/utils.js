@@ -7,9 +7,6 @@ const { Schema, model, Types } = require('mongoose');
 const Tantoony = require('./Tantoony');
 
 class ClientEvent {
-    /**
-     * @param {Tantoony} client
-     */
     constructor(client, {
         name = null,
         allow = [],
@@ -53,14 +50,11 @@ class ClientEvent {
     }
 
     async mount() {
-        client.models.exep.findOne({ user: this.audit.executor.id, type: "overwrite", effect: "channel" });
+        client.models.exep.find({ user: this.audit.executor.id, type: "overwrite", effect: "channel" });
     }
 }
 
 class SlashCommand extends ApplicationCommand {
-    /**
-     * @param {Tantoony} client
-     */
     constructor(client, {
         name = null,
         description = null,
@@ -117,9 +111,6 @@ class SlashCommand extends ApplicationCommand {
 
 }
 class ButtonCommand extends MessageButton {
-    /**
-     * @param {Tantoony} client
-     */
     constructor(client, {
         name = null,
         label = null,
@@ -181,9 +172,6 @@ class ButtonCommand extends MessageButton {
 }
 
 class MenuCommand extends MessageSelectMenu {
-    /**
-     * @param {Tantoony} client
-     */
     constructor(client, {
         custom_id = null,
         options = [],
@@ -214,9 +202,6 @@ class MenuCommand extends MessageSelectMenu {
 }
 
 class AppUserCommand extends ApplicationCommand {
-    /**
-     * @param {Tantoony} client
-     */
     constructor(client, {
         name = null,
         description = null,
@@ -265,9 +250,6 @@ class AppUserCommand extends ApplicationCommand {
 }
 
 class AppMessageCommand extends ApplicationCommand {
-    /**
-     * @param {Tantoony} client
-     */
     constructor(client, {
         name = null,
         description = null,
@@ -315,9 +297,6 @@ class AppMessageCommand extends ApplicationCommand {
     async run(client, interaction, data) { }
 }
 class PrefixCommand {
-    /**
-     * @param {Tantoony} client
-     */
     constructor(client, {
         name = null,
         description = "Açıklama Belirtilmemiş",
@@ -403,205 +382,159 @@ function format(tDate) {
 }
 
 exports.models = {
-    conf: {
-        key_config: model("key_config", new Schema({
-            _id: Types.ObjectId,
-            type: String,
-            name: String,
-            value: String,
-            deleted: Boolean
-        })),
-        exep: model("guard_exeption", new Schema({
-            _id: Types.ObjectId,
-            userId: String,
-            executor: String,
-            case: String,
-            audit: String,
-            event: String,
-            count: Number,
-            until: Date,
-            created: Date,
-            queued: Boolean
-        })),
-        membership: model("membership", new Schema({
-            _id: String,
-            records: Array,
-            roles: Array
-        }, { _id: false })),
-        afk_inbox: model("afk_inbox", new Schema({
-            _id: String,
-            reason: String,
-            created: Date,
-            inbox: Array
-        }, { _id: false })),
-        cmd_perms: model("cnd_perms", new Schema({
-            _id: Types.ObjectId,
-            id: String,
-            type: String,
-            permission: Boolean
-        }))
-    },
-    data: {
-        roles: model("data_roles", new Schema({
-            _id: Types.ObjectId,
-            roleId: String,
-            name: String,
-            color: String,
-            hoist: Boolean,
-            mentionable: Boolean,
-            rawPosition: Number,
-            bitfield: Number,
-            aliases: Array
-        })),
-        overwrites: model("data_overwrites", new Schema({
-            _id: Types.ObjectId,
-            channel: String,
-            subjecType: String,
-            subjectId: String,
-            allow: Array,
-            deny: Array
-        })),
-        category: model("data_categories", new Schema({
-            _id: String,
-            name: String,
-            position: Number,
-            children: Array
-        }, { _id: false })),
-        textChannel: model("data_textChannels", new Schema({
-            _id: String,
-            name: String,
-            nsfw: Boolean,
-            parentID: String,
-            position: Number,
-            rateLimit: Number
-        }, { _id: false })),
-        voiceChannels: model('data_voiceChannels', new Schema({
-            _id: String,
-            name: String,
-            bitrate: Number,
-            parentID: String,
-            position: Number
-        }, { _id: false }))
-    },
-    mod: {
-        ban: model('mod_ban', new Schema({
-            _id: String,
-            executor: String,
-            reason: String,
-            perma: Boolean,
-            until: Number,
-            note: String,
-            created: Date,
-            options: Object
-        }, { _id: false })),
-        cmute: model('mod_cmute', new Schema({
-            _id: String,
-            reason: String,
-            executor: String,
-            duration: Number,
-            until: Date,
-            created: Date,
-            note: String
-        }, { _id: false })),
-        vmute: model('mod_vmute', new Schema({
-            _id: String,
-            reason: String,
-            executor: String,
-            duration: Number,
-            until: Date,
-            created: Date,
-            note: String
-        }, { _id: false })),
-        jail: model('mod_jail', new Schema({
-            _id: String,
-            executor: String,
-            reason: String,
-            roles: Array,
-            type: String,
-            duration: Number,
-            note: String,
-            created: Date
-        }, { _id: false })),
-        penal: model('mod_penal', new Schema({
-            _id: Types.ObjectId,
-            userId: String,
-            executor: String,
-            reason: String,
-            type: String,
-            extra: Array,
-            note: String,
-            until: Date,
-            created: Date
-        })),
-    },
-    logs: {
-        cmd: model("log_cmd", new Schema({
-            _id: Types.ObjectId,
-            cmd: String,
-            executorId: String,
-            args: String,
-            resp: String
-        })),
-        action: model("log_action", new Schema({
-            _id: Types.ObjectId,
-            auditId: String,
-            type: String,
-            target: String,
-            targetId: String,
-            targetType: String,
-            action: String,
-            actionType: String,
-            extra: Object,
-            reason: String,
-            data: Object,
-            executorId: String,
-            changes: Array,
-            created: Date
-        })),
-        voice: model("log_voice", new Schema({
-            _id: Types.ObjectId,
-            userId: String,
-            channelId: String,
-            connected: Boolean,
-            status: Array,
-            created: Date
-        })),
-        nick: model("log_nick", new Schema({
-            _id: Types.ObjectId,
-            userId: String,
-            nick: String,
-            claimer: String,
-            created: Date
-        })),
-        warp: model("log_warp", new Schema({
-            _id: Types.ObjectId,
-            user: String,
-            job: String,
-            data: String,
-            created: Date
-        })),
-        inv: model("log_inv", new Schema({
-            _id: Types.ObjectId,
-            inviter: String,
-            invited: String,
-            created: Date,
-            firstTime: Boolean
-        })),
-        insult: model("log_insult", new Schema({
-            _id: Types.ObjectId,
-            author: String,
-            message: String,
-            created: Date
-        })),
-        registry: model("log_registry", new Schema({
-            _id: Types.ObjectId,
-            user: String,
-            executor: String,
-            gender: String,
-            created: Date,
-            gone: Date
-        })),
-    }
+    key_config: model("key_config", new Schema({
+        _id: Types.ObjectId,
+        type: String,
+        name: String,
+        value: String,
+        deleted: Boolean
+    })),
+    exep: model("guard_exeption", new Schema({
+        _id: Types.ObjectId,
+        userId: String,
+        executor: String,
+        case: String,
+        audit: String,
+        event: String,
+        count: Number,
+        until: Date,
+        created: Date,
+        queued: Boolean
+    })),
+    membership: model("membership", new Schema({
+        _id: String,
+        records: Array,
+        roles: Array
+    }, { _id: false })),
+    afk_inbox: model("afk_inbox", new Schema({
+        _id: String,
+        reason: String,
+        created: Date,
+        inbox: Array
+    }, { _id: false })),
+    cmd_perms: model("cnd_perms", new Schema({
+        _id: Types.ObjectId,
+        id: String,
+        type: String,
+        permission: Boolean
+    })),
+    roles: model("data_roles", new Schema({
+        _id: Types.ObjectId,
+        roleId: String,
+        name: String,
+        color: String,
+        hoist: Boolean,
+        mentionable: Boolean,
+        rawPosition: Number,
+        bitfield: Number,
+        aliases: Array
+    })),
+    overwrites: model("data_overwrites", new Schema({
+        _id: Types.ObjectId,
+        channel: String,
+        subjecType: String,
+        subjectId: String,
+        allow: Array,
+        deny: Array
+    })),
+    category: model("data_categories", new Schema({
+        _id: String,
+        name: String,
+        position: Number,
+        children: Array
+    }, { _id: false })),
+    textChannel: model("data_textChannels", new Schema({
+        _id: String,
+        name: String,
+        nsfw: Boolean,
+        parentID: String,
+        position: Number,
+        rateLimit: Number
+    }, { _id: false })),
+    voiceChannels: model('data_voiceChannels', new Schema({
+        _id: String,
+        name: String,
+        bitrate: Number,
+        parentID: String,
+        position: Number
+    }, { _id: false })),
+    penal: model('penalty', new Schema({
+        _id: Types.ObjectId,
+        userId: String,
+        executor: String,
+        reason: String,
+        type: String,
+        extra: Array,
+        note: String,
+        until: Date,
+        created: Date
+    })),
+    cmd: model("log_cmd", new Schema({
+        _id: Types.ObjectId,
+        cmd: String,
+        executorId: String,
+        args: String,
+        resp: String
+    })),
+    action: model("log_action", new Schema({
+        _id: Types.ObjectId,
+        auditId: String,
+        type: String,
+        target: String,
+        targetId: String,
+        targetType: String,
+        action: String,
+        actionType: String,
+        extra: Object,
+        reason: String,
+        data: Object,
+        executorId: String,
+        changes: Array,
+        created: Date
+    })),
+    voice: model("log_voice", new Schema({
+        _id: Types.ObjectId,
+        userId: String,
+        channelId: String,
+        connected: Boolean,
+        status: Array,
+        created: Date
+    })),
+    nick: model("log_nick", new Schema({
+        _id: Types.ObjectId,
+        userId: String,
+        nick: String,
+        claimer: String,
+        created: Date
+    })),
+    warp: model("log_warp", new Schema({
+        _id: Types.ObjectId,
+        user: String,
+        job: String,
+        data: String,
+        created: Date
+    })),
+    inv: model("log_inv", new Schema({
+        _id: Types.ObjectId,
+        inviter: String,
+        invited: String,
+        created: Date,
+        firstTime: Boolean
+    })),
+    insult: model("log_insult", new Schema({
+        _id: Types.ObjectId,
+        author: String,
+        message: String,
+        created: Date
+    })),
+    registry: model("log_registry", new Schema({
+        _id: Types.ObjectId,
+        user: String,
+        executor: String,
+        gender: String,
+        created: Date,
+        gone: Date
+    }))
 }
 
 exports.fuctions = {

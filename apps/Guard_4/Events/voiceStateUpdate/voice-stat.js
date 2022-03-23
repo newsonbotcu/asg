@@ -2,8 +2,8 @@ const { comparedate } = require('../../../../HELPERS/functions');
 const VoiceRecords = require('../../../../MODELS/StatUses/stat_voice');
 const vmutes = require('../../../../MODELS/Moderation/mod_vmute');
 const channelXp = require('../../../../MODELS/Economy/xp_channel');
-const { CliEvent } = require('../../../../base/utils');
-class VoiceStateUpdate extends CliEvent {
+const { ClientEvent } = require('../../../../base/utils');
+class VoiceStateUpdate extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

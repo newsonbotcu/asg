@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const { CliEvent } = require('../../../base/utils');
-class RoleUpdate extends CliEvent {
+const { ClientEvent } = require('../../../base/utils');
+class RoleUpdate extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

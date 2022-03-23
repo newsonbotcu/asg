@@ -1,7 +1,7 @@
-const { CliEvent } = require('../../../../base/utils');
+const { ClientEvent } = require('../../../../base/utils');
 const { CronJob } = require('cron');
 
-class ControlCmute extends CliEvent {
+class ControlCmute extends ClientEvent {
     constructor(client) {
         super(client);
         this.client = client;

@@ -1,0 +1,31 @@
+const { ClientEvent } = require('../base/utils');
+class EmitRunMuteV extends ClientEvent {
+    constructor(client) {
+        super(client, {
+            name: "vmute"
+        });
+        this.client = client;
+        this.data = this.loadMarks();
+    }
+    async run(targetId, executorId, reason, duration, note) {
+        const member = this.client.guild.members.cache.get(targetId);
+        const voice = member.voice;
+        if (voice && voice.channel) await voice.setMute(true, reason);
+        await this.client.models.penal.create({
+            userId: targetId,
+            executor: executorId,
+            reason,
+            type: "voice mute",
+            note,
+            until: require('moment')().add(duration),
+            created: new Date()
+        });
+    }
+}
+
+// bu kod yazılırken zeze sanal sex yaptı ve kado kızla dmde konuşmaya gitti
+// selam ben kado sanal sexe önem veren sanala giden bir kişiyim.
+// selam ben tantoony moment docsa bakarken
+module.exports = EmitRunMuteV;
+// amk zeze yapma şunu
+// (eline kuvvet)
