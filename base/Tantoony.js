@@ -4,7 +4,7 @@ class Tantoony extends Client {
         super(options);
         this.name = name;
         this.config = require('./config');
-        this.log = require("./utils").log;
+        this.log = require("./utils").fuctions.log;
         (() => {
             require('dotenv').config({ path: __dirname + '/.env' });
             this.login(process.env[this.config.vars[name]]);

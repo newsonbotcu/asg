@@ -1,5 +1,5 @@
 const { ClientEvent } = require('../base/utils');
-class SlashCommandCreate extends ClientEvent {
+class MenuCommandCreate extends ClientEvent {
     constructor(client) {
         super(client, {
             name: "interactionCreate"
@@ -9,11 +9,12 @@ class SlashCommandCreate extends ClientEvent {
     }
     async run(interaction) {
         if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
-        if (!interaction.isCommand()) return;
+        if (!interaction.isMessageComponent()) return;
+        if (!interaction.isButton()) return;
         if (interaction.isContextMenu()) return;
-        if (interaction.targetType) return;
-        if (client.responders.has(`slash:${interaction.commandName}`)) {
-            cmd = client.responders.get(`slash:${interaction.commandName}`);
+        if (interaction.targetType !== "USER") return;
+        if (client.responders.has(`menu:${interaction.commandName}`)) {
+            cmd = client.responders.get(`menu:${interaction.commandName}`);
         } else return;
         if (!cmd.props.enabled) return await interaction.reply(`Bu komut şuan için **devredışı**`, {
             ephemeral: true
@@ -38,4 +39,4 @@ class SlashCommandCreate extends ClientEvent {
     }
 }
 
-module.exports = SlashCommandCreate;
+module.exports = MenuCommandCreate;

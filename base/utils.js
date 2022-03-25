@@ -27,7 +27,7 @@ class ClientEvent {
 
     loadMarks(type) {
         this.audit = client.guild.fetchAuditLogs({ type: audit }).then(logs => logs.entries.first());
-        this.client.models.marked_ids.find(type ? { type } : {}).then(docs => {
+        this.client.models.key_config.find(type ? { type } : {}).then(docs => {
             docs.forEach(doc => {
                 switch (doc.type) {
                     case "ROLE":
@@ -59,12 +59,12 @@ class SlashCommand extends ApplicationCommand {
         name = null,
         description = null,
         customId = null,
-        options = [],
         disabled = false,
         dirname = null,
-        IntChannel = null,
-        cooldown = 5000,
-        enabled = true
+        intChannel = null,
+        cooldown = new Map(),
+        enabled = true,
+        time = 3000
     }) {
         super(client, {
             id: customId,
@@ -73,19 +73,19 @@ class SlashCommand extends ApplicationCommand {
             guild_id: client.guild.id,
             name: name,
             description: description,
-            options: options,
+            options: this.options,
             default_permission: false,
         }, client.guild, client.guild.id);
         this.client = client;
         this.props = {
             name,
             dirname,
-            IntChannel,
+            intChannel,
             cooldown,
             enabled,
-            isconst
+            isconst,
+            time
         };
-        this.label = label;
         this.customId = customId;
         this.style = style;
         this.emoji = emoji;
@@ -121,7 +121,7 @@ class ButtonCommand extends MessageButton {
         disabled = false,
         isconst = false,
         dirname = null,
-        IntChannel = null,
+        intChannel = null,
         cooldown = 5000,
         enabled = true
     }) {
@@ -138,7 +138,7 @@ class ButtonCommand extends MessageButton {
             name,
             type,
             dirname,
-            IntChannel,
+            intChannel,
             cooldown,
             enabled,
             isconst
@@ -209,7 +209,7 @@ class AppUserCommand extends ApplicationCommand {
         options = [],
         disabled = false,
         dirname = null,
-        IntChannel = null,
+        intChannel = null,
         cooldown = 5000,
         enabled = true
     }) {
@@ -227,7 +227,7 @@ class AppUserCommand extends ApplicationCommand {
         this.props = {
             name,
             dirname,
-            IntChannel,
+            intChannel,
             cooldown,
             enabled,
             isconst
@@ -257,7 +257,7 @@ class AppMessageCommand extends ApplicationCommand {
         options = [],
         disabled = false,
         dirname = null,
-        IntChannel = null,
+        intChannel = null,
         cooldown = 5000,
         enabled = true
     }) {
@@ -275,7 +275,7 @@ class AppMessageCommand extends ApplicationCommand {
         this.props = {
             name,
             dirname,
-            IntChannel,
+            intChannel,
             cooldown,
             enabled,
             isconst
@@ -464,8 +464,7 @@ exports.models = {
         executor: String,
         reason: String,
         type: String,
-        extra: Array,
-        note: String,
+        extras: Array,
         until: Date,
         created: Date
     })),
