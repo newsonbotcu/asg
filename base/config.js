@@ -25,8 +25,8 @@ module.exports = {
         name: "XXXXXXXXXXXXXXXX",
         type: "LISTENING"
     },
-    tag: [],
-    extag: 'XXXXXXXXXXXXXXXX',
+    tags: [],
+    untag: 'XXXXXXXXXXXXXXXX',
     dis: 'XXXXXXXXXXXXXXXX',
     vars: {
         Moderator: "XXXXXXXXXXXXXXXX",

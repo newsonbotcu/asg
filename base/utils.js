@@ -538,6 +538,8 @@ exports.models = {
         _id: Types.ObjectId,
         user: String,
         executor: String,
+        name: String,
+        age: Number,
         gender: String,
         created: Date,
         gone: Date

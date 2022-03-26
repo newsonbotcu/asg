@@ -43,8 +43,10 @@ class GuildMemberAdd extends ClientEvent {
             isFirst: !first
         });
         client.invites = await member.guild.invites.fetch();
+        const tag = client.config.tags.some(tag => member.user.username.includes(tag)) ? client.config.tags[0] : client.config.untag;
         const penals = await client.models.penal.find({ userId: member.user.id });
         penals = penals.filter((penal) => penal.until.getTime() > Date.now());
+        const recovery = await client.models.registry.find({ user: member.user.id });
         for (let index = 0; index < penals.length; index++) {
             const penal = penals[index];
             switch (penal.type) {
@@ -56,15 +58,27 @@ class GuildMemberAdd extends ClientEvent {
                             const rData = await client.models.roles.find({ aliases: roleId });
                             addRole.push(rData.roleId);
                         });
-                        const recovery = await client.models.registry.find({ user: member.user.id });
                         if (recovery.length > 0) {
                             const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
-
+                            if (record) await member.edit({
+                                nick: `${tag} ${record.name} | ${record.age}`,
+                                roles: this.data.roles[record.gender].concat(this.data.roles["member"])
+                            }, "Önceden Kayıtlıdır");
+                            return;
                         }
                     } else {
-                        return await member.roles.add(this.data.mash(this.data.roles["prisoner"], this.data.roles["karantina"]));
+                        if (recovery.length > 0) {
+                            const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
+                            if (record) await member.edit({
+                                nick: `${tag} ${record.name} | ${record.age}`,
+                                roles: this.data.roles["prisoner"].concat(this.data.roles["karantina"])
+                            }, "Önceden Kayıtlıdır, rol verilmedi.");
+                            return;
+                        }
                     }
-
+                    break;
+                case "CMUTE":
+                    await member.roles.add(this.data.roles["muted"]);
                     break;
 
                 default:
@@ -72,25 +86,15 @@ class GuildMemberAdd extends ClientEvent {
             }
 
         }
-        if (mute) await member.roles.add(this.data.roles["muted"]);
-        const registered = await client.models.members.findOne({ _id: member.user.id });
-        const pointed = client.config.tag.some(t => member.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
-        if (registered) await member.setNickname(`${pointed} ${registered.name} | ${registered.age}`).catch(e => console.error);
-        if (client.config.tag.some(t => member.user.username.includes(t))) await member.roles.add(this.data.roles["taglı"]);
-
-        if (this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) return await member.roles.add([this.data.roles["forbidden"], this.data.roles["karantina"]]);
-        const pJail = await client.models.jail.findOne({ _id: member.user.id });
-        if (pJail) {
-            if ((pJail.reason === "YASAKLI TAG") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
-                await pJails.deleteOne({ _id: member.user.id });
-            } else {
-                return await member.roles.add(this.data.mash(this.data.roles["prisoner"], this.data.roles["karantina"]));
-            }
-        }
-        if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add([this.data.roles["suspicious"], this.data.roles["karantina"]]);
-
-        if (registered && !this.data.other["taglıAlım"]) {
-            return await member.roles.add(this.data.roles["member"]);
+        if (client.config.tags.some(t => member.user.username.includes(t))) await member.roles.add(this.data.roles["taglı"]);
+        if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add(this.data.roles["suspicious"].concat(this.data.roles["karantina"]));
+        if (recovery.length > 0 && !this.data.other["taglıAlım"][0]) {
+            const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
+            if (record) await member.edit({
+                nick: `${tag} ${record.name} | ${record.age}`,
+                roles: this.data.roles[record.gender].concat(this.data.roles["member"])
+            }, "Önceden Kayıtlıdır");
+            return;
         }
         await member.roles.add(this.data.roles["welcome"]);
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
