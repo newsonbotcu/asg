@@ -1,13 +1,15 @@
 const low = require("lowdb");
 const { stripIndents } = require('common-tags');
-const { Types } = require("../../../base/utils");
+const { ClientEvent } = require("../../../base/utils");
 
-class GuildMemberAdd extends Types.ClientEvent {
+class GuildMemberAdd extends ClientEvent {
     constructor(client) {
         super(client, {
-            name: "GuildMemberAdd",
+            name: "guildMemberAdd",
             audit: "BOT_ADD"
-        })
+        });
+        this.client = client;
+        this.data = this.loadMarks();
     }
 
     async run(member) {
@@ -15,12 +17,10 @@ class GuildMemberAdd extends Types.ClientEvent {
         if (member.guild.id !== client.config.server) return;
         const utils = await low(client.adapters('utils'));
         const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
         if (member.user.bot) {
             const entry = await member.guild.fetchAuditLogs({ type: "BOT_ADD" }).then(logs => logs.entries.first());
             if (client.config.owner === entry.executor.id) {
-                await member.guild.channels.cache.get(channels.get("guard").value()).send(`${emojis.get("accepted_bot").value()} ${client.owner} Tarafından ${member} botu başarıyla eklendi.`);
+                await member.guild.channels.cache.get(this.data.channels["guard"]).send(`${this.data.emojis["accepted_bot"]} ${client.owner} Tarafından ${member} botu başarıyla eklendi.`);
                 await member.roles.add(roles.get("bots").value());
             } else {
                 await member.kick("Korundu");
@@ -73,8 +73,8 @@ class GuildMemberAdd extends Types.ClientEvent {
 
         if (registered && !utils.get("taglıAlım").value()) return await member.roles.add(roles.get(registered.sex).value());
         await member.roles.add(roles.get("welcome").value());
-        await member.guild.channels.cache.get(channels.get("welcome").value()).send(stripIndents`
-        ${emojis.get("hg").value()} Aramıza hoş geldin ${member}, eğer müsaitsen sunucumuza kayıt olmak için ses kanallarından birine girip bir yetkiliye ulaşabilirsin.       
+        await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
+        ${this.data.emojis["hg"]} Aramıza hoş geldin ${member}, eğer müsaitsen sunucumuza kayıt olmak için ses kanallarından birine girip bir yetkiliye ulaşabilirsin.       
        `);
     }
 }

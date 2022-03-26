@@ -22,7 +22,7 @@ class ClientEvent {
             channels: {},
             other: {}
         }
-        this.loadNarks();
+        this.loadMarks();
     }
 
     loadMarks(type) {

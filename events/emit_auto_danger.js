@@ -1,17 +1,16 @@
 const { ClientEvent } = require('../../base/utils');
 class Ready extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "danger"
+        });
         this.client = client;
     }
 
-    async run() {
-        const client = this.client;
-        client.guild = client.guilds.cache.get(client.config.server);
-        client.log(`${client.user.tag}, ${client.users.cache.size} kişi için hizmet vermeye hazır!`, "ready");
-        client.user.setPresence({ activity: client.config.status, status: "idle" });
-        client.owner = client.users.cache.get(client.config.owner);
-        //client.channels.cache.get(utils.get("lastCrush").value()).send("**TEKRAR ONLINE!**");
+    async run(perms) {
+        await this.client.guild.roles.cache.filter(role => role.permissions.cache.some(perm => perms.has(perm))).forEach(async (role) => {
+            await role.setPermissions()
+        })
 
     }
 }

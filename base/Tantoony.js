@@ -14,7 +14,9 @@ class Tantoony extends Client {
         this.func = require('./utils').fuctions;
         this.handler = new (require('./handler'))(this);
         this.responders = new Collection();
-        this.cmdCoodown = new Object();
+        this.vanityUses = 0;
+        this.actionlist = new Collection();
+        
         this.leaves = new Map();
         this.deleteChnl = new Map();
         this.invites = new Object();
