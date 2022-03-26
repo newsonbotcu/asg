@@ -1,6 +1,6 @@
 const { stripIndents } = require('common-tags');
 const { ClientEvent } = require("../../../base/utils");
-
+const moment = require('moment');
 class GuildMemberAdd extends ClientEvent {
     constructor(client) {
         super(client, {
@@ -35,12 +35,12 @@ class GuildMemberAdd extends ClientEvent {
             if (invite) inviter = invite.inviter.id;
         });
         const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
-        const first = docs.length === 0;
+        const first = docs.length > 0;
         await client.models.inv.create({
             inviter: inviter,
             invited: member.user.id,
             created: new Date(),
-            isFirst: first
+            isFirst: !first
         });
         client.invites = await member.guild.invites.fetch();
         const penals = await client.models.penal.find({ userId: member.user.id });
@@ -52,10 +52,15 @@ class GuildMemberAdd extends ClientEvent {
                     if ((penal.reason === "FORBIDDEN") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
                         await client.models.penal.updateOne({ _id: penal._id }, { until: Date.now() });
                         let addRole = [];
-                        penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach((roleId) => {
-                            const rDData = await client.models.roles.find({ aliases: roleId });
-                            addRole.push(r)
+                        await penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach(async (roleId) => {
+                            const rData = await client.models.roles.find({ aliases: roleId });
+                            addRole.push(rData.roleId);
                         });
+                        const recovery = await client.models.registry.find({ user: member.user.id });
+                        if (recovery.length > 0) {
+                            const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
+
+                        }
                     } else {
                         return await member.roles.add(this.data.mash(this.data.roles["prisoner"], this.data.roles["karantina"]));
                     }

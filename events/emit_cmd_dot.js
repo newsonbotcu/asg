@@ -1,5 +1,5 @@
 const { ClientEvent } = require('../base/utils');
-class PrefixCommandCreate extends ClientEvent {
+class DotCommandCreate extends ClientEvent {
     constructor(client) {
         super(client, {
             name: "message"
@@ -13,8 +13,8 @@ class PrefixCommandCreate extends ClientEvent {
         let command = message.content.split(' ')[0].slice(client.config.prefix.length);
         let cmd;
         let args = message.content.split(' ').slice(1);
-        if (client.commands.has(command)) {
-            cmd = client.commands.get(command);
+        if (client.responders.has(`dot:${interaction.commandName}`)) {
+            cmd = client.responders.get(`dot:${interaction.commandName}`);
         } else if (client.aliases.has(command)) {
             cmd = client.commands.get(client.aliases.get(command));
         } else return;
@@ -55,4 +55,4 @@ class PrefixCommandCreate extends ClientEvent {
     }
 }
 
-module.exports = PrefixCommandCreate;
+module.exports = DotCommandCreate;

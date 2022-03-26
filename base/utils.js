@@ -304,7 +304,7 @@ class AppMessageCommand extends ApplicationCommand {
      */
     async run(client, interaction, data) { }
 }
-class PrefixCommand {
+class DotCommand {
     constructor(client, {
         name = null,
         description = "Açıklama Belirtilmemiş",
@@ -363,7 +363,7 @@ class PrefixCommand {
 
 module.exports = {
     ButtonCommand,
-    PrefixCommand,
+    DotCommand,
     SlashCommand,
     MenuCommand,
     AppUserCommand,
@@ -521,7 +521,7 @@ exports.models = {
         data: String,
         created: Date
     })),
-    inv: model("log_inv", new Schema({
+    inv: model("log_invite", new Schema({
         _id: Types.ObjectId,
         inviter: String,
         invited: String,
