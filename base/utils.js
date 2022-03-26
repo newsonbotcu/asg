@@ -20,7 +20,15 @@ class ClientEvent {
             emojis: {},
             roles: {},
             channels: {},
-            other: {}
+            other: {},
+            mash: (...values) => {
+                let temp = [];
+                for (let i = 0; i < values.length; i++) {
+                    const value = values[i];
+                    temp.concat(value);
+                }
+                return temp;
+            }
         }
         this.loadMarks();
     }
@@ -31,16 +39,16 @@ class ClientEvent {
             docs.forEach(doc => {
                 switch (doc.type) {
                     case "ROLE":
-                        this.data.roles[doc._id] = doc.value;
+                        this.data.roles[doc._id] = doc.values;
                         break;
                     case "CHANNEL":
-                        this.data.channels[doc._id] = doc.value;
+                        this.data.channels[doc._id] = doc.values;
                         break;
                     case "EMOJI":
-                        this.data.emojis[doc._id] = doc.value;
+                        this.data.emojis[doc._id] = doc.values;
                         break;
                     case "OTHER":
-                        this.data.other[doc._id] = doc.value;
+                        this.data.other[doc._id] = doc.values;
                         break;
                     default: break;
                 }
@@ -386,7 +394,7 @@ exports.models = {
         _id: Types.ObjectId,
         type: String,
         name: String,
-        value: String,
+        values: Array,
         deleted: Boolean
     })),
     exep: model("guard_exeption", new Schema({
@@ -518,7 +526,7 @@ exports.models = {
         inviter: String,
         invited: String,
         created: Date,
-        firstTime: Boolean
+        isFirst: Boolean
     })),
     insult: model("log_insult", new Schema({
         _id: Types.ObjectId,

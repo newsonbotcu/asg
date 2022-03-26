@@ -1,4 +1,3 @@
-const low = require("lowdb");
 const { stripIndents } = require('common-tags');
 const { ClientEvent } = require("../../../base/utils");
 
@@ -15,13 +14,11 @@ class GuildMemberAdd extends ClientEvent {
     async run(member) {
         const client = this.client;
         if (member.guild.id !== client.config.server) return;
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
         if (member.user.bot) {
             const entry = await member.guild.fetchAuditLogs({ type: "BOT_ADD" }).then(logs => logs.entries.first());
             if (client.config.owner === entry.executor.id) {
                 await member.guild.channels.cache.get(this.data.channels["guard"]).send(`${this.data.emojis["accepted_bot"]} ${client.owner} Tarafından ${member} botu başarıyla eklendi.`);
-                await member.roles.add(roles.get("bots").value());
+                await member.roles.add(this.data.roles["bots"]);
             } else {
                 await member.kick("Korundu");
                 const exeMember = member.guild.members.cache.get(entry.executor.id);
@@ -29,50 +26,68 @@ class GuildMemberAdd extends ClientEvent {
             }
             return;
         }
-        let davetci = {};
-        if (member.guild.vanityURLCode && (utils.get("vanityUses").value() < member.guild.vanityURLUses)) {
-            utils.update("vanityUses", n => vanityURLUses).write();
-            davetci = {
-                username: "ÖZEL URL"
-            };
+        let inviter = "VANITY_URL";
+        if (member.guild.vanityURLCode && (client.vanityUses < member.guild.vanityURLUses)) {
+            client.vanityUses = vanityURLUses;
         }
-        await member.guild.invites.fetch().then(async gInvites => {
+        await member.guild.invites.fetch().then(async (gInvites) => {
             let invite = gInvites.find(inv => inv.uses > client.invites.get(inv.code).uses) || client.invites.find(i => !gInvites.has(i.code));
-            if (invite) {
-                davetci = invite.inviter;
-                const obj = {
-                    user: member.user.id,
-                    created: new Date()
-                };
-                let systeminv = await client.models.invites.findOne({ _id: davetci.id });
-                if (!systeminv) await client.models.invites.create({ _id: davetci.id, records: [] });
-                systeminv = await client.models.invites.findOne({ _id: davetci.id });
-                const dosyam = systeminv.get('records');
-                if (!dosyam.some(entry => entry.user === member.user.id)) await client.models.invites.updateOne({ _id: davetci.id }, { $push: { records: obj } });
-                count = dosyam.length + 1 || 1;
-            }
+            if (invite) inviter = invite.inviter.id;
+        });
+        const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
+        const first = docs.length === 0;
+        await client.models.inv.create({
+            inviter: inviter,
+            invited: member.user.id,
+            created: new Date(),
+            isFirst: first
         });
         client.invites = await member.guild.invites.fetch();
-        const mute = await client.models.cmute.findOne({ _id: member.user.id });
-        if (mute) await member.roles.add(roles.get("muted").value());
+        const penals = await client.models.penal.find({ userId: member.user.id });
+        penals = penals.filter((penal) => penal.until.getTime() > Date.now());
+        for (let index = 0; index < penals.length; index++) {
+            const penal = penals[index];
+            switch (penal.type) {
+                case "JAIL":
+                    if ((penal.reason === "FORBIDDEN") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
+                        await client.models.penal.updateOne({ _id: penal._id }, { until: Date.now() });
+                        let addRole = [];
+                        penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach((roleId) => {
+                            const rDData = await client.models.roles.find({ aliases: roleId });
+                            addRole.push(r)
+                        });
+                    } else {
+                        return await member.roles.add(this.data.mash(this.data.roles["prisoner"], this.data.roles["karantina"]));
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+        if (mute) await member.roles.add(this.data.roles["muted"]);
         const registered = await client.models.members.findOne({ _id: member.user.id });
         const pointed = client.config.tag.some(t => member.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
         if (registered) await member.setNickname(`${pointed} ${registered.name} | ${registered.age}`).catch(e => console.error);
-        if (client.config.tag.some(t => member.user.username.includes(t))) await member.roles.add(roles.get("taglı").value());
+        if (client.config.tag.some(t => member.user.username.includes(t))) await member.roles.add(this.data.roles["taglı"]);
 
-        if (utils.get("forbidden").value().some(tag => member.user.username.includes(tag))) return await member.roles.add([roles.get("forbidden").value(), roles.get("karantina").value()]);
+        if (this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) return await member.roles.add([this.data.roles["forbidden"], this.data.roles["karantina"]]);
         const pJail = await client.models.jail.findOne({ _id: member.user.id });
         if (pJail) {
-            if ((pJail.reason === "YASAKLI TAG") && !utils.get("forbidden").value().some(tag => member.user.username.includes(tag))) {
+            if ((pJail.reason === "YASAKLI TAG") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
                 await pJails.deleteOne({ _id: member.user.id });
             } else {
-                return await member.roles.add([roles.get("prisoner").value(), roles.get("karantina").value()]);
+                return await member.roles.add(this.data.mash(this.data.roles["prisoner"], this.data.roles["karantina"]));
             }
         }
-        if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add([roles.get("suspicious").value(), roles.get("karantina").value()]);
+        if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add([this.data.roles["suspicious"], this.data.roles["karantina"]]);
 
-        if (registered && !utils.get("taglıAlım").value()) return await member.roles.add(roles.get(registered.sex).value());
-        await member.roles.add(roles.get("welcome").value());
+        if (registered && !this.data.other["taglıAlım"]) {
+            return await member.roles.add(this.data.roles["member"]);
+        }
+        await member.roles.add(this.data.roles["welcome"]);
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
         ${this.data.emojis["hg"]} Aramıza hoş geldin ${member}, eğer müsaitsen sunucumuza kayıt olmak için ses kanallarından birine girip bir yetkiliye ulaşabilirsin.       
        `);

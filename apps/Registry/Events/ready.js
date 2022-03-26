@@ -9,12 +9,7 @@ class Ready extends ClientEvent {
         this.client = client;
         this.data = this.loadMarks();
     }
-
-    /**
-     *
-     * @param {Tantoony} client
-     * @returns {Promise<void>}
-     */
+    
     async run() {
         this.client.invites = await this.client.guild.invites.fetch();
         if (client.guild.vanityURLCode) {

@@ -17,14 +17,25 @@ class EmitRunBan extends ClientEvent {
             reason: reason,
             days: clear || 0
         });
+        if (duration === "p") duration = null;
         const docum = await this.client.models.penal.create({
-            userId: userId,
-            executor: executorId,
+            userId: member.user.id,
+            executor: executor,
             reason: reason,
-            type: duration ? "BAN" : "PERMABAN",
             extras: [],
-            until: require('moment')(new Date()).add(duration),
+            type: "BAN",
+            until: require('moment')(new Date()).add(duration || "0s"),
             created: new Date()
+        });
+        if (!duration) await this.client.models.penal.updateOne({ _id: docum._id }, {
+            $push: {
+                extras: [
+                    {
+                        subject: "perma",
+                        data: true
+                    }
+                ]
+            }
         });
         if (note) await this.client.models.penal.updateOne({ _id: docum._id }, {
             $push: {
