@@ -5,10 +5,10 @@ class Ready extends ClientEvent {
             name: "ready"
         });
         this.client = client;
-        this.data = this.loadMarks();
     }
 
     async run() {
+        this.data = this.loadMarks();
         const client = this.client;
         client.guild = client.guilds.cache.get(client.config.server);
         client.owner = client.users.cache.get(client.config.owner);

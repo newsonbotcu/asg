@@ -5,9 +5,9 @@ class EmitRunMuteV extends ClientEvent {
             name: "vmute"
         });
         this.client = client;
-        this.data = this.loadMarks();
     }
     async run(targetId, executorId, reason, duration, note) {
+        this.data = this.loadMarks();
         const member = this.client.guild.members.cache.get(targetId);
         const voice = member.voice;
         if (voice && voice.channel) await voice.setMute(true, reason);

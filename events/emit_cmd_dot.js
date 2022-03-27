@@ -5,9 +5,9 @@ class DotCommandCreate extends ClientEvent {
             name: "message"
         });
         this.client = client;
-        this.data = this.loadMarks();
     }
     async run(message) {
+        this.data = this.loadMarks();
         if (!message.content.startsWith(client.config.prefix)) return;
         if (message.author.bot) return;
         let command = message.content.split(' ')[0].slice(client.config.prefix.length);

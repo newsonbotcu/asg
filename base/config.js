@@ -31,7 +31,6 @@ module.exports = {
     vars: {
         Moderator: "XXXXXXXXXXXXXXXX",
         Registry: "XXXXXXXXXXXXXXXX",
-        Generic: "XXXXXXXXXXXXXXXX",
         Guard_1: "XXXXXXXXXXXXXXXX",
         Guard_2: "XXXXXXXXXXXXXXXX",
         Guard_3: "XXXXXXXXXXXXXXXX",

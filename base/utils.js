@@ -9,11 +9,10 @@ const Tantoony = require('./Tantoony');
 class ClientEvent {
     constructor(client, {
         name = null,
-        allow = [],
         audit = null
     }) {
         this.name = name;
-        this.allow = allow;
+        this.allow = [];
         this.audit = audit;
         this.client = client;
         this.data = {
@@ -30,11 +29,17 @@ class ClientEvent {
                 return temp;
             }
         }
-        this.loadMarks();
+        this.exec();
+    }
+    mount() {
+        let perms = [];
+        this.allow.forEach((except) => {
+
+        })
+        client.models.exep.find({ user: this.audit.executor.id, type: "overwrite", effect: "channel" });
     }
 
-    loadMarks(type) {
-        this.audit = client.guild.fetchAuditLogs({ type: audit }).then(logs => logs.entries.first());
+    exec(...args) {
         this.client.models.key_config.find(type ? { type } : {}).then(docs => {
             docs.forEach(doc => {
                 switch (doc.type) {
@@ -54,12 +59,18 @@ class ClientEvent {
                 }
             });
         });
-        return this.data;
+        if (!this.run) return false;
+        if (this.audit) {
+            this.audit = this.client.guild.fetchAuditLogs({ type: this.audit }).then(logs => logs.entries.first());
+            this.client.models.exep.findOne({ audit: this.audit.action, event: this.name }).then()
+        }
+        try {
+            this.run(...args);
+        } catch (error) {
+            this.client.log(error, this.name);
+        }
     }
 
-    async mount() {
-        client.models.exep.find({ user: this.audit.executor.id, type: "overwrite", effect: "channel" });
-    }
 }
 
 class SlashCommand extends ApplicationCommand {
@@ -407,7 +418,7 @@ exports.models = {
         count: Number,
         until: Date,
         created: Date,
-        queued: Boolean
+        start: Boolean
     })),
     membership: model("membership", new Schema({
         _id: String,

@@ -5,9 +5,9 @@ class EmitRunMuteC extends ClientEvent {
             name: "cmute"
         });
         this.client = client;
-        this.data = this.loadMarks();
     }
     async run(targetId, executorId, reason, duration, note) {
+        this.data = this.loadMarks();
         const member = this.client.guild.members.cache.get(targetId);
         await member.roles.add(this.data.roles["muted"]);
         const docum = await this.client.models.penal.create({

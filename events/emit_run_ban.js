@@ -6,10 +6,10 @@ class EmitRunBan extends ClientEvent {
             name: "ban"
         });
         this.client = client;
-        this.data = this.loadMarks();
     }
 
     async run(userId, executorId, reason, duration, note, clear) {
+        this.data = this.loadMarks();
         const member = await this.client.guild.members.fetch(userId);
         const executor = await this.client.guild.members.fetch(executorId);
         if (executor.roles.highest < member.roles.highest) return;
