@@ -75,7 +75,7 @@ class ChannelUpdate extends ClientEvent {
             });
         }
         const exeMember = curChannel.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Kanal Yenileme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Kanal Yenileme", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı sildi`);
     }
 }

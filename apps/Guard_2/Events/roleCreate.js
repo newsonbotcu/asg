@@ -30,7 +30,7 @@ class RoleCreate extends ClientEvent {
         client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         await role.delete();
         const exeMember = role.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Rol Oluşturma", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Rol Oluşturma", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "ROLE_CREATE", `${role.name} isimli rolü oluşturdu`);
     }
 }

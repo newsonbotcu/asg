@@ -23,7 +23,7 @@ class EmojiCreate extends ClientEvent {
         }
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "create", effect: "emoji" });
         const exeMember = emoji.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Emoji Oluşturma", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Emoji Oluşturma", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "EMOJI_CREATE", `${emoji.name} isimli emojiyi oluşturdu`);
         
     }

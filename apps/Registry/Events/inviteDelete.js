@@ -17,7 +17,7 @@ class InviteDelete {
         if (utils.get("root").value().includes(entry.executor.id)) return;
         const exeMember = invite.guild.members.cache.get(entry.executor.id);
         if (exeMember.roles.cache.has(roles.get("root").value())) return;
-        client.handler.emit("Jail", exeMember, this.client.user.id, "KDE - Davet Silme", "Perma", 1);
+        client.handler.emit("Jail", exeMember, this.client.user.id, "* Davet Silme", "Perma", 1);
         invite.guild.channels.cache.get(channels.get("guard").value()).send(`${emojis.get("davet")} ${exeMember} bir daveti sildi!`);
 
     }

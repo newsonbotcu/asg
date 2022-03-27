@@ -15,7 +15,7 @@ class GuildUpdate extends ClientEvent {
         if (entry.executor.id === client.user.id) return;
         let reasonn;
         const exeMember = curguild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Sunucu Güncelleme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Sunucu Güncelleme", "Perma", 0);
         if (oldGuild.banner !== curGuild.banner) {
             await curGuild.setBanner(oldGuild.bannerURL({size: 4096}));
             reasonn = "Afiş Değiştirme";

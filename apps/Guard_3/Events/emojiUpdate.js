@@ -27,7 +27,7 @@ class EmojiUpdate extends ClientEvent {
             roles: oldEmoji.roles
         }, `${entry.executor.username} Tarafından değiştirilmeye çalışıldı`);
         const exeMember = curEmoji.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Emoji Yenileme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Emoji Yenileme", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "EMOJI_UPDATE", `${oldEmoji.name} isimli emojiyi yeniledi`);
 
     }

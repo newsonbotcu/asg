@@ -37,7 +37,7 @@ class GuildBanRemove extends ClientEvent {
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "unban", effect: "member" });
         await guild.members.ban(user.id, { reason: "Sağ Tık UnBan" });
         const exeMember = guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Sağ Tık UnBan", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Sağ Tık UnBan", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "MEMBER_BAN_REMOVE", `${user.username} isimli kullanıcının banını kaldırdı`);
 
     }

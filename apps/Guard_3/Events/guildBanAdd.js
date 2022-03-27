@@ -35,7 +35,7 @@ class GuildBanAdd extends ClientEvent {
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "ban", effect: "member" });
         await guild.members.unban(user.id, "Sağ Tık Ban");
         const exeMember = guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Sağ Tık Ban", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Sağ Tık Ban", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "MEMBER_BAN_ADD", `${user.username} isimli kullanıcıyı banladı`);
 
     }

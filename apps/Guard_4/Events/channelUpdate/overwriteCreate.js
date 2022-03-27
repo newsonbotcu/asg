@@ -30,7 +30,7 @@ class OverwriteCreate extends ClientEvent {
         client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const overwrits = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
         const exeMember = curChannel.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - İzin Oluşturma", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* İzin Oluşturma", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_OVERWRITE_CREATE", `${oldChannel.name} isimli kanalın izinleriyle oynadı`);
         await curChannel.overwritePermissions(overwrits.overwrites);
     }

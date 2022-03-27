@@ -44,7 +44,7 @@ class GuildMemberUpdate {
             await cur.roles.add(roles["muted"]);
             const exeMember = cur.guild.members.cache.get(entry.executor.id);
             if (exeMember.roles.cache.has(roles["root"])) return;
-            client.handler.emit("Jail", exeMember, this.client.user.id, "KDE - Mute Açma", "Perma", 1);
+            client.handler.emit("Jail", exeMember, this.client.user.id, "* Mute Açma", "Perma", 1);
         };
         const pJail = await client.models.cmute.jail.findOne({ _id: cur.user.id });
         if (pJail && !entry.executor.bot) {
@@ -52,7 +52,7 @@ class GuildMemberUpdate {
             await cur.roles.add(roles["prisoner"]);
             const exeMember = cur.guild.members.cache.get(entry.executor.id);
             if (exeMember.roles.cache.has(roles["root"])) return;
-            client.handler.emit("Jail", exeMember, this.client.user.id, "KDE - Jail Açma", "Perma", 1);
+            client.handler.emit("Jail", exeMember, this.client.user.id, "* Jail Açma", "Perma", 1);
         };
         const role = cur.guild.roles.cache.get(entry.changes[0].new[0].id);
         const perms = ["ADMINISTRATOR", "KICK_MEMBERS", "BAN_MEMBERS", "MANAGE_CHANNELS", "MANAGE_GUILD", "VIEW_AUDIT_LOG", "MANAGE_MESSAGES", "MENTION_EVERYONE", "MUTE_MEMBERS", "DEAFEN_MEMBERS", "MOVE_MEMBERS", "MANAGE_NICKNAMES", "MANAGE_ROLES", "MANAGE_WEBHOOKS", "MANAGE_EMOJIS"];
@@ -61,7 +61,7 @@ class GuildMemberUpdate {
             if (key === '$add') await cur.roles.remove(role);
             if (key === '$remove') await cur.roles.add(role);
             const exeMember = cur.guild.members.cache.get(entry.executor.id);
-            client.handler.emit("Jail", exeMember, this.client.user.id, "KDE - Rol Verme", "Perma", 1);
+            client.handler.emit("Jail", exeMember, this.client.user.id, "* Rol Verme", "Perma", 1);
         }
 
     }

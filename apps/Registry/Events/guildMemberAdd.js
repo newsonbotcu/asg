@@ -44,7 +44,7 @@ class GuildMemberAdd extends ClientEvent {
         });
         client.invites = await member.guild.invites.fetch();
         const tag = client.config.tags.some(tag => member.user.username.includes(tag)) ? client.config.tags[0] : client.config.untag;
-        const penals = await client.models.penal.find({ userId: member.user.id });
+        let penals = await client.models.penal.find({ userId: member.user.id });
         penals = penals.filter((penal) => penal.until.getTime() > Date.now());
         const recovery = await client.models.registry.find({ user: member.user.id });
         for (let index = 0; index < penals.length; index++) {
@@ -96,9 +96,14 @@ class GuildMemberAdd extends ClientEvent {
             }, "Önceden Kayıtlıdır");
             return;
         }
+        const tutor = member.guild.members.cache.get(inviter);
+        const invCnt = await client.models.inv.find({ inviter: inviter, isFirst: true });
         await member.roles.add(this.data.roles["welcome"]);
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
-        ${this.data.emojis["hg"]} Aramıza hoş geldin ${member}, eğer müsaitsen sunucumuza kayıt olmak için ses kanallarından birine girip bir yetkiliye ulaşabilirsin.       
+        ${this.data.emojis["welcome"]} **Hoş Geldin** ${member} <3 
+        ${tutor || "sunucu linki"} senin sayende **${invCnt.length || 0} davet** sayısına ulaştı, seninle beraber **500** kişi olduk!
+        Hesabın <t:${member.user.createdTimestamp}:R> oluşturulmuş, kayıt olmanda herhangi bir sakınca yok.
+        Müsait oldğunda **V. Confirmed** kanallarına katılıp bir yetkiliden seni kayıt etmesini isteyebilirsin.
        `);
     }
 }

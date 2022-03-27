@@ -88,7 +88,7 @@ class ChannelDelete extends ClientEvent {
         await client.models.bc_ovrts.deleteOne({ _id: channel.id });
         await client.models.bc_ovrts.create({ _id: newChannel.id, overwrites: overwritesData.overwrites });
         const exeMember = channel.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Kanal Silme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Kanal Silme", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_DELETE", `${channel.name} isimli kanalı sildi`);
     }
 }

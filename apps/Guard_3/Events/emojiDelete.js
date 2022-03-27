@@ -25,7 +25,7 @@ class EmojiDelete extends ClientEvent {
             reason: `${entry.executor.username} tarafından silinmiştir.`
         });
         const exeMember = emoji.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Emoji Delete", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Emoji Delete", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "EMOJI_DELETE", `${emoji.name} isimli emojiyi sildi`);
     }
 }

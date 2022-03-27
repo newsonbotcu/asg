@@ -31,7 +31,7 @@ class RoleUpdate extends ClientEvent {
         }
         client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const exeMember = curRole.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Rol Güncelleme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Rol Güncelleme", "Perma", 0);
         await client.models.perms.deleteOne({ user: entry.executor.id, type: "update", effect: "role" });
         const data = await client.models.bc_roles.findOne({ _id: curRole.id });
         await curRole.edit({

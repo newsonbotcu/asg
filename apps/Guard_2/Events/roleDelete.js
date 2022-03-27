@@ -23,7 +23,7 @@ class RoleDelete extends ClientEvent {
         if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "role" });
         client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         const exeMember = role.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Rol Silme", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Rol Silme", "Perma", 0);
         const roleData = await client.models.bc_role.findOne({ _id: role.id });
         const newRole = await role.guild.roles.create({
             data: {

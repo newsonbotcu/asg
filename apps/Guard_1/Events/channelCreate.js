@@ -46,7 +46,7 @@ class ChannnelCreate extends ClientEvent {
         client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
         await channel.delete(`${entry.executor.username} Tarafından oluşturulmaya çalışıldı`);
         const exeMember = channel.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "KDE - Kanal Oluşturma", "Perma", 0);
+        client.handler.emit('Jail', exeMember, client.user.id, "* Kanal Oluşturma", "Perma", 0);
         client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_CREATE", `${channel.name} isimli kanalı sildi`);
     }
 }
