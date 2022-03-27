@@ -3,7 +3,7 @@ const {
     ButtonInteraction, SelectMenuInteraction, UserContextMenuInteraction,
     MessageContextMenuInteraction, Message
 } = require('discord.js');
-const { Schema, model, Types } = require('mongoose');
+const { Schema, model, Types, Collection } = require('mongoose');
 const Tantoony = require('./Tantoony');
 
 class ClientEvent {
@@ -11,10 +11,11 @@ class ClientEvent {
         name = null,
         audit = null
     }) {
+        this.client = client;
         this.name = name;
+        this.cooldown = new Collection();
         this.allow = [];
         this.audit = audit;
-        this.client = client;
         this.data = {
             emojis: {},
             roles: {},
@@ -401,6 +402,11 @@ function format(tDate) {
 }
 
 exports.models = {
+    membership: model("membership", new Schema({
+        _id: String,
+        roles: Array,
+        penals: []
+    }, { _id: false })),
     key_config: model("key_config", new Schema({
         _id: Types.ObjectId,
         type: String,
@@ -420,11 +426,6 @@ exports.models = {
         created: Date,
         start: Boolean
     })),
-    membership: model("membership", new Schema({
-        _id: String,
-        records: Array,
-        roles: Array
-    }, { _id: false })),
     afk_inbox: model("afk_inbox", new Schema({
         _id: String,
         reason: String,
@@ -510,6 +511,7 @@ exports.models = {
         changes: Array,
         created: Date
     })),
+    //
     voice: model("log_voice", new Schema({
         _id: Types.ObjectId,
         userId: String,
@@ -518,6 +520,7 @@ exports.models = {
         status: Array,
         created: Date
     })),
+    //
     nick: model("log_nick", new Schema({
         _id: Types.ObjectId,
         userId: String,
@@ -532,6 +535,7 @@ exports.models = {
         data: String,
         created: Date
     })),
+    //
     inv: model("log_invite", new Schema({
         _id: Types.ObjectId,
         inviter: String,
