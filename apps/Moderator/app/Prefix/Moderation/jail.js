@@ -20,16 +20,16 @@ class Jail extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let sebep = args.slice(1).join(" ");
-        if (!sebep) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (!mentioned.bannable) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!sebep) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (!mentioned.bannable) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         client.handler.emit('Jail', mentioned, message.author.id, sebep, "perma", 0);
         if (mentioned.voice.channel) await mentioned.voice.kick();
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
-        //const logChannel = message.guild.channels.cache.get(channels.get("jaillog").value());
-        //const embed = new Discord.MessageEmbed().setColor('BLACK').setDescription(`${emojis.get("ok").value()} ${mentioned} kullanıcısı ${message.member} tarafından ${sebep} sebebiyle ${args[1] === 0 ? "perma" : args[1]} günlüğüne zindana şutlandı!`);
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
+        //const logChannel = message.guild.channels.cache.get(data.channels["jaillog"]);
+        //const embed = new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["ok"]} ${mentioned} kullanıcısı ${message.member} tarafından ${sebep} sebebiyle ${args[1] === 0 ? "perma" : args[1]} günlüğüne zindana şutlandı!`);
         // await logChannel.send(embed);
     }
 }

@@ -23,19 +23,19 @@ class Duzelt extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const data = await nameData.findOne({ _id: mentioned.user.id });
-        if (!data) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!data) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         const adana = args[1]
         if (!adana) {
-            if (mentioned.roles.cache.has(roles.get("Male").value())) {
-                await mentioned.roles.remove(roles.get("Male").value());
-                await mentioned.roles.add(roles.get("Female").value());
+            if (mentioned.roles.cache.has(data.roles["Male"])) {
+                await mentioned.roles.remove(data.roles["Male"]);
+                await mentioned.roles.add(data.roles["Female"]);
             }
-            if (mentioned.roles.cache.has(roles.get("Female").value())) {
-                await mentioned.roles.remove(roles.get("Female").value());
-                await mentioned.roles.add(roles.get("Male").value());
+            if (mentioned.roles.cache.has(data.roles["Female"])) {
+                await mentioned.roles.remove(data.roles["Female"]);
+                await mentioned.roles.add(data.roles["Male"]);
             };
             return;
         }
@@ -88,7 +88,7 @@ class Duzelt extends Command {
 
         // }
 
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
     }
 }
 module.exports = Duzelt;

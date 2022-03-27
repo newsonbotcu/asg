@@ -23,20 +23,20 @@ class Isim extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (!mentioned.roles.cache.has(roles.get("welcome").value()) && (mentioned.roles.cache.size > 1)) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (!mentioned.roles.cache.has(data.roles["welcome"]) && (mentioned.roles.cache.size > 1)) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let rawName = args.slice(1);
-        if (!rawName) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!rawName) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let age = args[args.length - 1];
-        if (!sayi(age)) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!sayi(age)) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let nameAge = rawName.map(i => i[0].toUpperCase() + i.slice(1).toLowerCase());
         nameAge = nameAge.join(' ').replace(` ${age}`, '');
         let point = '⸸';
-        if (client.config.tag.some(tag => mentioned.user.username.includes(tag))) {
+        if (client.config.tags[0].some(tag => mentioned.user.username.includes(tag))) {
             point = client.config.tag[0];
         }
         await mentioned.setNickname(`${point} ${nameAge} | ${age}`);
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
         await message.inlineReply(new Discord.MessageEmbed().setDescription(`${mentioned} kişisinin adı başarıyla \`${point} ${nameAge} | ${age}\` olarak ayarlandı!`));
     }
 }

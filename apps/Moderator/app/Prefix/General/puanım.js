@@ -37,17 +37,17 @@ class stark extends Command {
             let str = "";
             for (let index = 2; index < 9; index++) {
                 if ((deger / index) >= 1) {
-                    str = str + emojis.get("ortabar_dolu").value()
+                    str = str + data.emojis["ortabar_dolu"]
                 } else {
-                    str = str + emojis.get("ortabar").value()
+                    str = str + data.emojis["ortabar"]
                 }
             }
             if (deger === 0) {
-                str = `${emojis.get("solbar").value()}${str}${emojis.get("sagbar").value()}`
+                str = `${data.emojis["solbar"]}${str}${data.emojis["sagbar"]}`
             } else if (deger === 10) {
-                str = `${emojis.get("solbar_dolu").value()}${str}${emojis.get("sagbar_dolu").value()}`
+                str = `${data.emojis["solbar_dolu"]}${str}${data.emojis["sagbar_dolu"]}`
             } else {
-                str = `${emojis.get("solbar_dolu").value()}${str}${emojis.get("sagbar").value()}`
+                str = `${data.emojis["solbar_dolu"]}${str}${data.emojis["sagbar"]}`
             }
             return str;
         }
@@ -60,7 +60,7 @@ class stark extends Command {
      /*   const nextRole = message.guild.roles.cache
             .filter(r => r.rawPosition >= myRole.rawPosition)
             .filter(r => r.hoist)
-            .filter(r => r.id !== roles.get("booster").value())
+            .filter(r => r.id !== data.roles["booster"])
             .sort((a, b) => a.rawPosition - b.rawPosition).array().find(role => role.rawPosition > myRole.rawPosition);*/
 
         message.inlineReply(new Discord.MessageEmbed().setDescription(`
@@ -89,7 +89,7 @@ class stark extends Command {
         const nextRole = message.guild.roles.cache
             .filter(r => r.rawPosition >= myRole.rawPosition)
             .filter(r => r.hoist)
-            .filter(r => r.id !== roles.get("booster").value())
+            .filter(r => r.id !== data.roles["booster"])
             .sort((a, b) => a.rawPosition - b.rawPosition).array().find(role => role.rawPosition > myRole.rawPosition);
 
         message.inlineReply(new Discord.MessageEmbed().setDescription(`

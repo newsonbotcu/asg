@@ -27,8 +27,8 @@ class Nerede extends Command {
         const channels = await low(client.adapters('channels'));
         const embed = new Discord.MessageEmbed().setColor('#2f3136');
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (args[1] && sayi(!args[1])) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (args[1] && sayi(!args[1])) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const data = await VoiceRecords.findOne({ _id: mentioned.user.id });
         const myData = data.records.sort((a, b) => comparedate(b.enter) - comparedate(a.enter));
         const embedi = embed.setDescription(stripIndent`

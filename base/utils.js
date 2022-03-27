@@ -39,16 +39,16 @@ class ClientEvent {
             docs.forEach(doc => {
                 switch (doc.type) {
                     case "ROLE":
-                        this.data.roles[doc._id] = doc.values;
+                        this.data.roles[doc.name] = doc.values;
                         break;
                     case "CHANNEL":
-                        this.data.channels[doc._id] = doc.values;
+                        this.data.channels[doc.name] = doc.values;
                         break;
                     case "EMOJI":
-                        this.data.emojis[doc._id] = doc.values;
+                        this.data.emojis[doc.name] = doc.values;
                         break;
                     case "OTHER":
-                        this.data.other[doc._id] = doc.values;
+                        this.data.other[doc.name] = doc.values;
                         break;
                     default: break;
                 }
@@ -589,7 +589,7 @@ exports.fuctions = {
         return Math.floor(Math.random() * (max - min)) + min;
     },
     rain(client, sayi) {
-        const emojis = low(client.adapters('emojis')).get("numbers").value();
+        const emojis = low(client.adapters('emojis')).get("numbers");
         var basamakbir = sayi.toString().replace(/ /g, "     ");
         var basamakiki = basamakbir.match(/([0-9])/g);
         basamakbir = basamakbir.replace(/([a-zA-Z])/g, "bilinmiyor").toLowerCase();

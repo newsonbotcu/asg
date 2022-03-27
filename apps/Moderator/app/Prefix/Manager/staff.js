@@ -41,36 +41,36 @@ class Staffver extends Command {
         `)).then(msg => msg.delete({ timeout: 10000 }));
 
         if (select == "register") {
-            if (!mentioned.roles.cache.has(roles.get("cmd-registry").value())) {
-                mentioned.roles.add(roles.get("cmd-registry").value())
+            if (!mentioned.roles.cache.has(data.roles["cmd-registry"])) {
+                mentioned.roles.add(data.roles["cmd-registry"])
                 const registeremb = new Discord.MessageEmbed().setColor("BLACK").setDescription(`Başarıyla \`Gatekeeper †\` adlı rolü verdim.`)
                 return await message.inlineReply(registeremb).then(msg => msg.delete({ timeout: 10000 }));
             }
         }
         if (select == "ability") {
-            if (!mentioned.roles.cache.has(roles.get("cmd-ability").value())) {
-                mentioned.roles.add(roles.get("cmd-ability").value())
+            if (!mentioned.roles.cache.has(data.roles["cmd-ability"])) {
+                mentioned.roles.add(data.roles["cmd-ability"])
                 const abilityemb = new Discord.MessageEmbed().setColor("BLACK").setDescription(`Başarıyla \`Ruby †\` adlı rolü verdim.`)
                 return await message.inlineReply(abilityemb).then(msg => msg.delete({ timeout: 10000 }));
             }
         }
         if (select == "jail") {
-            if (!mentioned.roles.cache.has(roles.get("cmd-jail").value())) {
-                mentioned.roles.add(roles.get("cmd-jail").value())
+            if (!mentioned.roles.cache.has(data.roles["cmd-jail"])) {
+                mentioned.roles.add(data.roles["cmd-jail"])
                 const jailemb = new Discord.MessageEmbed().setColor("BLACK").setDescription(`Başarıyla \`Punisher †\` adlı rolü verdim.`)
                 return await message.inlineReply(jailemb).then(msg => msg.delete({ timeout: 10000 }));
             }
         }
         if (select == "mute") {
-            if (!mentioned.roles.cache.has(roles.get("cmd-mute").value())) {
-                mentioned.roles.add(roles.get("cmd-mute").value())
+            if (!mentioned.roles.cache.has(data.roles["cmd-mute"])) {
+                mentioned.roles.add(data.roles["cmd-mute"])
                 const muteemb = new Discord.MessageEmbed().setColor("BLACK").setDescription(`Başarıyla \`Silencer †\` adlı rolü verdim.`)
                 return await message.inlineReply(muteemb).then(msg => msg.delete({ timeout: 10000 }));
             }
         }
         if (select == "gang") {
-            if (!mentioned.roles.cache.has(roles.get("cmd-crew").value())) {
-                mentioned.roles.add(roles.get("cmd-crew").value())
+            if (!mentioned.roles.cache.has(data.roles["cmd-crew"])) {
+                mentioned.roles.add(data.roles["cmd-crew"])
                 const gangemb = new Discord.MessageEmbed().setColor("BLACK").setDescription(`Başarıyla \`Gang †\` adlı rolü verdim.`)
                 return await message.inlineReply(gangemb).then(msg => msg.delete({ timeout: 10000 }));
             }

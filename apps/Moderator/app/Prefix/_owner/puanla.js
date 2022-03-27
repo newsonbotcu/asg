@@ -35,7 +35,7 @@ class pm2 extends Command {
         const hoistroller = message.guild.roles.cache
             .filter(r => r.rawPosition >= message.guild.roles.cache.get("856265277637394472").rawPosition)
             .filter(r => r.hoist).filter(r => r.name.startsWith('†'))
-            .filter(r => r.id !== roles.get("booster").value())
+            .filter(r => r.id !== data.roles["booster"])
             .sort((a, b) => a.rawPosition - b.rawPosition).array().reverse();
         console.log(hoistroller.map(r => r.name))
 

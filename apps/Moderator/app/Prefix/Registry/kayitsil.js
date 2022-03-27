@@ -23,14 +23,14 @@ class KayitSil extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         const data = await nameData.findOne({ _id: mentioned.user.id });
         if (data) await nameData.deleteOne({ _id: mentioned.user.id });
-        if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         await mentioned.roles.remove(mentioned.roles.cache.filter(r => r.editable).array());
         await mentioned.roles.add(roles.get('welcome').value());
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
         const aylar = [
             "Ocak",
             "Şubat",
@@ -46,12 +46,12 @@ class KayitSil extends Command {
             "Aralık"
         ];
         const tarih = new Date()
-        await message.guild.channels.cache.get(channels.get("kayıt_log").value()).send(new Discord.MessageEmbed().setDescription(stripIndents`
+        await message.guild.channels.cache.get(data.channels["kayıt_log"]).send(new Discord.MessageEmbed().setDescription(stripIndents`
         **Komutu kullanan:** ${message.member} (\`${message.member.user.id}\`)
         **Kayıtsıza atılan:** ${mentioned} (\`${mentioned.user.id}\`)
         **İsim/Yaş:** \`${data ? data.name : "Bilinmiyor"} | ${data ? data.age : "Bilinmiyor"}\`
         **Cinsiyet:** \`${data ? (data.sex === "Male" ? "Erkek" : "Kız") : "Bilinmiyor"}\`
-        **Tag:** ${client.config.tag.some(t => mentioned.user.username.includes(t)) ? "\`Var\`" : "\`Yok\`"}
+        **Tag:** ${client.config.tags[0].some(t => mentioned.user.username.includes(t)) ? "\`Var\`" : "\`Yok\`"}
         **Tarih:** \`${tarih.getDate()} ${aylar[tarih.getMonth()]} ${tarih.getFullYear()} ${tarih.getHours() + 3}:${tarih.getMinutes()}\`
         `).setColor("#6be4a2").setAuthor(message.member.user.tag, message.member.user.displayAvatarURL({ dynamic: true })).setThumbnail(mentioned.user.displayAvatarURL({ dynamic: true })));
         await message.inlineReply(new Discord.MessageEmbed().setDescription(`${mentioned} adlı kullanıcı başarıyla kayıtsız olarak ayarlandı.`).setColor("#6be4a2"));

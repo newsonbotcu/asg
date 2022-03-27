@@ -14,11 +14,11 @@ class InviteDelete {
         const emojis = await low(this.client.adapters('emojis'));
         if (entry.createdTimestamp <= Date.now() - 1000) return;
         await invite.guild.fetchInvites().yhen(gInvites => { this.client.invites[invite.guild.id] = gInvites });
-        if (utils.get("root").value().includes(entry.executor.id)) return;
+        if (data.other["root"].includes(entry.executor.id)) return;
         const exeMember = invite.guild.members.cache.get(entry.executor.id);
-        if (exeMember.roles.cache.has(roles.get("root").value())) return;
+        if (exeMember.roles.cache.has(data.roles["root"])) return;
         client.handler.emit("Jail", exeMember, this.client.user.id, "* Davet Silme", "Perma", 1);
-        invite.guild.channels.cache.get(channels.get("guard").value()).send(`${emojis.get("davet")} ${exeMember} bir daveti sildi!`);
+        invite.guild.channels.cache.get(data.channels["guard"]).send(`${data.emojis["davet")} ${exeMember} bir daveti sildi!`);
 
     }
 }

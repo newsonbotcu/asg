@@ -15,13 +15,13 @@ class MessageDelete {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const embed = new MessageEmbed().setColor("#2f3136").setDescription(`Eski Mesaj:\n\`\`\`${oldmsg.content}\`\`\`\nYeni Mesaj:\n\`\`\`${curmsg.content}\`\`\`\n[Mesaja erişmek için tıkla](${curmsg.url})`).setTitle("Bir mesaj yeniledi").addField("Yazarı:", curmsg.author, true);
-        await curmsg.guild.channels.cache.get(channels.get("mesajlog").value()).send(embed.addField("Kanal", curmsg.channel, true));
+        await curmsg.guild.channels.cache.get(data.channels["mesajlog"]).send(embed.addField("Kanal", curmsg.channel, true));
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];
         if (curmsg.guild && elebaşı.some(link => curmsg.content.includes(link))) {
             let anan = [];
             await curmsg.guild.invites.fetch().then((invs) => {
                 anan = invs.cache.map(i => i.code);
-                anan.push(utils.get("vanityURL").value());
+                anan.push(data.other["vanityURL"]);
             });
             for (let c = 0; c < elebaşı.length; c++) {
                 const ele = elebaşı[c];

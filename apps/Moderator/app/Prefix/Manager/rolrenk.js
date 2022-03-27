@@ -23,7 +23,7 @@ class CountByRole extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const mentionedRole = message.guild.roles.cache.get(args[0]) || message.mentions.roles.first() || message.guild.roles.cache.find(r => r.name.includes(args[0]))
-        if(!mentionedRole) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if(!mentionedRole) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         //Ana sikm ! koymayı unutmuşum aq ajklshdlasd
         message.inlineReply(`\`\`\`${mentionedRole.name} Rolünün rengi: ${mentionedRole.hexColor}\`\`\``)
     }

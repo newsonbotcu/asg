@@ -23,17 +23,17 @@ class Meeting extends Command {
 
     switch (args[0]) {
       case "katıldı": {
-        let joined = message.member.voice.channel.members.filter(member => !member.roles.cache.has(roles.get("857410693959647282").value())).array();
+        let joined = message.member.voice.channel.members.filter(member => !member.roles.cache.has(data.roles["857410693959647282"])).array();
         joined.forEach((member, fast) => {
           setTimeout(async () => {
-            member.roles.add(roles.get("857410693959647282").value()).catch();
+            member.roles.add(data.roles["857410693959647282"]).catch();
           }, fast * 750)
         })
         message.inlineReply(`Toplantı Odasında bulunan toplam \`${katıldı.size}\` kişiye rolü dağtımaya başaldım!`)
         break;
       }
       case "sustoplantı": {
-        if (!message.member.voice.channel.id) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!message.member.voice.channel.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let MutedMembers = message.guild.channels.cache.get(message.member.voice.channel.id).members.array().filter(x => x.id !== message.member.id);
         MutedMembers.forEach((x, y) => {
           setTimeout(async () => {
@@ -43,7 +43,7 @@ class Meeting extends Command {
         break;
       }
       case "konuspublic": {
-        if (!message.member.voice.channel.id) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!message.member.voice.channel.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let MutedMembers = message.guild.channels.cache.get(message.member.voice.channel.id).members.array().filter(x => x.id !== message.member.id);
         MutedMembers.forEach((x, y) => {
           setTimeout(async () => {

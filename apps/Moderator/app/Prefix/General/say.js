@@ -24,9 +24,9 @@ class Say2 extends Command {
         const roles = await low(client.adapters('roles'));
 
         let böyle = message.guild.memberCount;
-        let gitme = await message.guild.members.cache.filter(m => client.config.tag.some(tag => m.user.username.includes(tag))).size;
+        let gitme = await message.guild.members.cache.filter(m => client.config.tags[0].some(tag => m.user.username.includes(tag))).size;
         let ağlarım = await message.guild.members.cache.filter(m => m.presence.status !== 'offline').size;
-        let relax = await message.guild.members.cache.filter(m => m.roles.cache.has(roles.get("booster").value())).size;
+        let relax = await message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["booster"])).size;
         let baby = await message.guild.voiceStates.cache.filter(v => v.channel).size;
 
         const saranembed = new MessageEmbed().setColor("BLACK").setFooter(message.guild.name);
@@ -54,10 +54,10 @@ class Say2 extends Command {
         const sesler = Object.keys(obj).filter(k => lang[k]).filter(k => obj[k] >= 10).sort((a, b) => obj[b] - obj[a]).slice(0, 3);
         const deyim = sesler.map(k => `${lang[k]} \`${obj[k]}\``).join(', ');
         await message.inlineReply(saranembed.setDescription(stripIndent`
-       ${emojis.get("kahvehac").value()} Sunucuda \`${böyle}\` üye var.
-       ${emojis.get("kahvehac").value()} Aktif olan \`${ağlarım}\` üye var.
-       ${emojis.get("kahvehac").value()} Tagımızı taşıyarak bize destek olan \`${gitme}\` üye var.
-       ${sesler.length === 0 ? `${emojis.get("kahvehac").value()} Ses kanallarında \`${baby}\` üye bulunmaktadır.` : `${emojis.get("kahvehac").value()} ${deyim}, toplam seslide \`${baby}\` kişi bulunmaktadır.`}
+       ${data.emojis["kahvehac"]} Sunucuda \`${böyle}\` üye var.
+       ${data.emojis["kahvehac"]} Aktif olan \`${ağlarım}\` üye var.
+       ${data.emojis["kahvehac"]} Tagımızı taşıyarak bize destek olan \`${gitme}\` üye var.
+       ${sesler.length === 0 ? `${data.emojis["kahvehac"]} Ses kanallarında \`${baby}\` üye bulunmaktadır.` : `${data.emojis["kahvehac"]} ${deyim}, toplam seslide \`${baby}\` kişi bulunmaktadır.`}
         `));
     }
 }

@@ -21,9 +21,9 @@ class Booster extends Command {
         const roles = await low(client.adapters('roles'));
         const emojis = await low(client.adapters('emojis'));
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (mentioned.user.id === message.member.user.id) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (mentioned.user.presence.status == "offline") return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (mentioned.user.id === message.member.user.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (mentioned.user.presence.status == "offline") return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         let adana = "Bilinmiyor";
         let ceyhan = Object.keys(mentioned.user.presence.clientStatus)

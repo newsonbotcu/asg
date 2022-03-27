@@ -29,9 +29,9 @@ class Sicil extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!member) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!member) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let data = await sicil.findOne({ _id: member.user.id });
-        if (!data) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!data) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         let config = {
             border: {
@@ -95,7 +95,7 @@ class Sicil extends Command {
                 }
             });
         }
-        message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
 
     }
 }

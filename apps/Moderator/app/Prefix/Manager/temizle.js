@@ -25,16 +25,16 @@ class Avatar extends Command {
             return valid;
         }
 
-        if (!allah(args[0])) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!allah(args[0])) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
 
         const amount = args[0];
 
-        if (!amount) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (isNaN(amount)) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!amount) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (isNaN(amount)) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
-        if (amount > 100) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (amount < 1) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (amount > 100) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (amount < 1) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         await message.channel.messages.fetch(
             { limit: amount }).then(messages => {

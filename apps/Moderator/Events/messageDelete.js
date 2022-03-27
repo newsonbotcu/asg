@@ -16,9 +16,9 @@ class MessageDelete {
         if (entry.executor.bot) return;
         const embed = new MessageEmbed().setColor((entry.createdTimestamp < Date.now() - 1000) ? "#2f3136" : "RED").setDescription(`Mesajın içeriği:\n\`\`\`${message.content}\`\`\``).setTitle("Bir mesaj silindi").addField("Yazarı:", message.author, true);
         if ((entry.createdTimestamp > Date.now() - 1000) && (entry.executor.id !== message.author.id)) {
-            return message.guild.channels.cache.get(channels.get("mesajlog").value()).send(embed.addField("Silen Kişi", entry.executor, true).addField("Kanal", message.channel, true));
+            return message.guild.channels.cache.get(data.channels["mesajlog"]).send(embed.addField("Silen Kişi", entry.executor, true).addField("Kanal", message.channel, true));
         } else {
-            return message.guild.channels.cache.get(channels.get("mesajlog").value()).send(embed.addField("Kanal", message.channel, true));
+            return message.guild.channels.cache.get(data.channels["mesajlog"]).send(embed.addField("Kanal", message.channel, true));
         }
 
 

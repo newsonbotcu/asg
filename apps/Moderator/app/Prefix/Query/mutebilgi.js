@@ -20,17 +20,17 @@ class MuteSorgu extends Command {
     async run(client, message, args) {
         const emojis = await low(client.adapters('emojis'));
         let mentionedID = message.mentions.members.first() ? message.mentions.members.first().user.id : args[0];
-        if (!mentionedID) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentionedID) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const vmData = await VMS.findOne({ _id: mentionedID });
         const cmData = await CMS.findOne({ _id: mentionedID });
-        if (!vmData && !cmData) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!vmData && !cmData) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const embed = new Discord.MessageEmbed().setTitle("Mute Bilgisi").setDescription(stripIndent`
-        ${emojis.get("user").value()} **Kullanıcı:** ${message.guild.members.cache.get(mentionedID) || `Sunucuda değil (${mentionedID})`}
-        ${emojis.get("reason").value()} **Mute sebebi:** ${vmData && cmData ? stripIndent`
+        ${data.emojis["user"]} **Kullanıcı:** ${message.guild.members.cache.get(mentionedID) || `Sunucuda değil (${mentionedID})`}
+        ${data.emojis["reason"]} **Mute sebebi:** ${vmData && cmData ? stripIndent`
         V-Mute: \`${vmData ? vmData.reason : 'yok'}\`
         C-Mute: \`${cmData ? cmData.reason : 'yok'}\`
         ` : ((cmData || vmData).reason)}
-        ${emojis.get("id").value()} **Kullanıcı ID'si:** ${mentionedID}
+        ${data.emojis["id"]} **Kullanıcı ID'si:** ${mentionedID}
         \`Komutu Kullanan:\` ${vmData && cmData ? stripIndent`
         V-Mute: ${message.guild.members.cache.get(vmData) || `Sunucuda Değil (${vmData.executor})`}
         C-Mute: ${message.guild.members.cache.get(cmData.executor) || `Sunucuda Değil (${cmData.executor})`}

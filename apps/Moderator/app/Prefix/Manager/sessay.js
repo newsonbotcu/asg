@@ -23,7 +23,7 @@ class CountByRole extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const mentionedRole = message.guild.roles.cache.get(args[0]) || message.mentions.roles.first()
-        if(!mentionedRole) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if(!mentionedRole) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let sessay = mentionedRole.members.filter(a => a.presence.status == "online" && !a.voice.channel).map(a => `${a.displayName} [${a.user.tag} (${a.user.id})]`).join("\n")
         let sessaysize = mentionedRole.members.filter(a => a.presence.status == "online" && !a.voice.channel).size
 

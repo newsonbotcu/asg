@@ -15,7 +15,7 @@ class GuildMemberUpdate {
         }
         const memberDb = await client.models.members.findOne({ _id: cur.user.id });
         if (prev && prev.roles.cache.has(roles["booster"]) && !cur.roles.cache.has(roles["booster"])) {
-            const pointed = client.config.tag.some(t => target.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
+            const pointed = client.config.tags[0].some(t => target.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
             await cur.setNickname(`${pointed} ${memberDb.name} | ${memberDb.age}`);
             if (!memberDb) {
                 await cur.roles.remove(cur.roles.cache.array());

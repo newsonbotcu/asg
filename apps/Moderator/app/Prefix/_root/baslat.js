@@ -36,7 +36,7 @@ class Kur extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         /*
-        const publicCat = message.guild.channels.cache.get(channels.get("st_public").value());
+        const publicCat = message.guild.channels.cache.get(data.channels["st_public"]);
         const parent = message.guild.channels.cache.get(message.channel.parentID);
         await parent.setPosition(publicCat.position);
         await parent.updateOverwrite(message.guild.roles.everyone.id, {
@@ -48,7 +48,7 @@ class Kur extends Command {
                     VIEW_CHANNEL: true
                 });
             });
-            await c.updateOverwrite(roles.get("muted").value(), {
+            await c.updateOverwrite(data.roles["muted"], {
                 VIEW_CHANNEL: null
             });
             await c.updateOverwrite(message.guild.roles.everyone.id, {

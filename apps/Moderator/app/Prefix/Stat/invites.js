@@ -23,7 +23,7 @@ class Invites extends Command {
         const channels = await low(client.adapters('channels'));
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
         const Data = await InviteData.findOne({ _id: mentioned.user.id });
-        if (!Data) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!Data) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         const embed = new Discord.MessageEmbed().setColor('#2f3136').setDescription(stripIndent`
         Kullanıcı: **${mentioned.user.username}**

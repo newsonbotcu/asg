@@ -53,7 +53,7 @@ class Kur extends Command {
         });
         */
         function Process(i) {
-            var ls = children.exec(`pm2 delete /home/${client.config.project}/${utils.get("dir").value()}/INTERNAL/BOTS/_CD/cd${i}.js`);
+            var ls = children.exec(`pm2 delete /home/${client.config.project}/${data.other["dir"]}/INTERNAL/BOTS/_CD/cd${i}.js`);
             ls.stdout.on('data', function (data) {
                 console.log(data);
             });
@@ -67,7 +67,7 @@ class Kur extends Command {
                     console.log('Start');
             });
         }
-        for (let index = 1; index < utils.get("CdSize").value() + 1; index++) {
+        for (let index = 1; index < data.other["CdSize"] + 1; index++) {
             Process(index);
         }
         await ctx.send(`Başarılı!`);

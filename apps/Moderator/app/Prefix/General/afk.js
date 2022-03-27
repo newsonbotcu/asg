@@ -23,10 +23,10 @@ class Call extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const sebep = args.join(' ');
-        if (sebep.includes("@everyone")) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (sebep.includes("@here")) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (sebep.includes("@everyone")) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (sebep.includes("@here")) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
     
-        if (sebep.length > 50) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (sebep.length > 50) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const system = await afkdata.findOne({ _id: message.member.user.id });
         if (!system) {
             try {
@@ -40,7 +40,7 @@ class Call extends Command {
             } catch (error) {
                 console.log(error);
             }
-            await message.react(emojis.get("afk").value().split(':')[2].replace('>', ''));
+            await message.react(data.emojis["afk"].split(':')[2].replace('>', ''));
         } else return;
     }
 }

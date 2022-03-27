@@ -27,8 +27,8 @@ class Nerede extends Command {
         const channels = await low(client.adapters('channels'));
 
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (!mentioned.voice.channelID) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (!mentioned.voice.channelID) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         /*
         let whereinfo = `• Mikrofonu: ${mentioned.voice.mute ? `Kapalı` : `Açık`} \n• Kulaklığı: ${mentioned.voice.deaf ? `Kapalı` : `Açık`}`
         let wherechannel = `${mentioned.voice.channel} (\`${mentioned.voice.channel.members.size}/${mentioned.voice.channel.userLimit}\`)`;
@@ -73,8 +73,8 @@ class Nerede extends Command {
             p = p + 1;
         });
         let sorgu;
-        if (!entry) sorgu = `${mentioned}, ${mentioned.voice.channel} kanalında. \n \` • \` Mikrofon **:** ${mentioned.voice.mute ? `${emojis.get("offmic").value()}` : `${emojis.get("onmic").value()}`} \n \` • \` Kulaklık **:** ${mentioned.voice.deaf ? `:mute:` : `:loud_sound:`}`
-        if (entry) sorgu = `${mentioned} kullanıcısı **${msToTime(new Date(duration))}** öncesinden beridir ${mentioned.voice.channel} kanalında. \n \` • \` Mikrofon **:** ${mentioned.voice.mute ? `${emojis.get("offmic").value()}` : `${emojis.get("onmic").value()}`} \n \` • \` Kulaklık **:** ${mentioned.voice.deaf ? `:mute:` : `:loud_sound:`}`
+        if (!entry) sorgu = `${mentioned}, ${mentioned.voice.channel} kanalında. \n \` • \` Mikrofon **:** ${mentioned.voice.mute ? `${data.emojis["offmic"]}` : `${data.emojis["onmic"]}`} \n \` • \` Kulaklık **:** ${mentioned.voice.deaf ? `:mute:` : `:loud_sound:`}`
+        if (entry) sorgu = `${mentioned} kullanıcısı **${msToTime(new Date(duration))}** öncesinden beridir ${mentioned.voice.channel} kanalında. \n \` • \` Mikrofon **:** ${mentioned.voice.mute ? `${data.emojis["offmic"]}` : `${data.emojis["onmic"]}`} \n \` • \` Kulaklık **:** ${mentioned.voice.deaf ? `:mute:` : `:loud_sound:`}`
         let kembed = embed.setDescription(sorgu)
         message.inlineReply({ embed: kembed, allowedMentions: { repliedUser: false } });
     }

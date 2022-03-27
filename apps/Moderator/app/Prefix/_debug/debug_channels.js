@@ -74,7 +74,7 @@ class Kur extends Command {
                 });
             }
         }
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
 
 
     }

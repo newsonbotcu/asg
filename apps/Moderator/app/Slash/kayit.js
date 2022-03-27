@@ -1,8 +1,9 @@
-const { ApplicationCommand, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const low = require('lowdb');
+const { SlashCommand } = require('../../../../base/utils');
 
-module.exports = class SlashKayit extends ApplicationCommand {
-    constructor(client, data, guild, guildId) {
+class SlashKayit extends SlashCommand {
+    constructor(client) {
         super(client, data = {
             name: "kayıt",
             description: "Kullanıcıyı kayıt eder",
@@ -47,38 +48,40 @@ module.exports = class SlashKayit extends ApplicationCommand {
         }, guild, guildId);
         this.permissions = client.config.staff.slice(5);
     }
-    async run(client, intg) {
+    async run(client, interaction, data) {
         const roles = await low(client.adapters('roles'));
-        const target = intg.guild.members.cache.get(intg.options.get("kullanıcı").value);
-        if (!target) return intg.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
-        const data = await client.models.members.findOne({ _id: target.id });
-        const ceza = await client.models.jail.findOne({ _id: target.id });
-        const pointed = client.config.tag.some(t => target.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
-        if (data) {
-            if (ceza) return intg.reply({ content: `Bu kullanıcı ${intg.guild.members.cache.get(ceza.executor)} tarafından karantinaya atılmış.`, ephemeral: true, fetchReply: true });
-            if (roles.get("Male").value().concat(roles.get("Female").value()).some(r => target.roles.cache.has(r.id))) return intg.reply({ content: `Kayıtlı olan bir kullanıcıyı tekrar kayıt edemezsin.`, ephemeral: true, fetchReply: true });
-            await target.roles.add(roles.value()[data.sex]);
-            await target.roles.remove(roles.get("welcome").value());
-            await target.setNickname(`${pointed} ${data.name} | ${data.age}`);
+        const target = interaction.guild.members.cache.get(interaction.options.get("kullanıcı").value);
+        if (!target) return interaction.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
+        const docs = await client.models.registry.findOne({ user: target.id });
+        const ceza = await client.models.penal.findOne({ userId: target.id });
+        const pointed = client.config.tags.some(t => target.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
+        if (docs) {
+            if (ceza) return interaction.reply({ content: `Bu kullanıcı ${interaction.guild.members.cache.get(ceza.executor)} tarafından karantinaya atılmış.`, ephemeral: true, fetchReply: true });
+            if (data.roles["Male"].concat(data.roles["Female"]).some(r => target.roles.cache.has(r.id))) return interaction.reply({ content: `Kayıtlı olan bir kullanıcıyı tekrar kayıt edemezsin.`, ephemeral: true, fetchReply: true });
+            await target.edit({
+                roles: data.roles[docs.gender],
+                nick: `${pointed} ${docs.name} | ${docs.age}`
+            });
             return;
         }
-        await target.roles.add(roles.get(intg.options.get("cinsiyet").value).value());
-        await target.roles.remove(roles.get("welcome").value());
-        await target.setNickname(`${pointed} ${intg.options.get("isim").value.split(' ').map(s => s[0].toUpperCase() + s.slice(1).toLowerCase()).join(' ')} | ${intg.options.get("yaş").value}`);
+        await target.roles.add(data.roles[interaction.options.get("cinsiyet").value]);
+        await target.roles.remove(data.roles["welcome"]);
+        await target.setNickname(`${pointed} ${interaction.options.get("isim").value.split(' ').map(s => s[0].toUpperCase() + s.slice(1).toLowerCase()).join(' ')} | ${interaction.options.get("yaş").value}`);
         await client.models.members.create({
             _id: target.id,
-            executor: intg.user.id,
-            name: intg.options.get("isim").value.split(' ').map(s => s[0].toUpperCase() + s.slice(1).toLowerCase()).join(' '),
-            age: intg.options.get("yaş").value,
-            sex: intg.options.get("cinsiyet").value,
+            executor: interaction.user.id,
+            name: interaction.options.get("isim").value.split(' ').map(s => s[0].toUpperCase() + s.slice(1).toLowerCase()).join(' '),
+            age: interaction.options.get("yaş").value,
+            sex: interaction.options.get("cinsiyet").value,
             created: new Date()
         });
-        const registryDatas = await client.models.members.find({ executor: intg.user.id });
-        const total = registryDatas.length || 1;
-        const myEmbed = new MessageEmbed().setDescription(`${target} kişisinin kaydı <@${intg.user.id}> tarafından gerçekleştirildi.\nBu kişinin kayıt sayısı: \`${total}\``);
-        await intg.reply({
+        const registryvaris = await client.models.members.find({ executor: interaction.user.id });
+        const total = registryvaris.length || 1;
+        const myEmbed = new MessageEmbed().setDescription(`${target} kişisinin kaydı <@${interaction.user.id}> tarafından gerçekleştirildi.\nBu kişinin kayıt sayısı: \`${total}\``);
+        await interaction.reply({
             embeds: [myEmbed]
         });
 
     }
 }
+module.exports = SlashKayit;

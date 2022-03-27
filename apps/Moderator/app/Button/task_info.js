@@ -36,32 +36,32 @@ class RolSeçim extends Component {
             ephemeral: true
         });
         const embed = new Discord.MessageEmbed().setDescription(`${myRol} rolü için görevler aşağıda belirtilmiştir`).setTitle("ASGARD KILL ZONE")
-            .addField(`${emojis.get("task_registry").value()} Kayıt Görevi`, Duties.some(duty => duty.type === "registry") ? stripIndent`
+            .addField(`${data.emojis["task_registry"]} Kayıt Görevi`, Duties.some(duty => duty.type === "registry") ? stripIndent`
         Kayıt: ${Duties.find(duty => duty.type === "registry").count}
         Puan: ${Duties.find(duty => duty.type === "registry").points}
         \n‏‏‎ ‎
         `: "Yok", true)
-            .addField(`${emojis.get("task_invite").value()} Davet Görevi`, Duties.some(duty => duty.type === "invite") ? stripIndent`
+            .addField(`${data.emojis["task_invite"]} Davet Görevi`, Duties.some(duty => duty.type === "invite") ? stripIndent`
         Davet: ${Duties.find(duty => duty.type === "invite").count}
         Puan: ${Duties.find(duty => duty.type === "invite").points}
         \n‏‏‎ ‎
         `: "Yok", true)
-            .addField(`${emojis.get("task_voicexp").value()} Ses Aktifliği`, Duties.some(duty => duty.type === "voicexp") ? stripIndent`
+            .addField(`${data.emojis["task_voicexp"]} Ses Aktifliği`, Duties.some(duty => duty.type === "voicexp") ? stripIndent`
         Xp: ${Duties.find(duty => duty.type === "voicexp").count}
         Puan: ${Duties.find(duty => duty.type === "voicexp").points}
         \n‏‏‎ ‎
         `: "Yok", true)
-            .addField(`${emojis.get("task_messagexp").value()} Chat Aktifliği`, Duties.some(duty => duty.type === "message") ? stripIndent`
+            .addField(`${data.emojis["task_messagexp"]} Chat Aktifliği`, Duties.some(duty => duty.type === "message") ? stripIndent`
         Mesaj: ${Duties.find(duty => duty.type === "messagexp").count}
         Puan: ${Duties.find(duty => duty.type === "messagexp").points}
         \n‏‏‎ ‎
         `: "Yok", true)
-            .addField(`${emojis.get("task_tagged").value()} Taglı Çekme`, Duties.some(duty => duty.type === "tagged") ? stripIndent`
+            .addField(`${data.emojis["task_tagged"]} Taglı Çekme`, Duties.some(duty => duty.type === "tagged") ? stripIndent`
         Taglı: ${Duties.find(duty => duty.type === "tagged").count}
         Puan: ${Duties.find(duty => duty.type === "tagged").points}
         \n‏‏‎ ‎
         `: "Yok", true)
-            .addField(`${emojis.get("task_auth").value()} Yetkili Çekme`, Duties.some(duty => duty.type === "auth") ? stripIndent`
+            .addField(`${data.emojis["task_auth"]} Yetkili Çekme`, Duties.some(duty => duty.type === "auth") ? stripIndent`
         Yetkili: ${Duties.find(duty => duty.type === "auth").count}
         Puan: ${Duties.find(duty => duty.type === "auth").points}
         \n‏‏‎ ‎

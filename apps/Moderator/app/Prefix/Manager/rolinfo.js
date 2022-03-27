@@ -23,7 +23,7 @@ class RoleInfo extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         let mentionedRole = message.mentions.roles.first() || message.guild.roles.cache.get(args[0])
-        if (!mentionedRole) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentionedRole) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let mentionedRoleMembers = mentionedRole.members.map(role => `${message.guild.members.cache.get(role.id)} (\`${role.id}\`) `)
         message.inlineReply(`• \`${mentionedRole.name}\` rolündeki üyeler.
 • Roldeki üye sayısı: \`${mentionedRole.members.size}\`

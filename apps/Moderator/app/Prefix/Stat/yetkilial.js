@@ -21,9 +21,9 @@ class Upgrade extends Command {
         const channels = await low(client.adapters('channels'));
 
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
-        if (!mentioned.user.username.includes(client.config.tag)) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned.user.username.includes(client.config.tag)) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
     
         await mentioned.roles.add("848920653633028170")

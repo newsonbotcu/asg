@@ -25,7 +25,7 @@ class OldSicil extends Command {
     async run(client, message, args) {
         let mentionedID = message.mentions.members.first() ? message.mentions.members.first().user.id : args[0] || message.member.user.id;
         const doc = await sicil.findOne({ _id: mentionedID });
-        if (!doc) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!doc) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let sth;
         if (args[1] && args[1].includes('-')) {
             sth = args[1].split('-')[1];
@@ -47,7 +47,7 @@ class OldSicil extends Command {
         const embeddoc = stringTable.create(asdf, {
             headers: ['ID', 'Ceza', 'Sebep', 'Gün']
         });
-        if (!sayi(sth)) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!sayi(sth)) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const ecrin = scl[sth - 1];
         const ecrinim = embed.setDescription(stripIndent`
         **Tür:** \`${ecrin.punish} - ${ecrin.type}\`

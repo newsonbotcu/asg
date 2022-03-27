@@ -53,10 +53,10 @@ class Invites extends Command {
         let days = args[2] || 7;
 
         const embed = new Discord.MessageEmbed().setColor("RANDOM").setAuthor(message.member.displayName, message.author.avatarURL({ dynamic: true }));
-        if (!args[0] || (args[0] !== 'ses' && args[0] !== 'davet' && args[0] !== 'teyit' && args[0] !== 'mesaj')) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!args[0] || (args[0] !== 'ses' && args[0] !== 'davet' && args[0] !== 'teyit' && args[0] !== 'mesaj')) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         if (args[0] === 'ses') {
             const Data = await StatData.findOne({ _id: mentioned.user.id });
-            if (!Data) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+            if (!Data) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
             const records = Data.records.filter(r => checkDays(r.enter) < days);
             const responseEmbed = new Discord.MessageEmbed().setDescription(stripIndent`
             ${mentioned} kişisine ait ${days} günlük ses bilgileri:
@@ -85,7 +85,7 @@ class Invites extends Command {
 
         if (args[0] === 'davet') {
             const DataInv = await InviteData.findOne({ _id: mentioned.user.id });
-            if (!DataInv) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+            if (!DataInv) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
             const embed = new Discord.MessageEmbed().setColor('RANDOM').setDescription(stripIndent`
             • Kullanıcı: ${mentioned}
             • Toplam Davet sayısı: ${DataInv.records.length}
@@ -96,7 +96,7 @@ class Invites extends Command {
 
         if (args[0] === 'teyit') {
             const datam = await RegData.find({ executor: mentioned.user.id });
-            if (!datam) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+            if (!datam) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
             const embedD = new Discord.MessageEmbed().setColor('RANDOM').setDescription(stripIndent`
             • Kullanıcı: ${mentioned}
             • Toplam Kayıt sayısı: ${rain(client, datam.length)}
@@ -107,7 +107,7 @@ class Invites extends Command {
         }
         if (args[0] == 'mesaj') {
             const Data = await stat_msg.findOne({ _id: mentioned.user.id });
-            if (!Data) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+            if (!Data) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
             const records = Data.records.filter(r => checkDays(r.created) < days);
             let stats = {};
             for (let index = 0; index < records.length; index++) {
@@ -131,7 +131,7 @@ class Invites extends Command {
              `).setThumbnail(mentioned.user.displayAvatarURL({ dynamic: true })).setColor(mentioned.displayHexColor).setFooter("• bla bla bla - Starks").setTitle(message.guild.name);
             return await message.inlineReply(responseEmbed).then(msg => msg.delete({ timeout: 20000 }));
         }
-        return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
     }
 }
 module.exports = Invites;

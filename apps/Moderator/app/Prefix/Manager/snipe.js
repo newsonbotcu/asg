@@ -23,9 +23,9 @@ class Upgrade extends Command {
         const channels = await low(client.adapters('channels'));
         let embed = new Discord.MessageEmbed().setColor("#780580");
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.channels.cache.get(args[0]);
-        if (!mentioned) await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let sData = mentioned.user ? await msg_snipe.findOne({ author: mentioned.user.id }) : await msg_snipe.findOne({ channel: mentioned.id });
-        if (!sData) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!sData) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let channel = message.guild.channels.cache.get(sData.channel);
         await message.inlineReply(embed.setDescription(`<@${sData.author}> (\`${sData.author}\`) kullanıcısı ${channel ? channel : `[\`${sData.channel}\`]`} kanalında en son silinen mesajı yakaladı. \n\n**Kullanıcı:**\n**Mesaj Iceriği:**\n\`\`\`${sData.content ? sData.content : "Bulunamadı"}\`\`\``));
 

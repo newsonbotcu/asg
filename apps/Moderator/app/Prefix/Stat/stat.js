@@ -37,7 +37,7 @@ class Invites extends Command {
         let days = args[1] || 7;
 
         const Data = await StatData.findOne({ _id: mentioned.user.id });
-        if (!Data) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!Data) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const records = Data.records.filter(r => checkDays(r.enter) < days);
         const birim = [
             "Saat",

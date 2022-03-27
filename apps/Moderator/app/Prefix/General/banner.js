@@ -57,7 +57,7 @@ async function avatar(client, message, member, token) {
         }
     })
     let json = await fetched.json();
-    if (json.banner == null) return mmessage.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+    if (json.banner == null) return mmessage.react(data.emojis["error"].split(':')[2].replace('>', ''));
     let avatarGIF = `https://cdn.discordapp.com/banners/${userID}/${json.banner}.gif?size=1024`;
     let avatarPNG = `https://cdn.discordapp.com/banners/${userID}/${json.banner}.png?size=1024`;
     let avatarFetch = await fetch(avatarGIF);

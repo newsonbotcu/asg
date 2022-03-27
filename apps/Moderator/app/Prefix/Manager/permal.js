@@ -22,10 +22,10 @@ class Permal extends Command {
         const channels = await low(client.adapters('channels'));
 
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.inlineReply(new Discord.MessageEmbed().setDescription(`${emojis.get("kullaniciyok").value()} Kullanıcı bulunamadı!`).setColor('BLACK'));
-        if (mentioned.id == message.author.id) return message.inlineReply(new Discord.MessageEmbed().setDescription(`${emojis.get("kullaniciyok").value()} Kendi kendine işlem yapamazsın!`).setColor('BLACK'));
-        if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        message.inlineReply(new Discord.MessageEmbed().setColor("BLACK").setDescription(`${emojis.get("kullaniciyok").value()} Belirtilen yetkiliyi yetkiden almak istediğine eminmisin?`)).then(async msj => {
+        if (!mentioned) return message.inlineReply(new Discord.MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kullanıcı bulunamadı!`).setColor('BLACK'));
+        if (mentioned.id == message.author.id) return message.inlineReply(new Discord.MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kendi kendine işlem yapamazsın!`).setColor('BLACK'));
+        if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        message.inlineReply(new Discord.MessageEmbed().setColor("BLACK").setDescription(`${data.emojis["kullaniciyok"]} Belirtilen yetkiliyi yetkiden almak istediğine eminmisin?`)).then(async msj => {
             await msj.react('✅');
             const kabul = (reaction, user) => {
                 return ['✅'].includes(reaction.emoji.name) && user.id === message.author.id;

@@ -22,7 +22,7 @@ class Move extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         if (args[0] && (args[0] === "aç")) {
-            await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+            await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
             return await message.channel.updateOverwrite(message.guild.roles.everyone.id, {
                 SEND_MESSAGES: null
             });
@@ -30,13 +30,13 @@ class Move extends Command {
         await message.channel.updateOverwrite(message.guild.roles.everyone.id, {
             SEND_MESSAGES: false
         });
-        await message.channel.updateOverwrite(roles.get("cmd-ceo").value(), {
+        await message.channel.updateOverwrite(data.roles["cmd-ceo"], {
             SEND_MESSAGES: true
         });
-        await message.channel.updateOverwrite(roles.get("owner").value(), {
+        await message.channel.updateOverwrite(data.roles["owner"], {
             SEND_MESSAGES: true
         });
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
     }
 }
 

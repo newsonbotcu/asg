@@ -88,7 +88,7 @@ class Handler extends EventEmitter {
             client.log(reason, "error");
         });
         if (client) this.client = client;
-        //client.channels.cache.get(utils.get("lastCrush").value()).send("**TEKRAR ONLINE!**");
+        //client.channels.cache.get(data.other["lastCrush"]).send("**TEKRAR ONLINE!**");
         return this.client;
     }
 

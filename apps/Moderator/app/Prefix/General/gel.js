@@ -22,16 +22,16 @@ class Gel extends Command {
         const emojis = await low(client.adapters('emojis'))
         const channels = await low(client.adapters('channels'));
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (mentioned.user.id === message.member.user.id) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (mentioned.user.id === message.member.user.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let kanal = message.member.voice.channel;
-        if (!kanal) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (!mentioned.voice || !mentioned.voice.channel) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (message.member.roles.cache.has(roles.get("owner").value() && (mentioned.voice.channel.parentID !== channels.get("st_private").value()))) return await mentioned.voice.setChannel(message.member.voice.channel.id);
-        if (kanal.id === mentioned.voice.channel.id) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!kanal) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (!mentioned.voice || !mentioned.voice.channel) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (message.member.roles.cache.has(data.roles["owner"] && (mentioned.voice.channel.parentID !== data.channels["st_private"]))) return await mentioned.voice.setChannel(message.member.voice.channel.id);
+        if (kanal.id === mentioned.voice.channel.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         try {
-            await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
-            await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+            await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
+            await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         } catch (error) {
             console.error(error);
         }
@@ -44,14 +44,14 @@ class Gel extends Command {
             kanal = message.member.voice.channel;
             if (!kanal) {
                 collector.stop();
-                return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+                return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
             }
             switch (reaction.emoji.id) {
-                case emojis.get("ok").value().split(':')[2].replace('>', ''):
+                case data.emojis["ok"].split(':')[2].replace('>', ''):
                     await mentioned.voice.setChannel(kanal.id);
                     collector.stop("ok");
                     break;
-                case emojis.get("error").value().split(':')[2].replace('>', ''):
+                case data.emojis["error"].split(':')[2].replace('>', ''):
                     collector.stop();
                     break;
                 default:
@@ -60,9 +60,9 @@ class Gel extends Command {
         });
         collector.on("end", async (collected, reason) => {
             if (reason === "ok") {
-                return message.reactions.cache.find(r => r.emoji.id === emojis.get("error").value().split(':')[2].replace('>', '')).remove();
+                return message.reactions.cache.find(r => r.emoji.id === data.emojis["error"].split(':')[2].replace('>', '')).remove();
             } else {
-                return message.reactions.cache.find(r => r.emoji.id === emojis.get("ok").value().split(':')[2].replace('>', '')).remove();
+                return message.reactions.cache.find(r => r.emoji.id === data.emojis["ok"].split(':')[2].replace('>', '')).remove();
             }
         });
     }

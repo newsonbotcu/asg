@@ -22,7 +22,7 @@ class Avatar extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         let rol = message.guild.roles.cache.get(args[0]);
-        if (!rol) rol = message.guild.roles.cache.get(roles.get("cmd-crew").value());
+        if (!rol) rol = message.guild.roles.cache.get(data.roles["cmd-crew"]);
         if (!rol) return await message.inlineReply(`Böyle bir rol bulunmamaktadır.`);
         const members = rol.members.array();
         await message.inlineReply(`\`\`\`${rol.name} Rolüne Sahip Olan ${members.length} Kişi Bulunmaktadır \`\`\``);

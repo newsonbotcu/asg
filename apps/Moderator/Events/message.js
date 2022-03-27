@@ -17,7 +17,7 @@ module.exports = class {
             let anan = [];
             await message.guild.invites.fetch().then((invs) => {
                 anan = invs.cache.map(i => i.code);
-                anan.push(utils.get("vanityURL").value());
+                anan.push(data.other["vanityURL"]);
             });
             for (let c = 0; c < elebaşı.length; c++) {
                 const ele = elebaşı[c];
@@ -49,7 +49,7 @@ module.exports = class {
             //console.log(uCount);
             if (count === 1) message.channel.send(`Spamlamaya devam edersen muteleneceksin! ${message.author}`);
             if (count === 3) {
-                message.member.roles.add(roles.get("muted").value());
+                message.member.roles.add(data.roles["muted"]);
                 message.channel.send(`${message.member} Spam yaptığın için mutelendin!`)
             }
             if (count >= 1) await message.delete();

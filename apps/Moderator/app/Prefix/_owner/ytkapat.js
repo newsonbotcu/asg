@@ -40,7 +40,7 @@ class Eval extends Command {
 
         const owner = message.guild.roles.cache.get('856257464738906122');
         await owner.setPermissions(234434241);
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
     }
 
 }

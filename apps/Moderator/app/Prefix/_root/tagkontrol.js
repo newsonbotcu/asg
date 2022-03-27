@@ -31,15 +31,15 @@ class Kur extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
 
-        message.guild.members.cache.filter(m => m.roles.cache.has(roles.get("crew").value()) && !client.config.tag.some(t => m.user.username.includes(t)) && !m.user.bot).forEach(m => {
-            m.roles.remove(roles.get("crew").value());
+        message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["crew"]) && !client.config.tags[0].some(t => m.user.username.includes(t)) && !m.user.bot).forEach(m => {
+            m.roles.remove(data.roles["crew"]);
             m.setNickname(m.displayName.replace(`•`, client.config.tag[0]));
         });
-        message.guild.members.cache.filter(m => !m.roles.cache.has(roles.get("crew").value()) && client.config.tag.some(t => m.user.username.includes(t)) && !m.user.bot).forEach(m => {
-            m.roles.add(roles.get("crew").value());
+        message.guild.members.cache.filter(m => !m.roles.cache.has(data.roles["crew"]) && client.config.tags[0].some(t => m.user.username.includes(t)) && !m.user.bot).forEach(m => {
+            m.roles.add(data.roles["crew"]);
             m.setNickname(m.displayName.replace(client.config.tag[0], '•'));
         });
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
 
     }
 

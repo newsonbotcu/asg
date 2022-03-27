@@ -46,7 +46,7 @@ class Link extends Command {
         });
         const embed = new Discord.MessageEmbed()
         message.inlineReply(embed.setTitle("INVITE TOP LIST").setDescription(`\`\`\`md\n${embeddoc}\`\`\``))
-        await message.react((await emojiler).get("ok").value().split(':')[2].replace('>', ''));
+        await message.react((await emojiler).get("ok"].split(':')[2].replace('>', ''));
 
     }
 }

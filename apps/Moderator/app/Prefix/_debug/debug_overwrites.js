@@ -36,7 +36,7 @@ class Kur extends Command {
                 await Overwrites.updateOne({ _id: channel.id }, { $set: { overwrites: channel.permissionOverwrites.array() } });
             }
         }
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
 
     }
 

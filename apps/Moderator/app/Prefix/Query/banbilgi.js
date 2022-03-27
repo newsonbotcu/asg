@@ -20,7 +20,7 @@ class BanSorgu extends Command {
     async run(client, message, args) {
         const emojis = await low(client.adapters('emojis'));
         const banInfo = await message.guild.fetchBan(args[0]);
-        if (!banInfo) return message.inlineReply(new Discord.MessageEmbed().setColor("BLACK").setDescription(`${emojis.get("warn").value()} Belirtilen **ID*'ye sahip bir banlı kullanıcı bulunamadı.`));
+        if (!banInfo) return message.inlineReply(new Discord.MessageEmbed().setColor("BLACK").setDescription(`${data.emojis["warn"]} Belirtilen **ID*'ye sahip bir banlı kullanıcı bulunamadı.`));
         const banData = await Bans.findOne({ _id: args[0] });
         const embed = new Discord.MessageEmbed().setDescription(stripIndent`
         • Banlanan Kullanıcı: ${banInfo.user} (\`${banInfo.user.tag}\` - \`${banInfo.user.id}\`)

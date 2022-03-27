@@ -8,6 +8,7 @@ class SlashCommandCreate extends ClientEvent {
         this.data = this.loadMarks();
     }
     async run(interaction) {
+        const client = this.client;
         if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
         if (!interaction.isCommand()) return;
         if (interaction.isContextMenu()) return;

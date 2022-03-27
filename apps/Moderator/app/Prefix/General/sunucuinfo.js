@@ -25,19 +25,19 @@ class Call extends Command {
         const channels = await low(client.adapters('channels'));
 
         const embed = new Discord.MessageEmbed().setDescription(stripIndents`
-        ${emojis.get("pandomeme").value()} Açılma Tarihi: ${rain(client, checkDays(message.guild.createdAt))} **gün önce**
-        ${emojis.get("pandomeme").value()} Taç sahibi: **${message.guild.owner.user.username}**
+        ${data.emojis["pandomeme"]} Açılma Tarihi: ${rain(client, checkDays(message.guild.createdAt))} **gün önce**
+        ${data.emojis["pandomeme"]} Taç sahibi: **${message.guild.owner.user.username}**
         ●▬▬▬▬▬▬▬▬▬●
-        ${emojis.get("lock").value()} Kanal sayısı: ${rain(client, message.guild.channels.cache.size)}
-        ${emojis.get("lock").value()} Rol sayısı: ${rain(client, message.guild.roles.cache.size)}
-        ${emojis.get("lock").value()} Emoji sayısı: ${rain(client, message.guild.emojis.cache.size)}
+        ${data.emojis["lock"]} Kanal sayısı: ${rain(client, message.guild.channels.cache.size)}
+        ${data.emojis["lock"]} Rol sayısı: ${rain(client, message.guild.roles.cache.size)}
+        ${data.emojis["lock"]} Emoji sayısı: ${rain(client, message.guild.emojis.cache.size)}
         ●▬▬▬▬▬▬▬▬▬●
-        ${emojis.get("maviskull").value()} Toplam üye: ${rain(client, message.guild.memberCount)}
-        ${emojis.get("maviskull").value()} Çevrimiçi üye: ${rain(client, message.guild.members.cache.filter(m => m.presence.status !== 'offline').size)}
-        ${emojis.get("maviskull").value()} Yetkili üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(roles.get("crew").value())).size)}
-        ${emojis.get("maviskull").value()} Zindandaki üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(roles.get("prisoner").value())).size)}
-        ${emojis.get("maviskull").value()} Kayıtsız üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(roles.get("welcome").value())).size)}
-        ${emojis.get("maviskull").value()} Booster üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(roles.get("booster").value())).size)}
+        ${data.emojis["maviskull"]} Toplam üye: ${rain(client, message.guild.memberCount)}
+        ${data.emojis["maviskull"]} Çevrimiçi üye: ${rain(client, message.guild.members.cache.filter(m => m.presence.status !== 'offline').size)}
+        ${data.emojis["maviskull"]} Yetkili üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["crew"])).size)}
+        ${data.emojis["maviskull"]} Zindandaki üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["prisoner"])).size)}
+        ${data.emojis["maviskull"]} Kayıtsız üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["welcome"])).size)}
+        ${data.emojis["maviskull"]} Booster üye: ${rain(client, message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["booster"])).size)}
         ●▬▬▬▬▬▬▬▬▬●
 
         `);

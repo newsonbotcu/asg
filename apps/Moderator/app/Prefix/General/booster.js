@@ -21,13 +21,13 @@ class Booster extends Command {
         const roles = await low(client.adapters('roles'));
         const emojis = await low(client.adapters('emojis'));
         const isim = args.join(" ");
-        if (!isim) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!isim) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let taglo = '•';
-        if (client.config.tag.some(tag => message.member.user.username.includes(tag))) {
+        if (client.config.tags[0].some(tag => message.member.user.username.includes(tag))) {
             taglo = client.config.tag[0];
         }
         await message.member.setNickname(`${taglo} ${isim}`);
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
     }
 }
 

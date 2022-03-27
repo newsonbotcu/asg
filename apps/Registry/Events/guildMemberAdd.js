@@ -103,7 +103,7 @@ class GuildMemberAdd extends ClientEvent {
         ${this.data.emojis["welcome"]} **Hoş Geldin** ${member} <3 
         ${tutor || "sunucu linki"} senin sayende **${invCnt.length || 0} davet** sayısına ulaştı, seninle beraber **500** kişi olduk!
         Hesabın <t:${member.user.createdTimestamp}:R> oluşturulmuş, kayıt olmanda herhangi bir sakınca yok.
-        Müsait oldğunda **V. Confirmed** kanallarına katılıp bir yetkiliden seni kayıt etmesini isteyebilirsin.
+        Müsait olduğunda **V. Confirmed** kanallarına katılıp bir yetkiliden seni kayıt etmesini isteyebilirsin.
        `);
     }
 }

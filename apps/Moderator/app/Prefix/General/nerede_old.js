@@ -25,7 +25,7 @@ class Where extends Command {
         const channels = await low(client.adapters('channels'));
         const embed = new Discord.MessageEmbed().setColor('#2f3136');
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.inlineReply(new Discord.MessageEmbed().setDescription(`${emojis.get("kullaniciyok").value()} Kullanıcı bulunamadı!`).setColor('#2f3136'));
+        if (!mentioned) return message.inlineReply(new Discord.MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kullanıcı bulunamadı!`).setColor('#2f3136'));
         let desu = ``;
         let info = "";
         if (!mentioned.voice.channel) {

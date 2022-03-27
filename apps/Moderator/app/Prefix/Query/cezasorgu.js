@@ -28,12 +28,12 @@ class BanSorgu extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!member) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!member) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let datam = await sicil.findOne({ _id: member.user.id });
-        if (!datam) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!datam) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         let cezano = args[1];
-        if (!cezano) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!cezano) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         // ctrl + c başla
         let renk;
         let renkRol = member.roles.cache.array().filter(r => r.hoist).sort((a, b) => b.rawPosition - a.rawPosition)[0];
@@ -61,7 +61,7 @@ class BanSorgu extends Command {
 
         `);
             message.inlineReply(embed);
-        } else return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        } else return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
 
     }

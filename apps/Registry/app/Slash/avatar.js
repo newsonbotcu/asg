@@ -22,7 +22,7 @@ module.exports = class AFKCommand extends ApplicationCommand {
         const client = intg.creator.client;
         const userID = Object.values(intg.options)[0] || intg.member.user.id;
         const mentioned = client.guilds.cache.get(intg.guildID).members.cache.get(userID);
-        const errEmbed = new MessageEmbed().setDescription(`${emojis.get("kullaniciyok").value()} Kullanıcı bulunamadı!`).setColor('#2f3136')
+        const errEmbed = new MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kullanıcı bulunamadı!`).setColor('#2f3136')
         if (!mentioned) return intg.send({
             embeds: [errEmbed]
         });

@@ -40,7 +40,7 @@ module.exports = class SlashJail extends ApplicationCommand {
         const target = intg.guild.members.cache.get(intg.options["kullanıcı"]);
         if (!target) return intg.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
 
-        if (intg.member.roles.highest.rawPosition <= target.roles.highest.rawPosition) return await intg.reply(`${emojis.get("missingPerms").value()} Bunu yapmak için yeterli yetkiye sahip değilsin`, {
+        if (intg.member.roles.highest.rawPosition <= target.roles.highest.rawPosition) return await intg.reply(`${data.emojis["missingPerms"]} Bunu yapmak için yeterli yetkiye sahip değilsin`, {
             ephemeral: true
         });
         if (!target.bannable) return await intg.reply(`Bu kişiyi banlamak için yeterli yetkiye sahip değilim`, {

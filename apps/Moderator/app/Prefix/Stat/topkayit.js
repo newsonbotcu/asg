@@ -45,7 +45,7 @@ class Link extends Command {
         message.inlineReply(embed.setTitle("REGISTRY TOP LIST").setDescription(`\`\`\`md\n${embeddoc}\`\`\``))
 
 
-        await message.react((await emojiler).get("ok").value().split(':')[2].replace('>', ''));
+        await message.react((await emojiler).get("ok"].split(':')[2].replace('>', ''));
 
 
 

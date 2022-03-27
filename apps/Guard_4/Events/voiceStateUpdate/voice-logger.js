@@ -8,7 +8,7 @@ class MessageDelete extends ClientEvent {
         const client = this.client;
         if (cur.guild.id !== client.config.server) return;
         if (cur.channel && old.channel && cur.channel.id === old.channel.id) return;
-        //await cur.guild.channels.cache.get(channels.get("voicelog").value()).send(new MessageEmbed().setDescription(`${emojis.get("key").value()} ${cur.member} kullanıcısını kanal değiştirdi`).addField("Eski Kanal", old.channel || "Yok", false).addField("Yeni Kanal", cur.channel || "Yok", false));
+        //await cur.guild.channels.cache.get(data.channels["voicelog"]).send(new MessageEmbed().setDescription(`${data.emojis["key"]} ${cur.member} kullanıcısını kanal değiştirdi`).addField("Eski Kanal", old.channel || "Yok", false).addField("Yeni Kanal", cur.channel || "Yok", false));
         const entry = await cur.guild.fetchAuditLogs({ type: 'MEMBER_DISCONNECT' }).then(logs => logs.entries.first());
         if (entry.createdTimestamp <= Date.now() - 1000) return;
         const log = client.voicecutLimit[entry.executor.id] || 0;

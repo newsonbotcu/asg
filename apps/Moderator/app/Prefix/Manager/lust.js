@@ -22,11 +22,11 @@ class Lust extends Command {
         const channels = await low(client.adapters('channels'));
 
         let member = message.mentions.members.first() || message.guild.members.cache.get(args[0])
-        if (!member) return message.react(emojis.get("warn").value().split(':')[2].replace('>', ''));
-        if (member.roles.cache.has(roles.get("starter").value())) return message.reply("Kullanıcıda zaten perm var bilader amacın ne ?").catch(() => { })
+        if (!member) return message.react(data.emojis["warn"].split(':')[2].replace('>', ''));
+        if (member.roles.cache.has(data.roles["starter"])) return message.reply("Kullanıcıda zaten perm var bilader amacın ne ?").catch(() => { })
 
-        member.roles.add(roles.get("starter").value()).catch(() => { })
-        message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        member.roles.add(data.roles["starter"]).catch(() => { })
+        message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
     }
 }
 module.exports = Lust;

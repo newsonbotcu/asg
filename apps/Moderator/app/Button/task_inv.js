@@ -35,11 +35,11 @@ class RolSeçim extends Component {
         const mentioned = guild.members.cache.get(ctx.user.id);
         const profile = await Task_profile.findOne({ _id: mentioned.user.id });
         const myRol = guild.roles.cache.get(profile.role);
-        const startRol = guild.roles.cache.get(roles.get("starter").value());
+        const startRol = guild.roles.cache.get(data.roles["starter"]);
         const hoistroller = guild.roles.cache
             .filter(r => r.rawPosition > startRol.rawPosition + 2)
             .filter(r => r.hoist)
-            .filter(r => r.id !== roles.get("booster").value())
+            .filter(r => r.id !== data.roles["booster"])
             .sort((a, b) => a.rawPosition - b.rawPosition).array().reverse();
         const rawrol = mentioned.roles.cache.filter(r => r.hoist).sort((a, b) => a.rawPosition - b.rawPosition).array().reverse()[0];
         const nextRol = hoistroller.reverse().find(r => r.rawPosition > rawrol.rawPosition);
@@ -57,17 +57,17 @@ class RolSeçim extends Component {
             let str = "";
             for (let index = 2; index < 4; index++) {
                 if ((deger / index) >= 1) {
-                    str = str + emojis.get("ortabar_dolu").value()
+                    str = str + data.emojis["ortabar_dolu"]
                 } else {
-                    str = str + emojis.get("ortabar").value()
+                    str = str + data.emojis["ortabar"]
                 }
             }
             if (deger === 0) {
-                str = `${emojis.get("solbar").value()}${str}${emojis.get("sagbar").value()}`
+                str = `${data.emojis["solbar"]}${str}${data.emojis["sagbar"]}`
             } else if (deger === 5) {
-                str = `${emojis.get("solbar_dolu").value()}${str}${emojis.get("sagbar_dolu").value()}`
+                str = `${data.emojis["solbar_dolu"]}${str}${data.emojis["sagbar_dolu"]}`
             } else {
-                str = `${emojis.get("solbar_dolu").value()}${str}${emojis.get("sagbar").value()}`
+                str = `${data.emojis["solbar_dolu"]}${str}${data.emojis["sagbar"]}`
             }
             return str;
         }
@@ -78,37 +78,37 @@ class RolSeçim extends Component {
                 case "invite":
                     const Invites = await invite.find({ claim: mentioned.user.id });
                     const invitePoints = Invites.filter(doc => comparedate(doc.created) < comparedate(curTask.created)).length;
-                    strArrayCur.push(`${bar(invitePoints, curTask.count)}${emojis.get("task_invite").value()} Davet: \`${invitePoints}/${curTask.count}\`(${curTask.points} puan)`);
+                    strArrayCur.push(`${bar(invitePoints, curTask.count)}${data.emojis["task_invite"]} Davet: \`${invitePoints}/${curTask.count}\`(${curTask.points} puan)`);
                     break;
 
                 case "registry":
                     const Registries = await membership.find({ executor: mentioned.user.id });
                     const registryPoints = Registries.filter(data => comparedate(data.created) < comparedate(curTask.created)).length;
-                    strArrayCur.push(`${bar(registryPoints, curTask.count)}${emojis.get("task_registry").value()} Kayıt: \`${registryPoints}/${curTask.count}\`(${curTask.points} puan)`);
+                    strArrayCur.push(`${bar(registryPoints, curTask.count)}${data.emojis["task_registry"]} Kayıt: \`${registryPoints}/${curTask.count}\`(${curTask.points} puan)`);
                     break;
 
                 case "tagged":
                     const Taggeds = await tagged.find({ claim: mentioned.user.id });
                     const taggedPoints = Taggeds.filter(doc => comparedate(doc.created) < comparedate(curTask.created)).length;
-                    strArrayCur.push(`${bar(taggedPoints, curTask.count)}${emojis.get("task_tagged").value()} Taglı: \`${taggedPoints}/${curTask.count}\`(${curTask.points} puan)`);
+                    strArrayCur.push(`${bar(taggedPoints, curTask.count)}${data.emojis["task_tagged"]} Taglı: \`${taggedPoints}/${curTask.count}\`(${curTask.points} puan)`);
                     break;
 
                 case "auth":
                     const Personels = await personel.find({ claim: mentioned.user.id });
                     const personelPoints = Personels.filter(doc => comparedate(doc.created) < comparedate(curTask.created)).length;
-                    strArrayCur.push(`${bar(personelPoints, curTask.count)}${emojis.get("task_auth").value()} Yetkili: \`${personelPoints}/${curTask.count}\`(${curTask.points} puan)`);
+                    strArrayCur.push(`${bar(personelPoints, curTask.count)}${data.emojis["task_auth"]} Yetkili: \`${personelPoints}/${curTask.count}\`(${curTask.points} puan)`);
                     break;
 
                 case "voicexp":
                     const voiceXp = await stat_voice.findOne({ _id: mentioned.user.id });
                     const voicePoints = voiceXp.records.filter(data => comparedate(data.created) < comparedate(curTask.created)).map(data => data.xp).reduce((a, c) => a + c, 0);
-                    strArrayCur.push(`${bar(voicePoints, curTask.count)}${emojis.get("task_auth").value()} Ses: \`${voicePoints}/${curTask.count}\`(${curTask.points} puan)`);
+                    strArrayCur.push(`${bar(voicePoints, curTask.count)}${data.emojis["task_auth"]} Ses: \`${voicePoints}/${curTask.count}\`(${curTask.points} puan)`);
                     break;
 
                 case "message":
                     const messageXp = await stat_msg.findOne({ _id: mentioned.user.id });
                     const msgPoints = messageXp.records.filter(data => comparedate(data.created) < comparedate(curTask.created)).length;
-                    strArrayCur.push(`${bar(msgPoints, curTask.count)}${emojis.get("task_auth").value()} Mesaj: \`${msgPoints}/${curTask.count}\`(${curTask.points} puan)`);
+                    strArrayCur.push(`${bar(msgPoints, curTask.count)}${data.emojis["task_auth"]} Mesaj: \`${msgPoints}/${curTask.count}\`(${curTask.points} puan)`);
                     break;
 
                 default:
@@ -123,41 +123,41 @@ class RolSeçim extends Component {
                 case "invite":
                     const Invites = await invite.find({ claim: mentioned.user.id });
                     const invitePoints = Invites.filter(doc => comparedate(doc.created) < comparedate(oldTask.created)).length;
-                    strArrayDone.push(`${emojis.get("point_done").value()}${emojis.get("task_invite").value()} Davet: \`${invitePoints}/${oldTask.count}\`(+${oldTask.points} puan)`);
+                    strArrayDone.push(`${data.emojis["point_done"]}${data.emojis["task_invite"]} Davet: \`${invitePoints}/${oldTask.count}\`(+${oldTask.points} puan)`);
                     break;
 
                 case "registry":
                     const Registries = await membership.find({ executor: mentioned.user.id });
                     const registryPoints = Registries.filter(data => comparedate(data.created) < comparedate(oldTask.created)).length;
-                    strArrayDone.push(`${emojis.get("point_done").value()}${emojis.get("task_registry").value()} Kayıt: \`${registryPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
+                    strArrayDone.push(`${data.emojis["point_done"]}${data.emojis["task_registry"]} Kayıt: \`${registryPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
                     break;
 
                 case "tagged":
                     const Taggeds = await tagged.find({ claim: mentioned.user.id });
                     const taggedPoints = Taggeds.filter(doc => comparedate(doc.created) < comparedate(oldTask.created)).length;
-                    strArrayDone.push(`${emojis.get("point_done").value()}${emojis.get("task_tagged").value()} Taglı: \`${taggedPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
+                    strArrayDone.push(`${data.emojis["point_done"]}${data.emojis["task_tagged"]} Taglı: \`${taggedPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
                     break;
 
                 case "auth":
                     const Personels = await personel.find({ claim: mentioned.user.id });
                     const personelPoints = Personels.filter(doc => comparedate(doc.created) < comparedate(oldTask.created)).length;
-                    strArrayDone.push(`${emojis.get("point_done").value()}${emojis.get("task_auth").value()} Yetkili: \`${personelPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
+                    strArrayDone.push(`${data.emojis["point_done"]}${data.emojis["task_auth"]} Yetkili: \`${personelPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
                     break;
 
                 case "voicexp":
                     const voiceXp = await stat_voice.findOne({ _id: mentioned.user.id });
                     const voicePoints = voiceXp.records.filter(data => comparedate(data.created) < comparedate(oldTask.created)).map(data => data.xp).reduce((a, c) => a + c, 0);
-                    strArrayDone.push(`${emojis.get("point_done").value()}${emojis.get("task_auth").value()} Ses: \`${voicePoints}/${oldTask.count}\`(${oldTask.points} puan)`);
+                    strArrayDone.push(`${data.emojis["point_done"]}${data.emojis["task_auth"]} Ses: \`${voicePoints}/${oldTask.count}\`(${oldTask.points} puan)`);
                     break;
 
                 case "message":
                     const messageXp = await stat_msg.findOne({ _id: mentioned.user.id });
                     const msgPoints = messageXp.records.filter(data => comparedate(data.created) < comparedate(oldTask.created)).length;
-                    strArrayDone.push(`${emojis.get("point_done").value()}${emojis.get("task_auth").value()} Mesaj: \`${msgPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
+                    strArrayDone.push(`${data.emojis["point_done"]}${data.emojis["task_auth"]} Mesaj: \`${msgPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
                     break;
 
                 case "bonus":
-                    strArrayDone.push(`${emojis.get("point_bonus").value()} Bonus: **${oldTask.points} puan**`);
+                    strArrayDone.push(`${data.emojis["point_bonus"]} Bonus: **${oldTask.points} puan**`);
                     break;
                 default:
                     break;
@@ -169,13 +169,13 @@ class RolSeçim extends Component {
         ${mentioned} kullanıcısının puan bilgileri
         Yetkisi: ${myRol}
         ●▬▬▬▬▬▬▬▬▬▬●
-        ${emojis.get("tasks_active").value()} Aktif görevler:
+        ${data.emojis["tasks_active"]} Aktif görevler:
         ${strArrayCur.join('\n')}
         ●▬▬▬▬▬▬▬▬▬▬●
-        ${emojis.get("tasks_done").value()} Bitmiş görevler:
+        ${data.emojis["tasks_done"]} Bitmiş görevler:
         ${strArrayDone.join('\n')}
         ${bar(myOldDuties.map(task => task.points).reduce((a, c) => a + c, 0), RoleData.passPoint)} Toplam puan: \`${myOldDuties.map(task => task.points).reduce((a, c) => a + c, 0)}/${RoleData.passPoint}\`
-        ${emojis.get("point_time").value()} ${nextRol} rolüne yükselmek için ${RoleData.expiresIn - checkHours(profile.started)} saatin var!
+        ${data.emojis["point_time"]} ${nextRol} rolüne yükselmek için ${RoleData.expiresIn - checkHours(profile.started)} saatin var!
         `);
         await ctx.send({
             embeds: [embed],

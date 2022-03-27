@@ -45,9 +45,9 @@ module.exports = class RegistryCommand extends SlashCommand {
         const guild = client.guilds.cache.get(ctx.guildID);
         const embed = new Discord.MessageEmbed().setDescription(stripIndent`
         \`•\` Toplam üye: \`${guild.memberCount}\` (${guild.members.cache.filter(m => m.presence.status !== 'offline').size} online)
-        \`•\` Booster sayısı: \`${guild.members.cache.filter(m => m.roles.cache.has(roles.get("booster").value())).size}\` (${guild.premiumTier}. seviye)
-        \`•\` Taglı sayısı: \`${guild.members.cache.filter(m => client.config.tag.some(tag => m.user.username.includes(tag))).size}\` (${guild.members.cache.filter(m => m.roles.cache.has(roles.get("cmd-crew").value())).size} yetkili)
-        \`•\` Anlık ses: \`${guild.voiceStates.cache.filter(v => v.channel).size}\` (${guild.voiceStates.cache.filter(v => v.channel && (v.channel.parentID === channels.get("st_public").value())).size} public)
+        \`•\` Booster sayısı: \`${guild.members.cache.filter(m => m.roles.cache.has(data.roles["booster"])).size}\` (${guild.premiumTier}. seviye)
+        \`•\` Taglı sayısı: \`${guild.members.cache.filter(m => client.config.tags[0].some(tag => m.user.username.includes(tag))).size}\` (${guild.members.cache.filter(m => m.roles.cache.has(data.roles["cmd-crew"])).size} yetkili)
+        \`•\` Anlık ses: \`${guild.voiceStates.cache.filter(v => v.channel).size}\` (${guild.voiceStates.cache.filter(v => v.channel && (v.channel.parentID === data.channels["st_public"])).size} public)
         `).setColor('#7bf3e3');
         await ctx.send({
             embeds: [embed]

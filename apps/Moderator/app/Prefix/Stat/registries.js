@@ -23,7 +23,7 @@ class Invites extends Command {
         const channels = await low(client.adapters('channels'));
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
         const datam = await Data.find({ executor: mentioned.user.id });
-        if (!datam) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!datam) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
         
         const embedregistries = new Discord.MessageEmbed().setColor().setColor(mentioned.displayHexColor).setTitle("† Dante's INFEЯИO").setThumbnail(mentioned.user.displayAvatarURL({ dynamic: true }));

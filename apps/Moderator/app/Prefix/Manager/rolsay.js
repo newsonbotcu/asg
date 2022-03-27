@@ -37,7 +37,7 @@ class CountByRole extends Command {
     } else {
         await message.inlineReply(`\`\`\`${mentionedRole.name} Rolüne Sahip Online Olan ${mentionedRole.members.size} Kişi Bulunmaktadır \`\`\``);
     }
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
 
 
     }

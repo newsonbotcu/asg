@@ -33,7 +33,7 @@ class Kur extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         function Process() {
-            var ls = children.exec(`cd /home/${client.config.project}/${utils.get("dir").value()}; git pull`);
+            var ls = children.exec(`cd /home/${client.config.project}/${data.other["dir"]}; git pull`);
             ls.stdout.on('data', function (data) {
                 message.inlineReply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
             });

@@ -22,12 +22,12 @@ class Vip extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
 
-        const roleID = roles.get("vip").value();
+        const roleID = data.roles["vip"];
         const myRole = message.guild.roles.cache.get(roleID);
         const embed = new Discord.MessageEmbed().setColor("RANDOM")
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         
-        if (!mentioned) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         if (!mentioned.roles.cache.has(roleID)) {
             await message.inlineReply(embed
                 .setDescription(`${mentioned} kişisine **${myRole.name}** adlı rolü başarıyla verdim!`));
@@ -37,7 +37,7 @@ class Vip extends Command {
             await message.inlineReply(embed
             .setDescription(`${mentioned} kişisinden **${myRole.name}** adlı rolü başarıyla aldım!`));
         }
-        await message.react(emojis.get("ok").value());
+        await message.react(data.emojis["ok"]);
     }
 }
 

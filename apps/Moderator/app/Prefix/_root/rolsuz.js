@@ -33,11 +33,11 @@ class Kur extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         let rolsuz = message.guild.members.cache.filter(a => a.roles.cache.size <= 1)
-        if (rolsuz.size == 0) return await message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (rolsuz.size == 0) return await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         await rolsuz.forEach(async member => {
-            await member.roles.add(roles.get("welcome").value());
+            await member.roles.add(data.roles["welcome"]);
         });
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
         await message.inlineReply(new Discord.MessageEmbed().setDescription(`\`\`\`Herhangi bir rolü olmayan ${rolsuz.size} kişiye kayıtsız rolü verildi.\`\`\``).setColor('#6be4a2'));
 
     }

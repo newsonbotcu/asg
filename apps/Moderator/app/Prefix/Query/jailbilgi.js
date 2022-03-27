@@ -20,13 +20,13 @@ class JailSorgu extends Command {
     async run(client, message, args) {
         const emojis = await low(client.adapters('emojis'));
         let mentionedID = message.mentions.members.first() ? message.mentions.members.first().user.id : args[0];
-        if (!mentionedID) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!mentionedID) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const jailData = await Jails.findOne({ _id: mentionedID });
-        if (!jailData) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!jailData) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const embed = new Discord.MessageEmbed().setTitle("Jail Bilgisi").setDescription(stripIndent`
-        ${emojis.get("user").value()} **Kullanıcı:** ${message.guild.members.cache.get(mentionedID) || `Sunucuda değil (${mentionedID})`}
-        ${emojis.get("reason").value()} **Jail sebebi:** ${jailData.reason}
-        ${emojis.get("id").value()} **Kullanıcı ID'si:** ${mentionedID}
+        ${data.emojis["user"]} **Kullanıcı:** ${message.guild.members.cache.get(mentionedID) || `Sunucuda değil (${mentionedID})`}
+        ${data.emojis["reason"]} **Jail sebebi:** ${jailData.reason}
+        ${data.emojis["id"]} **Kullanıcı ID'si:** ${mentionedID}
         \`Komut sebebi:\` ${jailData.reason}
         \`Komutu Kullanan:\` ${message.guild.members.cache.get(jailData.executor) || `Sunucuda değil (${jailData.executor})`}
         \`Jail türü:\` ${jailData.type}

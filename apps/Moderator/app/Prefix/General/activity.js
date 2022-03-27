@@ -37,10 +37,10 @@ class Avatar extends Command {
             }
         };
         const emojis = await low(client.adapters('emojis'));
-        if (!message.channel.permissionsFor(message.guild.me).has("CREATE_INSTANT_INVITE")) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (!message.member.voice.channel) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!message.channel.permissionsFor(message.guild.me).has("CREATE_INSTANT_INVITE")) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (!message.member.voice.channel) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const activity = ACTIVITIES[args[0] ? args[0].toLowerCase() : null];
-        if (!activity) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
+        if (!activity) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         fetch(`https://discord.com/api/v8/channels/${message.member.voice.channelID}/invites`, {
             method: "POST",
             body: JSON.stringify({

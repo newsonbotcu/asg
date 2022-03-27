@@ -26,19 +26,19 @@ class Call extends Command {
         const channels = await low(client.adapters('channels'));
 
         const embed = new Discord.MessageEmbed().setDescription(stripIndents`
-        ${emojis.get("platform").value()} İşletim Sistemi: \`${Os.platform()} ${Os.arch()}\`
-        ${emojis.get("platform").value()} Sahibi: **${client.owner.username}**
+        ${data.emojis["platform"]} İşletim Sistemi: \`${Os.platform()} ${Os.arch()}\`
+        ${data.emojis["platform"]} Sahibi: **${client.owner.username}**
         ●▬▬▬▬▬▬▬▬▬●
-        ${emojis.get("version").value()} Version: \`${Os.version().split(' ')[0]}\`
-        ${emojis.get("version").value()} Sürüm: \`${Os.release()}\`
-        ${emojis.get("version").value()} Tip: \`${Os.type()}\`
+        ${data.emojis["version"]} Version: \`${Os.version().split(' ')[0]}\`
+        ${data.emojis["version"]} Sürüm: \`${Os.release()}\`
+        ${data.emojis["version"]} Tip: \`${Os.type()}\`
         ●▬▬▬▬▬▬▬▬▬●
-        ${emojis.get("uptime").value()} Boş Hafıza: \`${(Os.freemem() / 1024 / 1024).toFixed(2)} MB\`
-        ${emojis.get("uptime").value()} Toplam Hafıza: \`${(Os.totalmem() / 1024 / 1024).toFixed(2)} MB\`
-        ${emojis.get("uptime").value()} Çalışma Süresi: \`${Math.floor(Os.uptime() / 3600)} Saat\`
+        ${data.emojis["uptime"]} Boş Hafıza: \`${(Os.freemem() / 1024 / 1024).toFixed(2)} MB\`
+        ${data.emojis["uptime"]} Toplam Hafıza: \`${(Os.totalmem() / 1024 / 1024).toFixed(2)} MB\`
+        ${data.emojis["uptime"]} Çalışma Süresi: \`${Math.floor(Os.uptime() / 3600)} Saat\`
         ●▬▬▬▬▬▬▬▬▬●
-        ${emojis.get("type").value()} Gecikme: \`${client.ws.ping} ms\`
-        ${emojis.get("type").value()} Süre: \`${Math.floor(process.uptime() / 3600)} Saat\`
+        ${data.emojis["type"]} Gecikme: \`${client.ws.ping} ms\`
+        ${data.emojis["type"]} Süre: \`${Math.floor(process.uptime() / 3600)} Saat\`
         `);
         await message.inlineReply(embed.setColor('#2f3136').setAuthor("VDS için tıklayınız", client.owner.displayAvatarURL({ dynamic: true }), "https://www.odeaweb.com/r/210"));
     }

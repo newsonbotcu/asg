@@ -27,11 +27,11 @@ class CountByRole extends Command {
         const channels = await low(client.adapters('channels'));
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         const tagAlan = message.guild.members.cache.get(args[1]);
-        if (!mentioned || !tagAlan) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (!tagAlan.user.username.includes(client.config.tag[0])) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (mentioned.user.id === message.member.user.id) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        if (tagAlan.user.id === message.member.user.id) return message.react(emojis.get("error").value().split(':')[2].replace('>', ''));
-        await message.react(emojis.get("ok").value().split(':')[2].replace('>', ''));
+        if (!mentioned || !tagAlan) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (!tagAlan.user.username.includes(client.config.tag[0])) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (mentioned.user.id === message.member.user.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        if (tagAlan.user.id === message.member.user.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
+        await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
         await tagged.create({
             _id: tagAlan.user.id,
             verifier: message.author.id,
