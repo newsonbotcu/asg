@@ -15,7 +15,6 @@ class Handler extends EventEmitter {
         this.project_events();
         this.loader();
         this.lauch();
-        this.log = this.client.func.log;
     }
 
     lauch() {
@@ -40,11 +39,7 @@ class Handler extends EventEmitter {
                 files.filter((e) => e.endsWith('.js')).forEach((file) => {
                     this.client.log("loading event: " + file, "load");
                     const event = new (require(__dirname + "/../events/" + file))(this.client);
-                    this.on(file.split(".")[0], (...args) => {
-                        event.loadMarks();
-                        event.run(...args);
-                        return;
-                    });
+                    this.on(file.split(".")[0], (...args) => event.exec(...args));
                     delete require.cache[require.resolve(__dirname + "/../events/" + file)];
                 });
                 return;
@@ -53,11 +48,7 @@ class Handler extends EventEmitter {
                 files.filter((e) => e.endsWith('.js')).forEach((file) => {
                     this.client.log("loading event: " + file, "load");
                     const event = new (require(__dirname + "/../events/module/" + file))(this.client);
-                    this.client.on(file.split(".")[0], (...args) => {
-                        event.loadMarks();
-                        event.run(...args);
-                        return;
-                    });
+                    this.client.on(file.split(".")[0], (...args) => event.exec(...args));
                     delete require.cache[require.resolve(__dirname + "/../events/module/" + file)];
                 });
                 return;
@@ -101,11 +92,7 @@ class Handler extends EventEmitter {
             if (element.endsWith(".js")) {
                 this.client.log(`Loading Event: ${element.split(".")[0]}`, "load");
                 const event = new (require(__dirname + `/../apps/${this.client.name}/Events/${element}`))(this.client);
-                this.client.on(element.split(".")[0], (...args) => {
-                    event.loadMarks();
-                    event.run(...args);
-                        return;
-                });
+                this.client.on(element.split(".")[0], (...args) => event.exec(...args));
                 delete require.cache[require.resolve(__dirname + `/../apps/${this.client.name}/Events/${element}`)];
             } else {
                 const detaileds = await readdir(__dirname + `/../apps/${this.client.name}/Events/${element}/`);
@@ -113,11 +100,7 @@ class Handler extends EventEmitter {
                 detaileds.forEach((detail) => {
                     this.client.log(`Loading Event: ${detail.split(".")[0]}`, "load");
                     const event = new (require(__dirname + `/../apps/${this.client.name}/Events/${element}/${detail}`))(this.client);
-                    this.client.on(element.split(".")[0], (...args) => {
-                        event.loadMarks();
-                        event.run(...args);
-                        return;
-                    });
+                    this.client.on(element.split(".")[0], (...args) => event.exec(...args));
                     delete require.cache[require.resolve(__dirname + `/../apps/${this.client.name}/Events/${element}/${detail}`)];
                 });
             }

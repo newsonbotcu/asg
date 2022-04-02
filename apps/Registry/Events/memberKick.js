@@ -10,7 +10,6 @@ class GuildMemberKick extends ClientEvent {
     }
 
     async run(member) {
-        this.data = this.loadMarks();
         const client = this.client;
         if (member.guild.id !== client.config.server) return;
         const model = await client.models.membership.findOne({ _id: cur.user.id });

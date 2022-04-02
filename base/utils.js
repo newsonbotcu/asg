@@ -32,13 +32,6 @@ class ClientEvent {
         }
         this.exec();
     }
-    mount() {
-        let perms = [];
-        this.allow.forEach((except) => {
-
-        })
-        client.models.exep.find({ user: this.audit.executor.id, type: "overwrite", effect: "channel" });
-    }
 
     exec(...args) {
         this.client.models.key_config.find(type ? { type } : {}).then(docs => {
@@ -63,7 +56,7 @@ class ClientEvent {
         if (!this.run) return false;
         if (this.audit) {
             this.audit = this.client.guild.fetchAuditLogs({ type: this.audit }).then(logs => logs.entries.first());
-            this.client.models.exep.findOne({ audit: this.audit.action, event: this.name }).then()
+            this.client.models.exep.find({ audit: this.audit.action, event: this.name }).then()
         }
         try {
             this.run(...args);
@@ -401,11 +394,59 @@ function format(tDate) {
         dateTimePad(tDate.getMilliseconds(), 3))
 }
 
+const scm = {
+    role: new Schema({
+        _id: {
+            type: Types.ObjectId,
+            required: true,
+            unique: true
+        },
+        roleId: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        color: {
+            type: String,
+            required: true
+        },
+        hoist: {
+            type: String,
+            required: true
+        },
+        mentionable: {
+            type: Boolean,
+            required: true
+        },
+        rawPosition: {
+            type: String,
+            required: false
+        },
+        bitfield: Number,
+        aliases: Array
+    }),
+    member: new Schema(),
+    perm: new Schema({
+
+    }, {
+        timestamps: {
+            createdAt: "created_at",
+            updatedAt: "last_update"
+        },
+        collection: "role"
+    })
+}
+
+
 exports.models = {
     membership: model("membership", new Schema({
         _id: String,
         roles: Array,
-        penals: []
+        penals: Array
     }, { _id: false })),
     key_config: model("key_config", new Schema({
         _id: Types.ObjectId,

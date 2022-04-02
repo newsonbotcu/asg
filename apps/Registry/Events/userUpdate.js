@@ -1,20 +1,20 @@
 const Discord = require('discord.js');
-const low = require('lowdb');
-class UserUpdate {
+const { ClientEvent } = require('../../../base/utils');
+
+class UserUpdate extends ClientEvent {
     constructor(client) {
+        super(client, {
+            name: "userUpdate"
+        });
         this.client = client;
     }
     async run(oldUser, newUser) {
         const client = this.client;
         if (oldUser.username === newUser.username) return;
-        const guild = client.guilds.cache.get(client.config.server);
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
+        const guild = client.guild;
         const member = guild.members.cache.get(newUser.id);
         if (!data.other["forbidden"].some(tag => oldUser.username.includes(tag)) && data.other["forbidden"].some(tag => newUser.username.includes(tag))) {
-            client.handler.emit('Jail', member, this.client.user.id, "Yasaklı Tag", "Perma", 1)
+            client.handler.emit('Jail', member, this.client.user.id, "FORBIDDEN", "Perma", 1)
             const embed = new Discord.MessageEmbed().setColor('#2f3136').setTitle("Yasaklı Tag Alındı").setThumbnail(newUser.displayAvatarURL())
                 .setDescription(`${member} kullanıcısı **${data.other["forbidden"].find(tag => !oldUser.username.includes(tag) && newUser.username.includes(tag))}* tagını aldığından dolayı hapise atıldı!`);
             await guild.channels.cache.get(data.channels["ast-ytag"]).send(embed);
@@ -23,7 +23,7 @@ class UserUpdate {
             await member.send(dmEmbed);
         }
         if (data.other["forbidden"].some(tag => oldUser.username.includes(tag)) && !data.other["forbidden"].some(tag => newUser.username.includes(tag))) {
-            const pjail = await client.models.jail.findOne({ _id: newUser.id, reason: "YASAKLI TAG" });
+            const pjail = await client.models.jail.findOne({ _id: newUser.id, reason: "FORBIDDEN" });
             if (pjail) {
                 await member.roles.remove(data.roles["prisoner"]);
                 let deletedRoles = [];
@@ -38,7 +38,6 @@ class UserUpdate {
                 await member.send(dmEmbed);
             }
         }
-        /*
         if (!oldUser.username.includes(client.config.tag) && newUser.username.includes(client.config.tag)) {
             const tagrecord = await Tagli.findOne({ _id: newUser.id });
             if (tagrecord) {
@@ -68,7 +67,6 @@ class UserUpdate {
             await guild.channels.cache.get(data.channels["ast-tag"]).send(embed);
             
         }
-        */
     }
 }
 module.exports = UserUpdate;
