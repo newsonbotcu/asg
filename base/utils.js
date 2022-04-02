@@ -394,54 +394,6 @@ function format(tDate) {
         dateTimePad(tDate.getMilliseconds(), 3))
 }
 
-const scm = {
-    role: new Schema({
-        _id: {
-            type: Types.ObjectId,
-            required: true,
-            unique: true
-        },
-        roleId: {
-            type: String,
-            required: true,
-            unique: true
-        },
-        name: {
-            type: String,
-            required: true
-        },
-        color: {
-            type: String,
-            required: true
-        },
-        hoist: {
-            type: String,
-            required: true
-        },
-        mentionable: {
-            type: Boolean,
-            required: true
-        },
-        rawPosition: {
-            type: String,
-            required: false
-        },
-        bitfield: Number,
-        aliases: Array
-    }),
-    member: new Schema(),
-    perm: new Schema({
-
-    }, {
-        timestamps: {
-            createdAt: "created_at",
-            updatedAt: "last_update"
-        },
-        collection: "role"
-    })
-}
-
-
 exports.models = {
     membership: model("membership", new Schema({
         _id: String,
