@@ -1,5 +1,4 @@
 const { MessageEmbed, ApplicationCommand } = require('discord.js');
-const low = require('lowdb');
 module.exports = class Kayitsil extends ApplicationCommand {
     constructor(client, data) {
         super(client, data = {
@@ -10,7 +9,6 @@ module.exports = class Kayitsil extends ApplicationCommand {
         this.permissions = client.config.staff.slice(0);
     }
     async run(client, intg, data) {
-        const roles = await low(client.adapters("roles"));
         const target = intg.guild.members.cache.get(intg.targetId);
         if (!target) return intg.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
 

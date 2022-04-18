@@ -9,7 +9,6 @@ class EmitRunJail extends ClientEvent {
     };
 
     async run(member, executor, reason, duration, note) {
-        this.data = this.loadMarks();
         const memberRoles = member.roles.cache.filter(role => role.id !== this.data.roles["booster"][0]).map(role => role.id);
         await member.roles.remove(memberRoles);
         await member.roles.add(this.data.roles["prisoner"]);

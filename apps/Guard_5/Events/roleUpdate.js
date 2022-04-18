@@ -2,7 +2,10 @@ const Discord = require('discord.js');
 const { ClientEvent } = require('../../../base/utils');
 class RoleUpdate extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "roleUpdate",
+            audit: "ROLE_UPDATE"
+        });
         this.client = client;
     }
     async run(oldRole, curRole) {

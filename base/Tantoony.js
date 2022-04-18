@@ -4,19 +4,23 @@ class Tantoony extends Client {
         super(options);
         this.name = name;
         this.config = require('./config');
-        this.log = require("./utils").fuctions.log;
+        this.log = (p, t) => {
+            return require("./utils")
+                .functions
+                .log(p, t)
+        };
         (() => {
             require('dotenv').config({ path: __dirname + '/.env' });
             this.login(process.env[this.config.vars[name]]);
+            this.mongoLogin();
         })();
-        this.mongoLogin();
         this.models = require('./utils').models;
         this.func = require('./utils').fuctions;
-        this.handler = new (require('./handler'))(this);
         this.responders = new Collection();
         this.vanityUses = 0;
         this.actionlist = new Collection();
-        
+        this.handler = new (require('./handler'))(this);
+
         this.leaves = new Map();
         this.deleteChnl = new Map();
         this.invites = new Object();
@@ -36,9 +40,9 @@ class Tantoony extends Client {
             authSource: this.config.mongoDB.auth,
             dbName: this.config.mongoDB.name
         }).then(() => {
-            this.logger.log("Connected to the Mongodb database.", "mngdb");
+            this.log("Connected to the Mongodb database.", "mngdb");
         }).catch((err) => {
-            this.logger.log("Unable to connect to the Mongodb database. Error: " + err, "error");
+            this.log("Unable to connect to the Mongodb database. Error: " + err, "error");
         });
     }
 
@@ -73,25 +77,25 @@ class Tantoony extends Client {
     }
 
     async load_int(intName, intType, client) {
-        const props = new (require(`../apps/${this.name}/src/${intType}/${intName}`))(client);
+        const props = new (require(`./../apps/${this.name}/app/${intType}/${intName}`))(client);
         client.responders.set(`${intType}:${props.name}`, props);
         if (props.name) try {
             const cmd = await client.guild.commands.create(props);
             props.id = cmd.id;
-            this.logger.log(`Loading "${intType}" Integration in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
+            this.log(`Loading "${intType}" Integration in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
             client.responders.set(`${intType}:${cmd.name}`, props);
-            const markedRoles = await this.models.marked_ids.find({ type: "ROLE" });
-            const prm = props.permissions.map(p => markedRoles.find(rD => rD._id === p).value);
-            if (prm.length !== 0) client.guild.commands.permissions.set({
-                command: cmd.id,
-                permissions: prm.map(pm => {
-                    return {
-                        id: prm,
-                        type: "ROLE",
-                        permission: true
-                    }
-                })
-            });
+            const markedRoles = await this.models.key_config.find({ type: "ROLE" });
+            const mark = markedRoles.find(rD => rD._id === p);
+            if (mark) {
+                const prm = props.permissions.map(p => markedRoles.find(rD => rD._id === p).value);
+                if (prm.length !== 0) await client.guild.commands.permissions.set({
+                    command: cmd.id, permissions: prm.map(pm => {
+                        return {
+                            id: pm, type: "ROLE", permission: true
+                        }
+                    })
+                });
+            }
             return false;
         } catch (e) {
             return `Unable to load "${intType}" Integration ${intName}: ${e}`;

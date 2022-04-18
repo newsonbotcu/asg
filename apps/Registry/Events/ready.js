@@ -4,36 +4,41 @@ class Ready extends ClientEvent {
 
     constructor(client) {
         super(client, {
-            name: "ready"
+            name: "_ready"
         });
         this.client = client;
-        this.data = this.loadMarks();
     }
-    
+
     async run() {
         this.client.invites = await this.client.guild.invites.fetch();
-        if (client.guild.vanityURLCode) {
-            await this.client.guild.fetchVanityData().then(async (res) => {
-                this.client.vanityUses = res.uses;
-            }).catch(console.error);
+        if (this.client.guild.vanityURLCode) {
+            await this.client.guild.fetchVanityData()
+                .then(async (res) => {
+                    this.client.vanityUses = res.uses;
+                })
+                .catch(console.error);
         }
-        await this.client.guild.members.cache.forEach(async (member) => {
-            let doc = await this.client.models.membership.findOne({ _id: member.user.id });
+        this.client.guild.members.cache.forEach(async (member) => {
+            let roles = [];
+            await member.roles.cache.forEach(async (rl) => {
+                const doc = await this.client.models.roles.findOne({ roleId: rl.id });
+                roles.push(doc._id);
+            });
+            const doc = await this.client.models.membership.findOne({ _id: member.user.id });
             if (!doc) {
                 await this.client.models.membership.create({
-                    _id: member.user.id,
-                    roles: member.roles.cache.map(role => role.name)
+                    _id: member.user.id, roles: roles,
                 });
             } else {
                 await this.client.models.membership.updateOne({ _id: member.user.id }, {
                     $set: {
-                        roles: member.roles.cache.map(role => role.name)
+                        roles: roles
                     }
                 });
             }
-            this.client.log(` [KİTAPLIĞA EKLENDİ] : ${member.user.username}`, "mongo");
         });
-        await this.client.log(` [KAYITLAR TAMAMLANDI] `, "mongo");
+        this.client.log(`[KAYITLAR TAMAMLANDI] `, "mongo");
     }
 }
+
 module.exports = Ready;

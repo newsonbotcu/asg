@@ -1,4 +1,4 @@
-const Tantoony = require('../../BASE/Tantoony');
+const Tantoony = require('../../base/Tantoony');
 const { Intents } = require('discord.js');
 const client = new Tantoony({
     intents: [

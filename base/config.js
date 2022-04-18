@@ -1,18 +1,18 @@
 module.exports = {
     mongoDB: {
-        auth: "XXXXXXXXXXXXXXXX",
-        user: "XXXXXXXXXXXXXXXX",
-        name: "XXXXXXXXXXXXXXXX",
-        env_key: "XXXXXXXXXXXXXXXX",
+        auth: "admin",
+        user: "Tantoony",
+        name: "asgard",
+        env_key: "mongopass",
         port: 27017
     },
-    owner: "XXXXXXXXXXXXXXXX",
-    server: "XXXXXXXXXXXXXXXX",
-    prefix: 'XXXXXXXXXXXXXXXX',
-    status: {
-        name: "XXXXXXXXXXXXXXXX",
+    owner: "942697809080111145",
+    server: "936276300518260847",
+    prefix: '.',
+    status: [{
+        name: "Asgard Remedy Gang 💯",
         type: "LISTENING"
-    },
+    }],
     staff: [
         "registry",
         "ability",
@@ -22,20 +22,24 @@ module.exports = {
         "XXXXXXXXXXXXXXXX"
     ],
     cdStatus: {
-        name: "XXXXXXXXXXXXXXXX",
+        name: "Like THAT!",
         type: "LISTENING"
     },
-    tags: [],
+    point: {
+        default: "•",
+        tagged: "∗"
+    },
+    tags: ["146", "x)"],
     untag: 'XXXXXXXXXXXXXXXX',
-    dis: 'XXXXXXXXXXXXXXXX',
+    dis: '0146',
     vars: {
-        Moderator: "XXXXXXXXXXXXXXXX",
-        Registry: "XXXXXXXXXXXXXXXX",
-        Guard_1: "XXXXXXXXXXXXXXXX",
-        Guard_2: "XXXXXXXXXXXXXXXX",
-        Guard_3: "XXXXXXXXXXXXXXXX",
-        Guard_4: "XXXXXXXXXXXXXXXX",
-        Guard_5: "XXXXXXXXXXXXXXXX",
+        Moderator: "mod",
+        Registry: "reg",
+        Guard_1: "grd",
+        Guard_2: "grd",
+        Guard_3: "grd",
+        Guard_4: "grd",
+        Guard_5: "grd",
         calm_down: [
             "XXXXXXXXXXXXXXXX",
             "XXXXXXXXXXXXXXXX",

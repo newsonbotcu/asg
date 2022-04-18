@@ -6,8 +6,7 @@ class Ready {
 
     async run(client) {
         client.log(`${client.user.tag}, ${client.users.cache.size} kişi için hizmet vermeye hazır!`, "ready");
-        client.user.setPresence({ activity: client.config.status, status: "idle" });
-        client = this.client.handler.hello(this.client);
+        client.user.setPresence({ activities: client.config.status, status: "idle" });
     }
 }
 module.exports = Ready;

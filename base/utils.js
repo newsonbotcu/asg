@@ -1,15 +1,14 @@
 const {
-    MessageButton, MessageSelectMenu, ApplicationCommand, CommandInteraction,
-    ButtonInteraction, SelectMenuInteraction, UserContextMenuInteraction,
-    MessageContextMenuInteraction, Message
+    MessageButton,
+    MessageSelectMenu,
+    ApplicationCommand,
+    Collection
 } = require('discord.js');
-const { Schema, model, Types, Collection } = require('mongoose');
-const Tantoony = require('./Tantoony');
+const { Schema, model, Types } = require('mongoose');
 
 class ClientEvent {
     constructor(client, {
-        name = null,
-        audit = null
+        name = null, audit = null
     }) {
         this.client = client;
         this.name = name;
@@ -17,11 +16,7 @@ class ClientEvent {
         this.allow = [];
         this.audit = audit;
         this.data = {
-            emojis: {},
-            roles: {},
-            channels: {},
-            other: {},
-            mash: (...values) => {
+            emojis: {}, roles: {}, channels: {}, other: {}, mash: (...values) => {
                 let temp = [];
                 for (let i = 0; i < values.length; i++) {
                     const value = values[i];
@@ -30,33 +25,36 @@ class ClientEvent {
                 return temp;
             }
         }
-        this.exec();
     }
 
     exec(...args) {
-        this.client.models.key_config.find(type ? { type } : {}).then(docs => {
-            docs.forEach(doc => {
-                switch (doc.type) {
-                    case "ROLE":
-                        this.data.roles[doc.name] = doc.values;
-                        break;
-                    case "CHANNEL":
-                        this.data.channels[doc.name] = doc.values;
-                        break;
-                    case "EMOJI":
-                        this.data.emojis[doc.name] = doc.values;
-                        break;
-                    case "OTHER":
-                        this.data.other[doc.name] = doc.values;
-                        break;
-                    default: break;
-                }
+        this.client.models.key_config.find()
+            .then((docs) => {
+                docs.forEach((doc) => {
+                    switch (doc.type) {
+                        case "ROLE":
+                            this.data.roles[doc.name] = doc.values;
+                            break;
+                        case "CHANNEL":
+                            this.data.channels[doc.name] = doc.values;
+                            break;
+                        case "EMOJI":
+                            this.data.emojis[doc.name] = doc.values;
+                            break;
+                        case "OTHER":
+                            this.data.other[doc.name] = doc.values;
+                            break;
+                        default:
+                            break;
+                    }
+                });
             });
-        });
-        if (!this.run) return false;
+        if (!this.run) return;
         if (this.audit) {
-            this.audit = this.client.guild.fetchAuditLogs({ type: this.audit }).then(logs => logs.entries.first());
-            this.client.models.exep.find({ audit: this.audit.action, event: this.name }).then()
+            this.audit = this.client.guild.fetchAuditLogs({ type: this.audit })
+                .then(logs => logs.entries.first());
+            this.client.models.exep.find({ audit: this.audit.action, event: this.name })
+                .then()
         }
         try {
             this.run(...args);
@@ -77,7 +75,8 @@ class SlashCommand extends ApplicationCommand {
         intChannel = null,
         cooldown = new Map(),
         enabled = true,
-        time = 3000
+        time = 3000,
+        options: []
     }) {
         super(client, {
             id: customId,
@@ -86,43 +85,30 @@ class SlashCommand extends ApplicationCommand {
             guild_id: client.guild.id,
             name: name,
             description: description,
-            options: this.options,
+            options: options,
             default_permission: false,
         }, client.guild, client.guild.id);
         this.client = client;
         this.props = {
-            name,
-            dirname,
-            intChannel,
-            cooldown,
-            enabled,
-            isconst,
-            time
+            name, dirname, intChannel, cooldown, enabled, time
         };
         this.customId = customId;
         this.style = style;
         this.emoji = emoji;
         this.url = url;
         this.disabled = disabled;
-        this.perms = [];
+        this.perms = this.exec();
     }
 
-    loadPerms() {
-        this.client.models.cmd_perms.findOne({ cmd_type: "BUTTON", _id: this.customId }).then(doc => {
-            this.props.perms = doc.permissions;
-        });
-        return this.perms;
+    exec() {
+        return this.client.models.cmd_perms.findOne({ cmd_type: "SLASH", _id: this.customId })
+            .then((doc) => {
+                return doc.permissions;
+            });
     }
-    /**
-     * 
-     * @param {Tantoony} client "Extenden class for this bot"
-     * @param {CommandInteraction} interaction "the response"
-     * @param data "USEFUL!"
-     * 
-     */
-    async run(client, interaction, data) { }
 
 }
+
 class ButtonCommand extends MessageButton {
     constructor(client, {
         name = null,
@@ -139,79 +125,38 @@ class ButtonCommand extends MessageButton {
         enabled = true
     }) {
         super({
-            label,
-            customId,
-            style,
-            emoji,
-            url,
-            disabled
+            label, customId, style, emoji, url, disabled
         })
         this.client = client;
         this.props = {
-            name,
-            type,
-            dirname,
-            intChannel,
-            cooldown,
-            enabled,
-            isconst
+            name, type, dirname, intChannel, cooldown, enabled, isconst
         };
         this.info = {
-            label,
-            customId,
-            style,
-            emoji,
-            url,
-            disabled
+            label, customId, style, emoji, url, disabled
         };
         this.perms = [];
     }
 
     loadPerms() {
-        this.client.models.cmd_perms.findOne({ cmd_type: "BUTTON", _id: this.customId }).then(doc => {
-            this.props.perms = doc.permissions;
-        });
+        this.client.models.cmd_perms.findOne({ cmd_type: "BUTTON", _id: this.customId })
+            .then(doc => {
+                this.props.perms = doc.permissions;
+            });
         return this.perms;
     }
-    /**
-     * 
-     * @param {Tantoony} client "Extenden class for this bot"
-     * @param {ButtonInteraction} interaction "the response"
-     * @param data "USEFUL!"
-     */
-    async run(client, interaction, data) { }
-
 
 }
 
 class MenuCommand extends MessageSelectMenu {
     constructor(client, {
-        custom_id = null,
-        options = [],
-        placeholder = null,
-        min_values = 0,
-        max_values = 0,
-        disabled = false,
+        custom_id = null, options = [], placeholder = null, min_values = 0, max_values = 0, disabled = false,
     }) {
         super({
-            custom_id,
-            options,
-            placeholder,
-            min_values,
-            max_values,
-            disabled
+            custom_id, options, placeholder, min_values, max_values, disabled
         });
         this.client = client;
 
     }
-    /**
-     * 
-     * @param {Tantoony} client "Extenden class for this bot"
-     * @param {SelectMenuInteraction} interaction "the response"
-     * @param data "USEFUL!"
-     */
-    async run(client, interaction, data) { }
-
 }
 
 class AppUserCommand extends ApplicationCommand {
@@ -238,12 +183,7 @@ class AppUserCommand extends ApplicationCommand {
         }, client.guild, client.guild.id);
         this.client = client;
         this.props = {
-            name,
-            dirname,
-            intChannel,
-            cooldown,
-            enabled,
-            isconst
+            name, dirname, intChannel, cooldown, enabled, isconst
         };
         this.label = label;
         this.customId = customId;
@@ -253,13 +193,6 @@ class AppUserCommand extends ApplicationCommand {
         this.disabled = disabled;
         this.perms = [];
     }
-    /**
-     * 
-     * @param {Tantoony} client "Extenden class for this bot"
-     * @param {UserContextMenuInteraction} interaction "the response"
-     * @param data "USEFUL!"
-     */
-    async run(client, interaction, data) { }
 }
 
 class AppMessageCommand extends ApplicationCommand {
@@ -286,12 +219,7 @@ class AppMessageCommand extends ApplicationCommand {
         }, client.guild, client.guild.id);
         this.client = client;
         this.props = {
-            name,
-            dirname,
-            intChannel,
-            cooldown,
-            enabled,
-            isconst
+            name, dirname, intChannel, cooldown, enabled, isconst
         };
         this.label = label;
         this.customId = customId;
@@ -301,14 +229,8 @@ class AppMessageCommand extends ApplicationCommand {
         this.disabled = disabled;
         this.perms = [];
     }
-    /**
-     * 
-     * @param {Tantoony} client "Extenden class for this bot"
-     * @param {MessageContextMenuInteraction} interaction "the response"
-     * @param data "USEFUL!"
-     */
-    async run(client, interaction, data) { }
 }
+
 class DotCommand {
     constructor(client, {
         name = null,
@@ -330,50 +252,15 @@ class DotCommand {
     }) {
         this.client = client;
         this.config = {
-            dirname,
-            enabled,
-            ownerOnly,
-            rootOnly,
-            onTest,
-            adminOnly,
-            dmCmd
+            dirname, enabled, ownerOnly, rootOnly, onTest, adminOnly, dmCmd
         };
         this.info = {
-            name,
-            description,
-            usage,
-            examples,
-            category,
-            aliases,
-            cmdChannel,
-            accaptedPerms,
-            cooldown
+            name, description, usage, examples, category, aliases, cmdChannel, accaptedPerms, cooldown
         };
     }
-    /**
-     * 
-     * @param {Tantoony} client "Extenden class for this bot"
-     * @param {Message} message "the message"
-     * @param {string[]} args "USEFUL!"
-     * @param data "USEFUL!!!!!"
-     */
-    async run(client, message, args, data) {
-        return;
-    }
-
     load(props) {
         this.client.responders.set(`dot:${this.name}`, props);
     }
-}
-
-module.exports = {
-    ButtonCommand,
-    DotCommand,
-    SlashCommand,
-    MenuCommand,
-    AppUserCommand,
-    AppMessageCommand,
-    ClientEvent
 }
 
 
@@ -384,30 +271,17 @@ function dateTimePad(value, digits) {
     }
     return number;
 }
+
 function format(tDate) {
-    return (tDate.getFullYear() + "-" +
-        dateTimePad((tDate.getMonth() + 1), 2) + "-" +
-        dateTimePad(tDate.getDate(), 2) + " " +
-        dateTimePad(tDate.getHours(), 2) + ":" +
-        dateTimePad(tDate.getMinutes(), 2) + ":" +
-        dateTimePad(tDate.getSeconds(), 2) + "." +
-        dateTimePad(tDate.getMilliseconds(), 3))
+    return (tDate.getFullYear() + "-" + dateTimePad((tDate.getMonth() + 1), 2) + "-" + dateTimePad(tDate.getDate(), 2) + " " + dateTimePad(tDate.getHours(), 2) + ":" + dateTimePad(tDate.getMinutes(), 2) + ":" + dateTimePad(tDate.getSeconds(), 2) + "." + dateTimePad(tDate.getMilliseconds(), 3))
 }
 
-exports.models = {
-    membership: model("membership", new Schema({
-        _id: String,
-        roles: Array,
-        penals: Array
-    }, { _id: false })),
-    key_config: model("key_config", new Schema({
-        _id: Types.ObjectId,
-        type: String,
-        name: String,
-        values: Array,
-        deleted: Boolean
-    })),
-    exep: model("guard_exeption", new Schema({
+const models = {
+    membership: model("role_init", new Schema({
+        _id: String, roles: Array
+    }, { _id: false })), key_config: model("key_config", new Schema({
+        _id: Types.ObjectId, type: String, name: String, values: Array, deleted: Boolean
+    })), exep: model("guard_exeption", new Schema({
         _id: Types.ObjectId,
         userId: String,
         executor: String,
@@ -418,60 +292,29 @@ exports.models = {
         until: Date,
         created: Date,
         start: Boolean
-    })),
-    afk_inbox: model("afk_inbox", new Schema({
-        _id: String,
-        reason: String,
-        created: Date,
-        inbox: Array
-    }, { _id: false })),
-    cmd_perms: model("cnd_perms", new Schema({
-        _id: Types.ObjectId,
-        id: String,
-        type: String,
-        permission: Boolean
+    })), afk_inbox: model("afk_inbox", new Schema({
+        _id: String, reason: String, created: Date, inbox: Array
+    }, { _id: false })), cmd_perms: model("cmd_perms", new Schema({
+        _id: Types.ObjectId, cmd_id: String, type: String, permission: Boolean
     })),
     roles: model("data_roles", new Schema({
-        _id: Types.ObjectId,
         roleId: String,
         name: String,
         color: String,
         hoist: Boolean,
         mentionable: Boolean,
         rawPosition: Number,
-        bitfield: Number,
+        bitfield: String,
         aliases: Array
-    })),
-    overwrites: model("data_overwrites", new Schema({
-        _id: Types.ObjectId,
-        channel: String,
-        subjecType: String,
-        subjectId: String,
-        allow: Array,
-        deny: Array
-    })),
-    category: model("data_categories", new Schema({
-        _id: String,
-        name: String,
-        position: Number,
-        children: Array
-    }, { _id: false })),
-    textChannel: model("data_textChannels", new Schema({
-        _id: String,
-        name: String,
-        nsfw: Boolean,
-        parentID: String,
-        position: Number,
-        rateLimit: Number
-    }, { _id: false })),
-    voiceChannels: model('data_voiceChannels', new Schema({
-        _id: String,
-        name: String,
-        bitrate: Number,
-        parentID: String,
-        position: Number
-    }, { _id: false })),
-    penal: model('penalty', new Schema({
+    })), overwrites: model("data_overwrites", new Schema({
+        _id: Types.ObjectId, channel: String, subjecType: String, subjectId: String, allow: Array, deny: Array
+    })), category: model("data_categories", new Schema({
+        _id: String, name: String, position: Number, children: Array
+    }, { _id: false })), textChannel: model("data_textChannels", new Schema({
+        _id: String, name: String, nsfw: Boolean, parentID: String, position: Number, rateLimit: Number
+    }, { _id: false })), voiceChannels: model('data_voiceChannels', new Schema({
+        _id: String, name: String, bitrate: Number, parentID: String, position: Number
+    }, { _id: false })), penal: model('penalty', new Schema({
         _id: Types.ObjectId,
         userId: String,
         executor: String,
@@ -480,15 +323,9 @@ exports.models = {
         extras: Array,
         until: Date,
         created: Date
-    })),
-    cmd: model("log_cmd", new Schema({
-        _id: Types.ObjectId,
-        cmd: String,
-        executorId: String,
-        args: String,
-        resp: String
-    })),
-    action: model("log_action", new Schema({
+    })), cmd: model("log_cmd", new Schema({
+        _id: Types.ObjectId, cmd: String, executorId: String, args: String, resp: String
+    })), action: model("log_action", new Schema({
         _id: Types.ObjectId,
         auditId: String,
         type: String,
@@ -503,46 +340,20 @@ exports.models = {
         executorId: String,
         changes: Array,
         created: Date
-    })),
-    //
+    })), //
     voice: model("log_voice", new Schema({
-        _id: Types.ObjectId,
-        userId: String,
-        channelId: String,
-        connected: Boolean,
-        status: Array,
-        created: Date
-    })),
-    //
+        _id: Types.ObjectId, userId: String, channelId: String, connected: Boolean, status: Array, created: Date
+    })), //
     nick: model("log_nick", new Schema({
-        _id: Types.ObjectId,
-        userId: String,
-        nick: String,
-        claimer: String,
-        created: Date
-    })),
-    warp: model("log_warp", new Schema({
-        _id: Types.ObjectId,
-        user: String,
-        job: String,
-        data: String,
-        created: Date
-    })),
-    //
+        _id: Types.ObjectId, userId: String, nick: String, claimer: String, created: Date
+    })), warp: model("log_warp", new Schema({
+        _id: Types.ObjectId, user: String, job: String, data: String, created: Date
+    })), //
     inv: model("log_invite", new Schema({
-        _id: Types.ObjectId,
-        inviter: String,
-        invited: String,
-        created: Date,
-        isFirst: Boolean
-    })),
-    insult: model("log_insult", new Schema({
-        _id: Types.ObjectId,
-        author: String,
-        message: String,
-        created: Date
-    })),
-    registry: model("log_registry", new Schema({
+        _id: Types.ObjectId, inviter: String, invited: String, created: Date, isFirst: Boolean
+    })), insult: model("log_insult", new Schema({
+        _id: Types.ObjectId, author: String, message: String, created: Date
+    })), registry: model("log_registry", new Schema({
         _id: Types.ObjectId,
         user: String,
         executor: String,
@@ -554,33 +365,29 @@ exports.models = {
     }))
 }
 
-exports.fuctions = {
+const functions = {
     comparedate(date) {
         let now = new Date();
         let diff = now.getTime() - date.getTime();
         let days = Math.floor(diff);
         return days;
-    },
-    checkSecs(date) {
+    }, checkSecs(date) {
         let now = new Date();
         let diff = now.getTime() - date.getTime();
         let days = Math.floor(diff / 1000);
         return days / 60;
-    },
-    checkMins(date) {
+    }, checkMins(date) {
         let now = new Date();
         let diff = now.getTime() - date.getTime();
         let secs = Math.floor(diff / 60000);
         return secs;
-    },
-    sortByKey(array, key) {
+    }, sortByKey(array, key) {
         return array.sort(function (a, b) {
             let x = a[key];
             let y = b[key];
             return ((x < y) ? 1 : ((x > y) ? -1 : 0));
         });
-    },
-    shuffle(pArray) {
+    }, shuffle(pArray) {
         let array = [];
         pArray.forEach(element => array.push(element));
         let currentIndex = array.length, temporaryValue, randomIndex;
@@ -592,15 +399,16 @@ exports.fuctions = {
             array[randomIndex] = temporaryValue;
         }
         return array;
-    },
-    randomNum(min, max) {
+    }, randomNum(min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
-    },
-    rain(client, sayi) {
-        const emojis = low(client.adapters('emojis')).get("numbers");
-        var basamakbir = sayi.toString().replace(/ /g, "     ");
+    }, rain(client, sayi) {
+        const emojis = low(client.adapters('emojis'))
+            .get("numbers");
+        var basamakbir = sayi.toString()
+            .replace(/ /g, "     ");
         var basamakiki = basamakbir.match(/([0-9])/g);
-        basamakbir = basamakbir.replace(/([a-zA-Z])/g, "bilinmiyor").toLowerCase();
+        basamakbir = basamakbir.replace(/([a-zA-Z])/g, "bilinmiyor")
+            .toLowerCase();
         if (basamakiki) {
             basamakbir = basamakbir.replace(/([0-9])/g, d => {
                 return {
@@ -618,26 +426,34 @@ exports.fuctions = {
             });
         }
         return basamakbir;
-    },
-    sayi(number) {
+    }, sayi(number) {
         var reg = new RegExp("^\\d+$");
-        var valid = reg.test(number);
+        var valid = reg.test(numbdate1er);
         return valid;
-    },
-    checkDays(date) {
+    }, checkDays(date) {
         let now = new Date();
         let diff = now.getTime() - date.getTime();
         let days = Math.floor(diff / 86400000);
         return days;
-    },
-    checkHours(date) {
+    }, checkHours(date) {
         let now = new Date();
         let diff = now.getTime() - date.getTime();
         let days = Math.floor(diff / 3600000);
         return days;
-    },
-    log(content, type = "log") {
+    }, log(content, type = "log") {
         const date = `[${format(new Date(Date.now()))}]:`;
-        return console.log(`${date}[${type.toUpperCase()}] ~ :${content} `);
+        console.log(`${date}[${type.toUpperCase()}] ~ :${content} `);
     }
+}
+
+module.exports = {
+    ButtonCommand,
+    DotCommand,
+    SlashCommand,
+    MenuCommand,
+    AppUserCommand,
+    AppMessageCommand,
+    ClientEvent,
+    functions,
+    models
 }

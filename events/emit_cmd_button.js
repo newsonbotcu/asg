@@ -7,7 +7,6 @@ class ButtonCommandCreate extends ClientEvent {
         this.client = client;
     }
     async run(interaction) {
-        this.data = this.loadMarks();
         if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
         if (!interaction.isMessageComponent()) return;
         if (!interaction.isButton()) return;

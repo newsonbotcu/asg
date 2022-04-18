@@ -8,7 +8,6 @@ class GuildMemberAdd extends ClientEvent {
             audit: "BOT_ADD"
         });
         this.client = client;
-        this.data = this.loadMarks();
     }
 
     async run(member) {
@@ -43,7 +42,7 @@ class GuildMemberAdd extends ClientEvent {
             isFirst: !first
         });
         client.invites = await member.guild.invites.fetch();
-        const tag = client.config.tags.some(tag => member.user.username.includes(tag)) ? client.config.tags[0] : client.config.untag;
+        const tag = client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator ? client.config.point.tagged : client.config.point.default;
         let penals = await client.models.penal.find({ userId: member.user.id });
         penals = penals.filter((penal) => penal.until.getTime() > Date.now());
         const recovery = await client.models.registry.find({ user: member.user.id });
@@ -100,10 +99,11 @@ class GuildMemberAdd extends ClientEvent {
         const invCnt = await client.models.inv.find({ inviter: inviter, isFirst: true });
         await member.roles.add(this.data.roles["welcome"]);
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
-        ${this.data.emojis["welcome"]} **Hoş Geldin** ${member} <3 
-        ${tutor || "sunucu linki"} senin sayende **${invCnt.length || 0} davet** sayısına ulaştı, seninle beraber **500** kişi olduk!
-        Hesabın <t:${member.user.createdTimestamp}:R> oluşturulmuş, kayıt olmanda herhangi bir sakınca yok.
-        Müsait olduğunda **V. Confirmed** kanallarına katılıp bir yetkiliden seni kayıt etmesini isteyebilirsin.
+        > ${this.data.emojis["welcome1"]} **Hoş Geldin** ${member},
+        > buraya gelmeni sağlayan ${tutor || "özel url"} toplamda **${invCnt.length || 0} kişiyi** buraya kazandırdı.
+        > Güvenli bölgede anlık olarak **${member.guild.memberCount} üye** barınıyor. 
+        > Giriş için lütfen **V. Confirmed** isimli kanallardan herhangi birinde yetkili birisinin seninle ilgilenmesini bekle.
+        > ${this.data.emojis["welcome2"]} __Hesap <t:${member.user.createdTimestamp}:R>  oluşturulmuş__
        `);
     }
 }

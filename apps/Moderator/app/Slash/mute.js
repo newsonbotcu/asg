@@ -4,7 +4,7 @@ module.exports = class SlashMute extends ApplicationCommand {
     constructor(client, data, guild, guildId) {
         super(client, data = {
             name: "mute",
-            description: "Kullanıcıyı cezalıya atar",
+            description: "Kullanıcıya mute atar",
             default_permission: false,
             options: [
                 {

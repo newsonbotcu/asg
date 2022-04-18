@@ -1,28 +1,30 @@
 const { ClientEvent } = require('../../../base/utils');
+
 class Ready extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "_ready"
+        });
         this.client = client;
     }
 
-    async run(client) {
-        client = this.client.handler.hello(this.client);
-        client.log(`${client.user.tag}, ${client.users.cache.size} kişi için hizmet vermeye hazır!`, "ready");
-        client.user.setPresence({ activity: client.config.status, status: "idle" });
-        const roles = client.guild.roles.cache.map(r => r);
+    async run() {
+        const roles = this.client.guild.roles.cache.map(r => r);
         for (let index = 0; index < roles.length; index++) {
             const role = roles[index];
-            const roleData = await client.models.bc_role.findOne({ _id: role.id });
-            if (!roleData) await client.models.bc_role.create({
-                _id: role.id,
+            const roleData = await this.client.models.roles.findOne({ roleId: role.id });
+            if (!roleData) await this.client.models.roles.create({
+                roleId: role.id,
                 name: role.name,
                 color: role.hexColor,
                 hoist: role.hoist,
                 mentionable: role.mentionable,
                 rawPosition: role.rawPosition,
-                bitfield: role.permissions
+                bitfield: role.permissions.bitfield.toString()
             });
+            this.client.log(`${role.name} başarıyla yedeklendi`);
         }
     }
 }
+
 module.exports = Ready;

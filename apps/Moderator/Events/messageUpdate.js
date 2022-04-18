@@ -1,4 +1,3 @@
-const low = require('lowdb');
 const { MessageEmbed } = require('discord.js');
 
 class MessageDelete {
@@ -10,10 +9,6 @@ class MessageDelete {
         if (!oldmsg.guild) return;
         if (curmsg.guild.id !== client.config.server) return;
         if (newmsg.author.bot) return;
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
         const embed = new MessageEmbed().setColor("#2f3136").setDescription(`Eski Mesaj:\n\`\`\`${oldmsg.content}\`\`\`\nYeni Mesaj:\n\`\`\`${curmsg.content}\`\`\`\n[Mesaja erişmek için tıkla](${curmsg.url})`).setTitle("Bir mesaj yeniledi").addField("Yazarı:", curmsg.author, true);
         await curmsg.guild.channels.cache.get(data.channels["mesajlog"]).send(embed.addField("Kanal", curmsg.channel, true));
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];

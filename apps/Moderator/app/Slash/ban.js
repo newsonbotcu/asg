@@ -50,7 +50,7 @@ module.exports = class SlashBan extends ApplicationCommand {
         });
         let typo = "perma";
         if (intg.options["süre"]) typo = "temp";
-        await client.handler.emit('Ban', intg.guild, target.id, intg.user.id, intg.options["sebep"], typo, intg.options["süre"], intg.options["not"]);
+        client.handler.emit('Ban', intg.guild, target.id, intg.user.id, intg.options["sebep"], typo, intg.options["süre"], intg.options["not"]);
 
     }
 }

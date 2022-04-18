@@ -1,4 +1,3 @@
-const low = require('lowdb');
 const Discord = require("discord.js");
 
 module.exports = class {
@@ -8,10 +7,6 @@ module.exports = class {
     async run(message) {
         const client = this.client;
         if (message.guild && (message.guild.id !== client.config.server)) return;
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
-        const utils = await low(client.adapters('utils'));
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];
         if (message.guild && elebaşı.some(link => message.content.includes(link))) {
             let anan = [];

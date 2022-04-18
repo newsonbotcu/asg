@@ -1,5 +1,4 @@
 const { MessageEmbed } = require('discord.js');
-const low = require('lowdb');
 const { SlashCommand } = require('../../../../base/utils');
 
 class SlashKayit extends SlashCommand {
@@ -49,7 +48,6 @@ class SlashKayit extends SlashCommand {
         this.permissions = client.config.staff.slice(5);
     }
     async run(client, interaction, data) {
-        const roles = await low(client.adapters('roles'));
         const target = interaction.guild.members.cache.get(interaction.options.get("kullanıcı").value);
         if (!target) return interaction.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
         const docs = await client.models.registry.findOne({ user: target.id });

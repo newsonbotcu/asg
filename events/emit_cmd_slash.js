@@ -7,7 +7,6 @@ class SlashCommandCreate extends ClientEvent {
         this.client = client;
     }
     async run(interaction) {
-        this.data = this.loadMarks();
         const client = this.client;
         if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
         if (!interaction.isCommand()) return;
