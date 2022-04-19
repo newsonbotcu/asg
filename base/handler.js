@@ -18,7 +18,7 @@ class Handler {
                 console.log(packet);
             });
         });
-        process.on('message', function (packet) {
+        process.on('message', function () {
             process.send({
                 type: 'process:msg', data: {
                     success: true
@@ -41,7 +41,7 @@ class Handler {
     }
 
     hello(client) {
-        client = client || this.client;
+        this.client = client;
         client.emit("_ready");
         readdir(__dirname.replace('base', 'apps') + `/${this.client.name}/app/`)
             .then((appFolders) => {
@@ -67,26 +67,28 @@ class Handler {
         return this.client;
     }
 
-    loader() {
-        this.client.on("error", (e) => this.client.log(e, "error"));
-        this.client.on("warn", (info) => this.client.log(info, "warn"));
-        readdir(__dirname + `/../apps/${this.client.name}/Events/`)
+    loader(client) {
+        if (!client) client = this.client;
+        this.client = client;
+        client.on("error", (e) => client.log(e, "error"));
+        client.on("warn", (info) => client.log(info, "warn"));
+        readdir(__dirname + `/../apps/${client.name}/Events/`)
             .then((elements) => {
-                this.client.log(`Loading ${elements.length} events in ${this.client.name}...`, "category");
+                client.log(`Loading ${elements.length} events in ${client.name}...`, "category");
                 elements.forEach(async (element) => {
                     if (element.endsWith(".js")) {
-                        this.client.log(`Loading Event: ${element.split(".")[0]}`, "load");
-                        const event = new (require(__dirname + `/../apps/${this.client.name}/Events/${element}`))(this.client);
-                        this.client.on(event.name, (...args) => event.exec(...args));
-                        delete require.cache[require.resolve(__dirname + `/../apps/${this.client.name}/Events/${element}`)];
+                        client.log(`Loading Event: ${element.split(".")[0]}`, "load");
+                        const event = new (require(__dirname + `/../apps/${client.name}/Events/${element}`))(client);
+                        client.on(event.name, (...args) => event.exec(client, ...args));
+                        delete require.cache[require.resolve(__dirname + `/../apps/${client.name}/Events/${element}`)];
                     } else {
-                        const detaileds = await readdir(__dirname + `/../apps/${this.client.name}/Events/${element}/`);
-                        this.client.log(`Loading ${detaileds.length} details of the event ${element} in ${this.client.name}...`, "category");
+                        const detaileds = await readdir(__dirname + `/../apps/${client.name}/Events/${element}/`);
+                        client.log(`Loading ${detaileds.length} details of the event ${element} in ${client.name}...`, "category");
                         detaileds.forEach((detail) => {
-                            this.client.log(`Loading Event: ${detail.split(".")[0]}`, "load");
-                            const event = new (require(__dirname + `/../apps/${this.client.name}/Events/${element}/${detail}`))(this.client);
-                            this.client.on(event.name, (...args) => event.exec(...args));
-                            delete require.cache[require.resolve(__dirname + `/../apps/${this.client.name}/Events/${element}/${detail}`)];
+                            client.log(`Loading Event: ${detail.split(".")[0]}`, "load");
+                            const event = new (require(__dirname + `/../apps/${client.name}/Events/${element}/${detail}`))(client);
+                            client.on(event.name, (...args) => event.exec(client, ...args));
+                            delete require.cache[require.resolve(__dirname + `/../apps/${client.name}/Events/${element}/${detail}`)];
                         });
                     }
                 });
