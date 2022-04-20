@@ -83,7 +83,6 @@ class GuildMemberAdd extends ClientEvent {
                 default:
                     break;
             }
-
         }
         if (client.config.tags.some(t => member.user.username.includes(t))) await member.roles.add(this.data.roles["taglı"]);
         if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add(this.data.roles["suspicious"].concat(this.data.roles["karantina"]));
@@ -101,7 +100,7 @@ class GuildMemberAdd extends ClientEvent {
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
         > ${this.data.emojis["welcome1"]} **Hoş Geldin** ${member},
         > buraya gelmeni sağlayan ${tutor || "özel url"} toplamda **${invCnt.length || 0} kişiyi** buraya kazandırdı.
-        > Güvenli bölgede anlık olarak **${member.guild.memberCount} üye** barınıyor. 
+        > Güvenli bölgede anlık olarak **${member.guild.memberCount} üye** barınıyor.
         > Giriş için lütfen **V. Confirmed** isimli kanallardan herhangi birinde yetkili birisinin seninle ilgilenmesini bekle.
         > ${this.data.emojis["welcome2"]} __Hesap <t:${member.user.createdTimestamp}:R>  oluşturulmuş__
        `);

@@ -14,13 +14,27 @@ class Tantoony extends Client {
             this.login(process.env[this.config.vars[name]]);
             this.mongoLogin();
         })();
+        this.data = {
+            emojis: {},
+            roles: {},
+            channels: {},
+            other: {},
+            mash: (...values) => {
+                let temp = [];
+                for (let i = 0; i < values.length; i++) {
+                    const value = values[i];
+                    temp.concat(value);
+                }
+                return temp;
+            }
+        };
         this.models = require('./utils').models;
-        this.func = require('./utils').fuctions;
+        this.func = require('./utils').functions;
         this.responders = new Collection();
         this.vanityUses = 0;
         this.actionlist = new Collection();
         this.handler = new (require('./handler'))(this);
-
+        /*
         this.leaves = new Map();
         this.deleteChnl = new Map();
         this.invites = new Object();
@@ -31,6 +45,7 @@ class Tantoony extends Client {
         this.stats = new Object();
         this.banlimit = new Object();
         this.voicecutLimit = new Object();
+        */
     };
 
     mongoLogin() {
@@ -78,24 +93,20 @@ class Tantoony extends Client {
 
     async load_int(intName, intType, client) {
         const props = new (require(`./../apps/${this.name}/app/${intType}/${intName}`))(client);
-        client.responders.set(`${intType}:${props.name}`, props);
+        client.responders.set(`${intType.toLowerCase()}:${props.name}`, props);
         if (props.name) try {
             const cmd = await client.guild.commands.create(props);
             props.id = cmd.id;
             this.log(`Loading "${intType}" Integration in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
-            client.responders.set(`${intType}:${cmd.name}`, props);
-            const markedRoles = await this.models.key_config.find({ type: "ROLE" });
-            const mark = markedRoles.find(rD => rD._id === p);
-            if (mark) {
-                const prm = props.permissions.map(p => markedRoles.find(rD => rD._id === p).value);
-                if (prm.length !== 0) await client.guild.commands.permissions.set({
-                    command: cmd.id, permissions: prm.map(pm => {
-                        return {
-                            id: pm, type: "ROLE", permission: true
-                        }
-                    })
-                });
-            }
+            const markedRoles = await this.models.roles.find({ commands: { $in: [`${intType.toLowerCase()}:${props.name}`] } });
+            const marks = markedRoles.map((roleData) => roleData.meta.sort((a, b) => b.created.getTime() - a.created.getTime())[0].id);
+            if (marks.length !== 0) await client.guild.commands.permissions.set({
+                command: cmd.id, permissions: marks.map(mark => {
+                    return {
+                        id: mark, type: "ROLE", permission: true
+                    }
+                })
+            });
             return false;
         } catch (e) {
             return `Unable to load "${intType}" Integration ${intName}: ${e}`;
@@ -120,6 +131,30 @@ class Tantoony extends Client {
     async fetchEntry(action) {
         const entry = await this.client.guild.fetchAuditLogs({ type: action }).then((logs) => logs.entries.first());
         return entry;
+    }
+
+    updateData() {
+        this.models.key_config.find().then((docs) => {
+            docs.forEach((doc) => {
+                switch (doc.type) {
+                    case "ROLE":
+                        this.data.roles[doc.name] = doc.values;
+                        break;
+                    case "CHANNEL":
+                        this.data.channels[doc.name] = doc.values;
+                        break;
+                    case "EMOJI":
+                        this.data.emojis[doc.name] = doc.values;
+                        break;
+                    case "OTHER":
+                        this.data.other[doc.name] = doc.values;
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+        return this.data;
     }
 
 }
