@@ -297,7 +297,7 @@ function format(tDate) {
 }
 
 const models = {
-	membership: model("membership", new Schema({
+	membership: model("meta_members", new Schema({
 		id: String,
 		roles: [Types.ObjectId],
 		leaves: [Date],
@@ -318,7 +318,15 @@ const models = {
 				topic: String,
 				action: String
 			}
-		]
+		],
+		penalties: [{
+			executor: String,
+			reason: String,
+			type: String,
+			extras: Array,
+			until: Date,
+			created: Date
+		}]
 	})),
 	key_config: model("key_config", new Schema({
 		_id: Types.ObjectId,
@@ -380,12 +388,11 @@ const models = {
 				bitrate: Number,
 				nsfw: Boolean,
 				rateLimit: Number,
-				overwrites: [
-					{
+				overwrites: [{
 						id: String,
-						type: String,
-						deny: Array,
-						allow: Array
+						typeOf: String,
+						deny: [String],
+						allow: [String]
 					}
 				]
 			}
@@ -394,7 +401,6 @@ const models = {
 		tags: [String]
 	})),
 	penal: model('penalty', new Schema({
-		_id: Types.ObjectId,
 		userId: String,
 		executor: String,
 		reason: String,
@@ -458,13 +464,7 @@ const models = {
 		data: String,
 		created: Date
 	})),
-	inv: model("log_invite", new Schema({
-		_id: Types.ObjectId,
-		inviter: String,
-		invited: String,
-		created: Date,
-		isFirst: Boolean
-	})),
+	inv: model("log_invite", new Schema()),
 	insult: model("log_insult", new Schema({
 		_id: Types.ObjectId,
 		author: String,

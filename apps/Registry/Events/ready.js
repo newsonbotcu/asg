@@ -8,7 +8,7 @@ class Ready extends ClientEvent {
 		});
 		this.client = client;
 	}
-	
+
 	async run(client) {
 		client = this.client;
 		this.client.invites = await client.guild.invites.fetch();

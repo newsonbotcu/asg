@@ -19,7 +19,6 @@ class Ready extends ClientEvent {
         if (this.data.channels["lastCrush"]) {
             await client.channels.cache.get(this.data.channels["lastCrush"]).send("**TEKRAR ONLINE!**");
         }
-        this.client = client;
         client.handler.hello(this.client);
     }
 }

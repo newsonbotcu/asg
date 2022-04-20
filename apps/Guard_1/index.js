@@ -5,6 +5,6 @@ const client = new Tantoony({
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_PRESENCES
     ]
-}, __dirname.split('\\').pop());
+}, __dirname.split('/').pop());
 process.on("warning", (warn) => { client.log(warn, "varn") });
 process.on("beforeExit", () => { console.log('Bitiriliyor...'); });
