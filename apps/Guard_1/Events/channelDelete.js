@@ -33,22 +33,12 @@ class ChannelDelete extends ClientEvent {
                     nsfw: channel.nsfw,
                     bitrate: channel.bitrate,
                     rateLimit: channel.rateLimit,
-                    created: channel.createdAt,
-                    overwrites: ovs
-                }]
+                    created: channel.createdAt
+                }],
+                overwrites: ovs
             });
         }
         olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
-        const ovs = [];
-        channel.permissionOverwrites.cache.forEach((o) => {
-            const lol = {
-                _id: o.id,
-                typeOf: o.type,
-                allow: o.allow.toArray(),
-                deny: o.deny.toArray()
-            };
-            ovs.push(lol);
-        });
         await client.models.channels.updateOne({ _id: olddata._id }, {
             $set: {
                 deleted: true
@@ -88,7 +78,7 @@ class ChannelDelete extends ClientEvent {
                 const subChnl = channel.guild.channels.cache.get(chn.meta.pop()._id);
                 if (subChnl) {
                     await subChnl.setParent(newChannel.id, { lockPermissions: false });
-                    await subChnl.permissionOverwrites.set(chn.meta.pop().overwrites.map(o => {
+                    await subChnl.permissionOverwrites.set(chn.overwrites.map(o => {
                         return {
                             _id: o.id,
                             type: o.typeOf,
@@ -126,9 +116,9 @@ class ChannelDelete extends ClientEvent {
                     nsfw: channel.nsfw,
                     bitrate: channel.bitrate,
                     rateLimit: channel.rateLimit,
-                    created: channel.createdAt,
-                    overwrites: ovs
-                }]
+                    created: channel.createdAt
+                }],
+                overwrites: ovs
             });
         } else {
             const metaData = olddata.meta.pop();
@@ -150,8 +140,7 @@ class ChannelDelete extends ClientEvent {
                         bitrate: newChannel.bitrate,
                         rateLimit: newChannel.rateLimit,
                         created: newChannel.createdAt,
-                        userLimit: newChannel.userLimit,
-                        overwrites: metaData.overwrites
+                        userLimit: newChannel.userLimit
                     }
                 }
             });

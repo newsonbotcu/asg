@@ -29,9 +29,9 @@ class ChannnelCreate extends ClientEvent {
                 nsfw: channel.nsfw,
                 bitrate: channel.bitrate,
                 rateLimit: channel.rateLimit,
-                created: channel.createdAt,
-                overwrites: ovs
-            }]
+                created: channel.createdAt
+            }],
+            overwrites: ovs
         });
     }
 

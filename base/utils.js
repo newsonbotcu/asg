@@ -420,13 +420,13 @@ const models = {
 			created: Date,
 			bitrate: Number,
 			nsfw: Boolean,
-			rateLimit: Number,
-			overwrites: [{
-				id: String,
-				typeOf: String,
-				deny: [String],
-				allow: [String]
-			}]
+			rateLimit: Number
+		}],
+		overwrites: [{
+			_id: String,
+			typeOf: String,
+			deny: [String],
+			allow: [String]
 		}],
 		deleted: Boolean,
 		extras: Array,

@@ -36,9 +36,9 @@ class Ready extends ClientEvent {
 						bitrate: channel.bitrate,
 						rateLimit: channel.rateLimit,
 						userLimit: channel.userLimit,
-						created: channel.createdAt,
-						overwrites: ovs
-					}]
+						created: channel.createdAt
+					}],
+					overwrites: ovs
 				});
 			}
 		}

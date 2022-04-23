@@ -17,11 +17,11 @@ class GuildUpdate extends ClientEvent {
         const exeMember = curguild.members.cache.get(entry.executor.id);
         client.handler.emit('Jail', exeMember, client.user.id, "* Sunucu Güncelleme", "Perma", 0);
         if (oldGuild.banner !== curGuild.banner) {
-            await curGuild.setBanner(oldGuild.bannerURL({size: 4096}));
+            await curGuild.setBanner(oldGuild.bannerURL({ size: 4096 }));
             reasonn = "Afiş Değiştirme";
         }
         if (oldGuild.icon !== curGuild.icon) {
-            await curGuild.setIcon(oldGuild.iconURL({type: 'gif', size: 4096}));
+            await curGuild.setIcon(oldGuild.iconURL({ type: 'gif', size: 4096 }));
             reasonn = "Ikon Değiştirme";
         }
         if (oldGuild.region !== curGuild.region) {
@@ -38,7 +38,7 @@ class GuildUpdate extends ClientEvent {
                     "Authorization": `Bot ${client.token}`
                 },
                 json: {
-                    "code":  this.data.other["vanityURL"]
+                    "code": this.data.other["vanityURL"]
                 }
             });
         }

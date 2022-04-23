@@ -3,74 +3,95 @@ const pm2 = require('pm2');
 const { ClientEvent } = require('../../../base/utils');
 class RoleDelete extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "roleDelete",
+            action: "ROLE_DELETE",
+            punish: "ban",
+            privity: true
+        });
         this.client = client;
     }
 
-    async run(role) {
-        const client = this.client;
-        if (role.guild.id !== client.config.server) return;
-        const entry = await client.fetchEntry("ROLE_DELETE");
-        if (entry.createdTimestamp <= Date.now() - 5000) return;
-        if (entry.executor.id === client.user.id) return;
-        const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "delete", effect: "role" });
-        if ((permission && (permission.count > 0))) {
-            if (permission) await client.models.perms.updateOne({ user: entry.executor.id, type: "delete", effect: "role" }, { $inc: { count: -1 } });
-            await client.models.bc_role.deleteOne({ _id: role.id });
-            client.handler.emit('Logger', 'Guard', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
-            return;
-        }
-        if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "role" });
-        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
-        const exeMember = role.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "* Rol Silme", "Perma", 0);
-        const roleData = await client.models.bc_role.findOne({ _id: role.id });
-        const newRole = await role.guild.roles.create({
-            data: {
-                name: roleData.name,
-                color: roleData.color,
-                hoist: roleData.hoist,
-                mentionable: roleData.mentionable,
-                position: roleData.rawPosition,
-                permissions: roleData.bitfield
+    async rebuild(role) {
+        let roleData = await client.models.roles.findOne({ meta: { $elemMatch: { _id: role.id } } });
+        if (!roleData) await client.models.roles.create({
+            meta: [
+                {
+                    _id: role.id,
+                    name: role.name,
+                    icon: role.icon,
+                    color: role.hexColor,
+                    hoist: role.hoist,
+                    mentionable: role.mentionable,
+                    position: role.rawPosition,
+                    bitfield: role.permissions.bitfield.toString(),
+                    created: role.createdAt,
+                    emoji: role.unicodeEmoji
+                }
+            ]
+        });
+        roleData = await client.models.roles.findOne({ meta: { $elemMatch: { _id: role.id } } });
+        await client.models.roles.updateOne({ _id: roleData._id }, {
+            $set: {
+                deleted: true
             }
         });
-        if (rolePath) await this.client.models.marked_ids.updateOne({ value: role.id }, { $set: { value: newRole.id } });
-        await client.models.bc_role.deleteOne({ _id: role.id });
-        await client.models.bc_role.create({
-            _id: newRole.id,
-            name: newRole.name,
-            color: newRole.hexColor,
-            hoist: newRole.hoist,
-            mentionable: newRole.mentionable,
-            rawPosition: newRole.rawPosition,
-            bitfield: newRole.permissions
+    }
+
+    async refix(role) {
+        const client = this.client;
+        let roleData = await client.models.roles.findOne({ meta: { $elemMatch: { _id: role.id } } });
+        if (!roleData) await client.models.roles.create({
+            meta: [
+                {
+                    _id: newRole.id,
+                    name: newRole.name,
+                    icon: newRole.icon,
+                    color: newRole.hexColor,
+                    hoist: newRole.hoist,
+                    mentionable: newRole.mentionable,
+                    position: newRole.rawPosition,
+                    bitfield: newRole.permissions.bitfield.toString(),
+                    created: newRole.createdAt,
+                    emoji: newRole.unicodeEmoji
+                }
+            ]
         });
-        const overwrits = await client.models.bc_ovrts.find();
-        const roleFiltered = overwrits.filter(doc => doc.overwrites.some(o => o.id === role.id));
-        for (let index = 0; index < roleFiltered.length; index++) {
-            const document = roleFiltered[index];
-            let docover = document.overwrites.find(o => o.id === role.id);
-            const channel = role.guild.channels.cache.get(document._id);
+        roleData = await client.models.roles.findOne({ meta: { $elemMatch: { _id: role.id } } });
+        const metadata = roleData.meta.pop();
+        const newRole = await role.guild.roles.create({
+            data: {
+                name: metadata.name,
+                color: metadata.color,
+                hoist: metadata.hoist,
+                mentionable: metadata.mentionable,
+                position: metadata.rawPosition,
+                permissions: BigInt(metadata.bitfield)
+            }
+        });
+        const chnlData = await client.models.channels.find({ overwrites: { $elemMatch: { _id: role.id } } });
+        for (let datx = 0; datx < chnlData.length; datx++) {
+            const vrt = chnlData[datx].overwrites.find(o => o._id === role.id);
+            const channel = role.guild.channels.cache.get(chnlData[datx].meta.pop()._id);
             await channel.permissionOverwrites.add({
-                id: role.id,
-                allow: docover.allow,
-                deny: docover.deny,
+                id: newRole.id,
+                allow: vrt.allow,
+                deny: vrt.deny,
                 type: 'role'
             });
-            await client.models.bc_ovrts.updateOne({ _id: document._id }, { $pull: { overwrites: docover } });
-            await client.models.bc_ovrts.updateOne({ _id: document._id }, {
+            await client.models.channels.updateOne({ _id: chnlData[datx]._id }, { $pull: { overwrites: vrt } });
+            await client.models.channels.updateOne({ _id: chnlData[datx]._id }, {
                 $push: {
                     overwrites: {
-                        id: newRole.id,
+                        _id: newRole.id,
                         type: 'role',
-                        allow: docover.allow,
-                        deny: docover.deny
+                        allow: vrt.allow,
+                        deny: vrt.deny
                     }
                 }
             });
+            
         }
-        client.handler.emit('Logger', 'KDE', entry.executor.id, "ROLE_DELETE", `${role.name} isimli rolü sildi`);
         let ohal = false;
         pm2.list((err, list) => {
             if (err) return;
