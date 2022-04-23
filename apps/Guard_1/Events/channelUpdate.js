@@ -3,7 +3,8 @@ class ChannelUpdate extends ClientEvent {
     constructor(client) {
         super(client, {
             name: "channelUpdate",
-            audit: "CHANNEL_UPDATE"
+            action: "CHANNEL_UPDATE",
+            punish: "ban"
         });
         this.client = client;
     }

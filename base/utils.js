@@ -14,28 +14,63 @@ const {
 class ClientEvent {
 	constructor(client, {
 		name = null,
-		action = null
+		action = null,
+		punish = "jail",
+		privity = false
 	}) {
+		this.punish = punish;
 		this.client = client;
 		this.name = name;
 		this.cooldown = new Collection();
-		this.allow = [];
 		this.action = action;
+		this.isAuthed = false;
+		this.privity = privity;
 	}
-	
+
 	exec(...args) {
-		this.data = this.client.updateData();
+		//this.data = this.client.updateData();
 		if (this.action) {
-			this.client.guild.fetchAuditLogs({ type: this.action })
-			.then((logs) => {this.audit = logs.entries.first();});
-		}
+			this.client.guild.fetchAuditLogs({ type: this.action }).then((logs) => {
+				this.audit = logs.entries.first();
+			});
+			this.client.models.member.findOne({ _id: this.audit.executor.id }).then((doc) => {
+				const primity = doc.authorized.find(prm => prm.until.getTime > new Date().getTime() && prm.auditType === this.action);
+				if (primity) {
+					this.isAuthed = true;
+					this.pass(primity, ...args);
+				} else {
+					this.axis(...args);
+				}
+			});
+		} 
 		try {
 			this.run(...args);
 		} catch (error) {
 			this.client.log(error, this.name);
 		}
 	}
-	
+
+	async pass(peer, ...params) {
+		await this.client.models.member.updateOne({ _id: this.audit.executor.id }, { $pull: { authorized: peer } });
+		try {
+			this.rebuild(...params);
+		} catch (error) {
+			this.client.log(error, this.name);
+		}
+	}
+
+	axis(...params) {
+		if (this.audit.createdTimestamp <= Date.now() - 5000) return;
+		if (this.audit.executor.id === this.client.user.id) return;
+		if (this.privity) this.client.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+		this.client.emit(this.punish, this.audit.executor.id, this.client.user.id, this.action, "p", `auditId: ${this.audit.id}`);
+		try {
+			this.refix(...params);
+		} catch (error) {
+			this.client.log(error, this.name);
+		}
+	}
+
 }
 
 class SlashCommand extends ApplicationCommand {
@@ -71,8 +106,8 @@ class SlashCommand extends ApplicationCommand {
 		this.customId = customId;
 		this.disabled = disabled;
 	}
-	
-	
+
+
 }
 
 class ButtonCommand extends MessageButton {
@@ -118,18 +153,18 @@ class ButtonCommand extends MessageButton {
 		};
 		this.perms = [];
 	}
-	
+
 	loadPerms() {
 		this.client.models.cmd_perms.findOne({
 			cmd_type: "BUTTON",
 			_id: this.customId
 		})
-		.then(doc => {
-			this.props.perms = doc.permissions;
-		});
+			.then(doc => {
+				this.props.perms = doc.permissions;
+			});
 		return this.perms;
 	}
-	
+
 }
 
 class MenuCommand extends MessageSelectMenu {
@@ -150,7 +185,7 @@ class MenuCommand extends MessageSelectMenu {
 			disabled
 		});
 		this.client = client;
-		
+
 	}
 }
 
@@ -277,7 +312,7 @@ class DotCommand {
 			cooldown
 		};
 	}
-	
+
 	load(props) {
 		this.client.responders.set(`dot:${this.name}`, props);
 	}
@@ -297,117 +332,121 @@ function format(tDate) {
 }
 
 const models = {
-	membership: model("meta_members", new Schema({
-		id: String,
+	member: model("meta_members", new Schema({
+		_id: String,
 		roles: [Types.ObjectId],
-		leaves: [Date],
 		afk_data: {
 			note: String,
 			created: Date,
 			iskAfk: Boolean,
-			inbox: [
-				{
-					content: String,
-					from: String
-				}
-			]
+			inbox: [{
+				content: String,
+				from: String,
+				created: Date
+			}]
 		},
-		rewards: [
-			{
-				when: Date,
-				topic: String,
-				action: String
-			}
-		],
-		penalties: [{
-			executor: String,
-			reason: String,
-			type: String,
-			extras: Array,
-			until: Date,
+		rewards: [{
+			created: Date,
+			topic: String,
+			action: String
+		}],
+		names: [{
+			username: String,
+			created: Date,
+			claimer: String
+		}],
+		registries: [{
+			name: String,
+			age: Number,
+			gender: String,
 			created: Date
+		}],
+		authorized: [{
+			auditType: String,
+			until: Date,
+			created: Date,
+			executor: String
+		}],
+		msgData: [{
+			message: String,
+			created: Date,
+			channel: String,
+			extras: [String]
 		}]
-	})),
-	key_config: model("key_config", new Schema({
-		_id: Types.ObjectId,
-		type: String,
-		name: String,
-		values: Array,
-		deleted: Boolean
-	})),
-	exep: model("guard_exeption", new Schema({
-		_id: Types.ObjectId,
-		userId: String,
-		executor: String,
-		case: String,
-		audit: String,
-		event: String,
-		count: Number,
-		until: Date,
-		created: Date,
-		start: Boolean
-	})),
-	roles: model("meta_roles", new Schema({
-		key: String,
-		commands: [String],
-		meta: [
-			{
-				_id: String,
-				name: String,
-				icon: String,
-				color: String,
-				hoist: Boolean,
-				mentionable: Boolean,
-				position: Number,
-				bitfield: String,
-				auditRef: String,
-				created: Date,
-				emoji: String
-			}
-		],
-		overwrites: [
-			{
-				channel: Types.ObjectId,
-				allow: [String],
-				deny: [String]
-			}
-		],
-		emojis: [String],
-		tags: [String]
-	})),
-	channels: model("meta_channels", new Schema({
-		key: String,
-		kindOf: String,
-		meta: [
-			{
-				id: String,
-				name: String,
-				parent: String,
-				position: Number,
-				created: Date,
-				bitrate: Number,
-				nsfw: Boolean,
-				rateLimit: Number,
-				overwrites: [{
-						id: String,
-						typeOf: String,
-						deny: [String],
-						allow: [String]
-					}
-				]
-			}
-		],
-		extras: Array,
-		tags: [String]
-	})),
-	penal: model('penalty', new Schema({
-		userId: String,
+	}, { _id: false })),
+	penal: model("data_penalty", new Schema({
 		executor: String,
 		reason: String,
 		type: String,
 		extras: Array,
 		until: Date,
 		created: Date
+	})),
+	roles: model("meta_roles", new Schema({
+		key: String,
+		commands: [String],
+		meta: [{
+			_id: String,
+			name: String,
+			icon: String,
+			color: String,
+			hoist: Boolean,
+			mentionable: Boolean,
+			position: Number,
+			bitfield: String,
+			auditRef: String,
+			created: Date,
+			emoji: String
+		}],
+		overwrites: [{
+			id: String,
+			typeOf: String,
+			allow: [String],
+			deny: [String]
+		}],
+		deleted: Boolean,
+		emojis: [String],
+		tags: [String]
+	})),
+	channels: model("meta_channels", new Schema({
+		key: String,
+		kindOf: String,
+		meta: [{
+			_id: String,
+			name: String,
+			parent: String,
+			position: Number,
+			created: Date,
+			bitrate: Number,
+			nsfw: Boolean,
+			rateLimit: Number,
+			overwrites: [{
+				id: String,
+				typeOf: String,
+				deny: [String],
+				allow: [String]
+			}]
+		}],
+		extras: Array,
+		tags: [String]
+	})),
+	invite: model("log_invite", new Schema({
+		inviter: String,
+		invited: String,
+		created: Date,
+		urlCode: String,
+		left: Date
+	})),
+	voice: model("log_voice", new Schema({
+		channelId: String,
+		userId: String,
+		self_mute: Boolean,
+		self_deaf: Boolean,
+		server_mute: Boolean,
+		server_deaf: Boolean,
+		streaming: Boolean,
+		webcam: Boolean,
+		playing: Boolean
 	})),
 	cmd: model("log_cmd", new Schema({
 		_id: Types.ObjectId,
@@ -416,10 +455,9 @@ const models = {
 		args: String,
 		resp: String
 	})),
-	action: model("log_action", new Schema({
-		_id: Types.ObjectId,
+	action: model("log_audit", new Schema({
+		executorId: String,
 		auditId: String,
-		type: String,
 		target: String,
 		targetId: String,
 		targetType: String,
@@ -428,58 +466,8 @@ const models = {
 		extra: Object,
 		reason: String,
 		data: Object,
-		executorId: String,
 		changes: Array,
 		created: Date
-	})),
-	voice: model("log_voice", new Schema({
-		_id: Types.ObjectId,
-		userId: String,
-		channelId: String,
-		data: {
-			self_mute: Boolean,
-			self_deaf: Boolean,
-			server_mute: Boolean,
-			server_deaf: Boolean,
-			streaming: Boolean,
-			webcam: Boolean,
-			playing: Boolean
-		}
-	}, {
-		timestamps: {
-			createdAt: "created_at"
-		}
-	})),
-	nick: model("log_nick", new Schema({
-		_id: Types.ObjectId,
-		userId: String,
-		nick: String,
-		claimer: String,
-		created: Date
-	})),
-	warp: model("log_warp", new Schema({
-		_id: Types.ObjectId,
-		user: String,
-		job: String,
-		data: String,
-		created: Date
-	})),
-	inv: model("log_invite", new Schema()),
-	insult: model("log_insult", new Schema({
-		_id: Types.ObjectId,
-		author: String,
-		message: String,
-		created: Date
-	})),
-	registry: model("log_registry", new Schema({
-		_id: Types.ObjectId,
-		user: String,
-		executor: String,
-		name: String,
-		age: Number,
-		gender: String,
-		created: Date,
-		gone: Date
 	}))
 };
 
@@ -527,12 +515,12 @@ const functions = {
 	},
 	rain(client, sayi) {
 		const emojis = low(client.adapters('emojis'))
-		.get("numbers");
+			.get("numbers");
 		var basamakbir = sayi.toString()
-		.replace(/ /g, "     ");
+			.replace(/ /g, "     ");
 		var basamakiki = basamakbir.match(/([0-9])/g);
 		basamakbir = basamakbir.replace(/([a-zA-Z])/g, "bilinmiyor")
-		.toLowerCase();
+			.toLowerCase();
 		if (basamakiki) {
 			basamakbir = basamakbir.replace(/([0-9])/g, d => {
 				return {

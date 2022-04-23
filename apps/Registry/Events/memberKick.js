@@ -12,8 +12,8 @@ class GuildMemberKick extends ClientEvent {
     async run(member) {
         const client = this.client;
         if (member.guild.id !== client.config.server) return;
-        const model = await client.models.membership.findOne({ _id: cur.user.id });
-        if (model) await client.models.membership.delete({ _id: member.user.id });
+        const model = await client.models.member.findOne({ _id: cur.user.id });
+        if (model) await client.models.member.delete({ _id: member.user.id });
         const entry = await member.guild.fetchAuditLogs({ type: "MEMBER_KICK" }).then(logs => logs.entries.first());
         if ((this.audit.target.id === member.user.id) && entry.createdTimestamp >= Date.now() - 1000) {
             const exeMember = member.guild.members.cache.get(entry.executor.id);

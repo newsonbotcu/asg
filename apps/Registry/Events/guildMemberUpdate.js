@@ -13,7 +13,7 @@ class GuildMemberUpdate extends ClientEvent {
 	async run(prev, cur) {
 		const client = this.client;
 		if (cur.guild.id !== client.config.server) return;
-		const memberDb = await client.models.membership.findOne({ id: cur.user.id });
+		const memberDb = await client.models.member.findOne({ id: cur.user.id });
 		if (prev && prev.roles.cache.has(this.data.roles["booster"]) && !cur.roles.cache.has(this.data.roles["booster"])) {
 			const pointed = client.config.tags[0].some(t => target.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
 			await cur.setNickname(`${pointed} ${memberDb.name} | ${memberDb.age}`);
@@ -36,14 +36,14 @@ class GuildMemberUpdate extends ClientEvent {
 					rolex.push(doc._id);
 				});
 			});
-			const model = await client.models.membership.findOne({ id: cur.user.id });
+			const model = await client.models.member.findOne({ id: cur.user.id });
 			if (!model) {
-				await client.models.membership.create({
+				await client.models.member.create({
 					id: cur.user.id,
 					roles: rolex
 				});
 			} else {
-				await client.models.membership.updateOne({ id: cur.user.id }, { $set: { roles: rolex } });
+				await client.models.member.updateOne({ id: cur.user.id }, { $set: { roles: rolex } });
 				client.log(`${this.audit.executor.username} => [${this.audit.changes[0].key}] ${this.audit.target.username} : ${this.audit.changes[0].new[0].name}`, "mngdb");
 			}
 		}

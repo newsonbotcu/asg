@@ -2,7 +2,7 @@ const Component = require("../../../Base/Component");
 const Discord = require('discord.js');
 const low = require('lowdb');
 const Task_roles = require("../../../../../MODELS/Economy/Task_roles");
-const membership = require("../../../../../MODELS/Datalake/membership");
+const member = require("../../../../../MODELS/Datalake/member");
 const stat_msg = require("../../../../../MODELS/StatUses/stat_msg");
 const stat_voice = require("../../../../../MODELS/StatUses/stat_voice");
 const tagged = require("../../../../../MODELS/Datalake/tagged");
@@ -82,7 +82,7 @@ class RolSeçim extends Component {
                     break;
 
                 case "registry":
-                    const Registries = await membership.find({ executor: mentioned.user.id });
+                    const Registries = await member.find({ executor: mentioned.user.id });
                     const registryPoints = Registries.filter(data => comparedate(data.created) < comparedate(curTask.created)).length;
                     strArrayCur.push(`${bar(registryPoints, curTask.count)}${data.emojis["task_registry"]} Kayıt: \`${registryPoints}/${curTask.count}\`(${curTask.points} puan)`);
                     break;
@@ -127,7 +127,7 @@ class RolSeçim extends Component {
                     break;
 
                 case "registry":
-                    const Registries = await membership.find({ executor: mentioned.user.id });
+                    const Registries = await member.find({ executor: mentioned.user.id });
                     const registryPoints = Registries.filter(data => comparedate(data.created) < comparedate(oldTask.created)).length;
                     strArrayDone.push(`${data.emojis["point_done"]}${data.emojis["task_registry"]} Kayıt: \`${registryPoints}/${oldTask.count}\`(${oldTask.points} puan)`);
                     break;

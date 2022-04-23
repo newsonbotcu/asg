@@ -13,7 +13,7 @@ class ControlBan extends ClientEvent {
         const mapcron = new CronJob('*/30 * * * * *', async () => {
             const now = new Date();
             let asd = await this.client.models.mod_ban.find();
-            asd.filter((ban) => ban.type === "temp" && now.getTime() - ban.created.getTime() >= (ban.duration - 1) * 3600000).forEach((ban) => {
+            asd.filter((ban) => ban.type === "temp" && now.getTime() - ban.created.getTime() >= (ban.duration - 1) * 3600000).forEach(async (ban) => {
                 const date = require('moment')(ban.created).add(ban.duration, 'd').toDate();
                 if (now.getTime() - ban.created.getTime() > date.getTime()) {
                     await this.client.guild.members.unban(doc._id);

@@ -1,30 +1,74 @@
 const { ClientEvent } = require('../../../base/utils');
 class ChannelDelete extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "channelDelete",
+            privity: true,
+            action: "CHANNEL_DELETE",
+            punish: "ban"
+        });
         this.client = client;
     }
-    async run(channel) {
-        const client = this.client;
-        if (channel.guild.id !== client.config.server) return;
-        const entry = await client.fetchEntry("CHANNEL_DELETE");
-        if (entry.createdTimestamp <= Date.now() - 5000) return;
-        if (entry.executor.id === client.user.id) return;
-        const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "delete", effect: "channel" });
-        if ((permission && (permission.count > 0))) {
-            if (permission) await client.models.perms.updateOne({ user: entry.executor.id, type: "delete", effect: "channel" }, { $inc: { count: -1 } });
-            if ((channel.type === 'text') || (channel.type === 'news')) await client.models.bc_text.deleteOne({ _id: channel.id });
-            if (channel.type === 'voice') await client.models.bc_voice.deleteOne({ _id: channel.id });
-            if (channel.type === 'category') await client.models.bc_cat.deleteOne({ _id: channel.id });
-            await client.models.overwrites.deleteOne({ _id: channel.id });
-            client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_DELETE", `${entry.executor.username} ${channel.name} isimli kanalı sildi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
-            return;
+
+    async rebuild(channel) {
+        const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
+        if (!olddata) {
+            const ovs = [];
+            channel.permissionOverwrites.cache.forEach((o) => {
+                const lol = {
+                    id: o.id,
+                    typeOf: o.type,
+                    allow: o.allow.toArray(),
+                    deny: o.deny.toArray()
+                };
+                ovs.push(lol);
+            });
+            await client.models.channels.create({
+                kindOf: channel.type,
+                meta: {
+                    _id: channel.id,
+                    name: channel.name,
+                    parent: channel.parentID,
+                    position: channel.position,
+                    nsfw: channel.nsfw,
+                    bitrate: channel.bitrate,
+                    rateLimit: channel.rateLimit,
+                    created: channel.createdAt,
+                    overwrites: ovs
+                }
+            });
         }
-        if (permission) await client.models.perms.deleteOne({ user: entry.executor.id, type: "delete", effect: "channel" });
-        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        const ovs = [];
+        channel.permissionOverwrites.cache.forEach((o) => {
+            const lol = {
+                id: o.id,
+                typeOf: o.type,
+                allow: o.allow.toArray(),
+                deny: o.deny.toArray()
+            };
+            ovs.push(lol);
+        });
+        await client.models.channels.updateOne({ _id: olddata._id }, {
+            $push: {
+                meta: {
+                    _id: null,
+                    name: channel.name,
+                    parent: channel.parentID,
+                    position: channel.position,
+                    nsfw: channel.nsfw,
+                    bitrate: channel.bitrate,
+                    rateLimit: channel.rateLimit,
+                    created: channel.createdAt,
+                    overwrites: ovs
+                }
+            }
+        });
+    }
+
+    async refix(channel) {
+        const client = this.client;
         let newChannel;
         if ((channel.type === 'text') || (channel.type === 'news')) {
-            await client.models.bc_text.deleteOne({ _id: channel.id });
             newChannel = await channel.guild.channels.create(channel.name, {
                 type: channel.type,
                 topic: channel.topic,
@@ -33,17 +77,8 @@ class ChannelDelete extends ClientEvent {
                 position: channel.position + 1,
                 rateLimitPerUser: channel.rateLimitPerUser
             });
-            await client.models.bc_text.create({
-                _id: newChannel.id,
-                name: newChannel.name,
-                nsfw: newChannel.nsfw,
-                parentID: newChannel.parentID,
-                position: newChannel.position,
-                rateLimit: newChannel.rateLimitPerUser
-            });
         }
         if (channel.type === 'voice') {
-            await client.models.bc_voice.deleteOne({ _id: channel.id });
             newChannel = await channel.guild.channels.create(channel.name, {
                 type: channel.type,
                 bitrate: channel.bitrate,
@@ -51,45 +86,70 @@ class ChannelDelete extends ClientEvent {
                 parent: channel.parent,
                 position: channel.position + 1
             });
-            await client.models.bc_voice.create({
-                _id: newChannel.id,
-                name: newChannel.name,
-                bitrate: newChannel.bitrate,
-                parentID: newChannel.parentID,
-                position: newChannel.position
-            });
         }
         if (channel.type === 'category') {
-            await client.models.bc_cat.deleteOne({ _id: channel.id });
             newChannel = await channel.guild.channels.create(channel.name, {
                 type: channel.type,
                 position: channel.position + 1
             });
-            const textChannels = await client.models.bc_text.find({ parentID: channel.id });
-            await  client.models.bc_text.updateMany({ parentID: channel.id }, { parentID: newChannel.id });
-            textChannels.forEach(c => {
-                const textChannel = channel.guild.channels.cache.get(c._id);
-                if (textChannel) textChannel.setParent(newChannel, { lockPermissions: false });
-            });
-            const voiceChannels = await client.models.bc_voice.find({ parentID: channel.id });
-            await client.models.bc_voice.updateMany({ parentID: channel.id }, { parentID: newChannel.id });
-            voiceChannels.forEach(c => {
-                const voiceChannel = channel.guild.channels.cache.get(c._id);
-                if (voiceChannel) voiceChannel.setParent(newChannel, { lockPermissions: false });
-            });
-            await client.models.bc_cat.create({
-                _id: newChannel.id,
-                name: newChannel.name,
-                position: newChannel.position
+            const subChannels = await client.models.channels.find({ meta: { $last: { parent: channel.id } } });
+            await subChannels.forEach(async (chn) => {
+                const subChnl = channel.guild.channels.cache.get(chn.meta.pop()._id);
+                const ovs = [];
+                subChnl.permissionOverwrites.cache.forEach((o) => {
+                    const lol = {
+                        id: o.id,
+                        typeOf: o.type,
+                        allow: o.allow.toArray(),
+                        deny: o.deny.toArray()
+                    };
+                    ovs.push(lol);
+                });
+                if (subChnl) await subChnl.setParent(newChannel.id, { lockPermissions: false });
+                await client.models.channels.updateOne({ _id: chn.meta.pop()._id }, {
+                    $push: {
+                        _id: subChnl.id,
+                        name: subChnl.name,
+                        parent: newChannel.id,
+                        position: subChnl.position,
+                        nsfw: subChnl.nsfw,
+                        bitrate: subChnl.bitrate,
+                        rateLimit: subChnl.rateLimit,
+                        created: subChnl.createdAt,
+                        overwrites: ovs
+                    }
+                });
             });
         }
+        const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
+        const ovs = [];
+        newChannel.permissionOverwrites.cache.forEach((o) => {
+            const lol = {
+                id: o.id,
+                typeOf: o.type,
+                allow: o.allow.toArray(),
+                deny: o.deny.toArray()
+            };
+            ovs.push(lol);
+        });
+        await client.models.channels.updateOne({ _id: olddata._id }, {
+            $push: {
+                meta: {
+                    _id: newChannel.id,
+                    name: newChannel.name,
+                    parent: newChannel.parent.id,
+                    position: newChannel.position,
+                    nsfw: newChannel.nsfw,
+                    bitrate: newChannel.bitrate,
+                    rateLimit: newChannel.rateLimit,
+                    created: newChannel.createdAt,
+                    overwrites: ovs
+                }
+            }
+        });
         const overwritesData = await client.models.bc_ovrts.findOne({ _id: channel.id });
         await newChannel.permissionOverwrites.set(overwritesData.overwrites);
-        await client.models.bc_ovrts.deleteOne({ _id: channel.id });
-        await client.models.bc_ovrts.create({ _id: newChannel.id, overwrites: overwritesData.overwrites });
-        const exeMember = channel.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "* Kanal Silme", "Perma", 0);
-        client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_DELETE", `${channel.name} isimli kanalı sildi`);
+
     }
 }
 module.exports = ChannelDelete;
