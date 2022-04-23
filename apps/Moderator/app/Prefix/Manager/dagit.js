@@ -25,7 +25,7 @@ class Dagit extends Command {
         let voiceChannel = message.member.voice.channelID;
         if (!voiceChannel) return message.reply("Herhangi bir ses kanalında değilsin!");
 
-        let publicRooms = message.guild.channels.cache.filter(c => c.parentID === "854087056757489696" && c.type === "voice" && c.id != "871460692321009715");
+        let publicRooms = message.guild.channels.cache.filter(c => c.parentId === "854087056757489696" && c.type === "voice" && c.id != "871460692321009715");
         message.member.voice.channel.members.array().forEach((m, index) => {
           setTimeout(() => {
              if (m.voice.channelID !== voiceChannel) return;

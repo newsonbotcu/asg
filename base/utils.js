@@ -399,7 +399,7 @@ const models = {
 			emoji: String
 		}],
 		overwrites: [{
-			id: String,
+			_id: String,
 			typeOf: String,
 			allow: [String],
 			deny: [String]
@@ -411,10 +411,11 @@ const models = {
 	channels: model("meta_channels", new Schema({
 		key: String,
 		kindOf: String,
+		parent: String,
 		meta: [{
 			_id: String,
 			name: String,
-			parent: String,
+			userLimit: Number,
 			position: Number,
 			created: Date,
 			bitrate: Number,
@@ -427,6 +428,7 @@ const models = {
 				allow: [String]
 			}]
 		}],
+		deleted: Boolean,
 		extras: Array,
 		tags: [String]
 	})),

@@ -15,7 +15,7 @@ class VoiceStateUpdate extends ClientEvent {
         const gaming = client.guild.channels.cache.get(this.data.channels["game_lobby"]);
         if (prev.channel && privChannels.some(c => c._id === prev.channel.id)) {
             let tyype;
-            switch (prev.channel.parentID) {
+            switch (prev.channel.parentId) {
                 case this.data.channels["oda_olustur"]:
                     tyype = "gaming";
                     break;

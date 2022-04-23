@@ -27,7 +27,7 @@ class Gel extends Command {
         let kanal = message.member.voice.channel;
         if (!kanal) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         if (!mentioned.voice || !mentioned.voice.channel) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-        if (message.member.roles.cache.has(data.roles["owner"] && (mentioned.voice.channel.parentID !== data.channels["st_private"]))) return await mentioned.voice.setChannel(message.member.voice.channel.id);
+        if (message.member.roles.cache.has(data.roles["owner"] && (mentioned.voice.channel.parentId !== data.channels["st_private"]))) return await mentioned.voice.setChannel(message.member.voice.channel.id);
         if (kanal.id === mentioned.voice.channel.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         try {
             await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));

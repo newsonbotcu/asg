@@ -43,7 +43,7 @@ class VoiceStateUpdate extends ClientEvent {
             const yeniEntry = {
                 _id: cur.member.user.id,
                 created: new Date(),
-                type: client.getPath(this.data.channels, cur.channel.parentID),
+                type: client.getPath(this.data.channels, cur.channel.parentId),
                 channelID: cur.channel.id,
                 selfMute: cur.selfMute,
                 serverMute: cur.serverMute,
@@ -88,7 +88,7 @@ class VoiceStateUpdate extends ClientEvent {
             const yeniEntry = {
                 _id: cur.member.user.id,
                 created: new Date(),
-                type: client.getPath(this.data.channels, cur.channel.parentID),
+                type: client.getPath(this.data.channels, cur.channel.parentId),
                 channelID: cur.channel.id,
                 selfMute: cur.selfMute,
                 serverMute: cur.serverMute,

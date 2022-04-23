@@ -33,8 +33,8 @@ class Say2 extends Command {
         const obj = {};
         for (let index = 0; index < message.guild.channels.cache.filter(c => c.type === "voice").array().length; index++) {
             const myChannel = message.guild.channels.cache.filter(c => c.type === "voice").array()[index];
-            const key = obj[client.getPath(channels.value(), myChannel.parentID)] || 0;
-            obj[client.getPath(channels.value(), myChannel.parentID)] = key + myChannel.members.size
+            const key = obj[client.getPath(channels.value(), myChannel.parentId)] || 0;
+            obj[client.getPath(channels.value(), myChannel.parentId)] = key + myChannel.members.size
         }
         const lang = {
             "st_public": "Public",

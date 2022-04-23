@@ -27,17 +27,18 @@ class Ready extends ClientEvent {
 				});
 				await client.models.channels.create({
 					kindOf: channel.type,
-					meta: {
+					parent: channel.parentId,
+					meta: [{
 						_id: channel.id,
 						name: channel.name,
-						parent: channel.parentID,
 						position: channel.position,
 						nsfw: channel.nsfw,
 						bitrate: channel.bitrate,
 						rateLimit: channel.rateLimit,
+						userLimit: channel.userLimit,
 						created: channel.createdAt,
 						overwrites: ovs
-					}
+					}]
 				});
 			}
 		}

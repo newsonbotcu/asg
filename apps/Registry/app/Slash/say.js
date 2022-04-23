@@ -47,7 +47,7 @@ module.exports = class RegistryCommand extends SlashCommand {
         \`•\` Toplam üye: \`${guild.memberCount}\` (${guild.members.cache.filter(m => m.presence.status !== 'offline').size} online)
         \`•\` Booster sayısı: \`${guild.members.cache.filter(m => m.roles.cache.has(data.roles["booster"])).size}\` (${guild.premiumTier}. seviye)
         \`•\` Taglı sayısı: \`${guild.members.cache.filter(m => client.config.tags[0].some(tag => m.user.username.includes(tag))).size}\` (${guild.members.cache.filter(m => m.roles.cache.has(data.roles["cmd-crew"])).size} yetkili)
-        \`•\` Anlık ses: \`${guild.voiceStates.cache.filter(v => v.channel).size}\` (${guild.voiceStates.cache.filter(v => v.channel && (v.channel.parentID === data.channels["st_public"])).size} public)
+        \`•\` Anlık ses: \`${guild.voiceStates.cache.filter(v => v.channel).size}\` (${guild.voiceStates.cache.filter(v => v.channel && (v.channel.parentId === data.channels["st_public"])).size} public)
         `).setColor('#7bf3e3');
         await ctx.send({
             embeds: [embed]

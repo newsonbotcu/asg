@@ -26,7 +26,7 @@ class Git extends Command {
         let kanal = mentioned.voice.channel;
         if (!kanal) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         if (!message.member.voice || !message.member.voice.channel) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-        if (message.member.roles.cache.has(data.roles["owner"] && (mentioned.voice.channel.parentID !== data.channels["st_private"]))) return await message.member.voice.setChannel(mentioned.voice.channel.id);
+        if (message.member.roles.cache.has(data.roles["owner"] && (mentioned.voice.channel.parentId !== data.channels["st_private"]))) return await message.member.voice.setChannel(mentioned.voice.channel.id);
         if (kanal.id === message.member.voice.channel.id) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         try {
             await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));

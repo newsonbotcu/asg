@@ -25,7 +25,7 @@ class Say extends Command {
         \`•\` Toplam üye: \`${message.guild.memberCount}\` (${message.guild.members.cache.filter(m => m.presence.status !== 'offline').size} online)
         \`•\` Booster sayısı: \`${message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["booster"])).size}\` (${message.guild.premiumTier}. seviye)
         \`•\` Taglı sayısı: \`${message.guild.members.cache.filter(m => client.config.tags[0].some(tag => m.user.username.includes(tag))).size}\` (${message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["cmd-crew"])).size} yetkili)
-        \`•\` Anlık ses: \`${message.guild.voiceStates.cache.filter(v => v.channel).size}\` (${message.guild.voiceStates.cache.filter(v => v.channel && (v.channel.parentID === data.channels["st_public"])).size} public)
+        \`•\` Anlık ses: \`${message.guild.voiceStates.cache.filter(v => v.channel).size}\` (${message.guild.voiceStates.cache.filter(v => v.channel && (v.channel.parentId === data.channels["st_public"])).size} public)
         `).setColor('#7bf3e3'));
     }
 }

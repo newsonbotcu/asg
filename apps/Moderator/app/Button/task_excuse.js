@@ -38,7 +38,7 @@ class RolSeçim extends ButtonCommand {
             type: 'text',
             topic: `${mentioned.displayName} (${mentioned.roles.highest})`,
             nsfw: false,
-            parent: mazeretlog.parentID
+            parent: mazeretlog.parentId
         });
         await channel.updateOverwrite(mentioned.user.id, {
             VIEW_CHANNEL: true

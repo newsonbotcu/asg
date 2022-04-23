@@ -37,7 +37,7 @@ class Kur extends Command {
                     $set: {
                         name: channel.name,
                         bitrate: channel.bitrate,
-                        parentID: channel.parentID,
+                        parentId: channel.parentId,
                         position: channel.position
                     }
                 });
@@ -53,7 +53,7 @@ class Kur extends Command {
                     $set: {
                         name: channel.name,
                         nsfw: channel.nsfw,
-                        parentID: channel.parentID,
+                        parentId: channel.parentId,
                         position: channel.position,
                         rateLimit: channel.rateLimitPerUser
                     }

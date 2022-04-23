@@ -11,12 +11,12 @@ class ChannelDelete extends ClientEvent {
     }
 
     async rebuild(channel) {
-        const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
+        let olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
         if (!olddata) {
             const ovs = [];
             channel.permissionOverwrites.cache.forEach((o) => {
                 const lol = {
-                    id: o.id,
+                    _id: o.id,
                     typeOf: o.type,
                     allow: o.allow.toArray(),
                     deny: o.deny.toArray()
@@ -25,23 +25,24 @@ class ChannelDelete extends ClientEvent {
             });
             await client.models.channels.create({
                 kindOf: channel.type,
-                meta: {
+                parent: channel.parentId,
+                meta: [{
                     _id: channel.id,
                     name: channel.name,
-                    parent: channel.parentID,
                     position: channel.position,
                     nsfw: channel.nsfw,
                     bitrate: channel.bitrate,
                     rateLimit: channel.rateLimit,
                     created: channel.createdAt,
                     overwrites: ovs
-                }
+                }]
             });
         }
+        olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
         const ovs = [];
         channel.permissionOverwrites.cache.forEach((o) => {
             const lol = {
-                id: o.id,
+                _id: o.id,
                 typeOf: o.type,
                 allow: o.allow.toArray(),
                 deny: o.deny.toArray()
@@ -49,18 +50,8 @@ class ChannelDelete extends ClientEvent {
             ovs.push(lol);
         });
         await client.models.channels.updateOne({ _id: olddata._id }, {
-            $push: {
-                meta: {
-                    _id: null,
-                    name: channel.name,
-                    parent: channel.parentID,
-                    position: channel.position,
-                    nsfw: channel.nsfw,
-                    bitrate: channel.bitrate,
-                    rateLimit: channel.rateLimit,
-                    created: channel.createdAt,
-                    overwrites: ovs
-                }
+            $set: {
+                deleted: true
             }
         });
     }
@@ -92,63 +83,79 @@ class ChannelDelete extends ClientEvent {
                 type: channel.type,
                 position: channel.position + 1
             });
-            const subChannels = await client.models.channels.find({ meta: { $last: { parent: channel.id } } });
+            const subChannels = await client.models.channels.find({ parent: channel.id });
             await subChannels.forEach(async (chn) => {
                 const subChnl = channel.guild.channels.cache.get(chn.meta.pop()._id);
-                const ovs = [];
-                subChnl.permissionOverwrites.cache.forEach((o) => {
-                    const lol = {
-                        id: o.id,
-                        typeOf: o.type,
-                        allow: o.allow.toArray(),
-                        deny: o.deny.toArray()
-                    };
-                    ovs.push(lol);
-                });
-                if (subChnl) await subChnl.setParent(newChannel.id, { lockPermissions: false });
-                await client.models.channels.updateOne({ _id: chn.meta.pop()._id }, {
-                    $push: {
-                        _id: subChnl.id,
-                        name: subChnl.name,
-                        parent: newChannel.id,
-                        position: subChnl.position,
-                        nsfw: subChnl.nsfw,
-                        bitrate: subChnl.bitrate,
-                        rateLimit: subChnl.rateLimit,
-                        created: subChnl.createdAt,
-                        overwrites: ovs
-                    }
-                });
+                if (subChnl) {
+                    await subChnl.setParent(newChannel.id, { lockPermissions: false });
+                    await subChnl.permissionOverwrites.set(chn.meta.pop().overwrites.map(o => {
+                        return {
+                            _id: o.id,
+                            type: o.typeOf,
+                            allow: o.allow,
+                            deny: o.deny
+                        }
+                    }));
+                }
+            });
+            await client.models.channels.updateMany({ parent: channel.id }, {
+                $set: {
+                    parent: newChannel.id
+                }
             });
         }
         const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
-        const ovs = [];
-        newChannel.permissionOverwrites.cache.forEach((o) => {
-            const lol = {
-                id: o.id,
-                typeOf: o.type,
-                allow: o.allow.toArray(),
-                deny: o.deny.toArray()
-            };
-            ovs.push(lol);
-        });
-        await client.models.channels.updateOne({ _id: olddata._id }, {
-            $push: {
-                meta: {
-                    _id: newChannel.id,
-                    name: newChannel.name,
-                    parent: newChannel.parent.id,
-                    position: newChannel.position,
-                    nsfw: newChannel.nsfw,
-                    bitrate: newChannel.bitrate,
-                    rateLimit: newChannel.rateLimit,
-                    created: newChannel.createdAt,
+        if (!olddata) {
+            const ovs = [];
+            channel.permissionOverwrites.cache.forEach((o) => {
+                const lol = {
+                    _id: o.id,
+                    typeOf: o.type,
+                    allow: o.allow.toArray(),
+                    deny: o.deny.toArray()
+                };
+                ovs.push(lol);
+            });
+            await client.models.channels.create({
+                kindOf: channel.type,
+                parent: channel.parentId,
+                meta: [{
+                    _id: channel.id,
+                    name: channel.name,
+                    position: channel.position,
+                    nsfw: channel.nsfw,
+                    bitrate: channel.bitrate,
+                    rateLimit: channel.rateLimit,
+                    created: channel.createdAt,
                     overwrites: ovs
+                }]
+            });
+        } else {
+            const metaData = olddata.meta.pop();
+            await newChannel.permissionOverwrites.set(metaData.overwrites.map(o => {
+                return {
+                    _id: o.id,
+                    type: o.typeOf,
+                    allow: o.allow,
+                    deny: o.deny
                 }
-            }
-        });
-        const overwritesData = await client.models.bc_ovrts.findOne({ _id: channel.id });
-        await newChannel.permissionOverwrites.set(overwritesData.overwrites);
+            }));
+            await client.models.channels.updateOne({ _id: olddata._id }, {
+                $push: {
+                    meta: {
+                        _id: newChannel.id,
+                        name: newChannel.name,
+                        position: newChannel.position,
+                        nsfw: newChannel.nsfw,
+                        bitrate: newChannel.bitrate,
+                        rateLimit: newChannel.rateLimit,
+                        created: newChannel.createdAt,
+                        userLimit: newChannel.userLimit,
+                        overwrites: metaData.overwrites
+                    }
+                }
+            });
+        }
 
     }
 }

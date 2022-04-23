@@ -8,76 +8,87 @@ class ChannelUpdate extends ClientEvent {
         });
         this.client = client;
     }
-    async run(oldChannel, curChannel) {
-        this.data = await this.init();
-        const client = this.client.hello(this.client);
-        if (curChannel.guild.id !== client.config.server) return;
-        const entry = await client.fetchEntry("CHANNEL_UPDATE");
-        if (entry.createdTimestamp <= Date.now() - 5000) return;
-        if (entry.executor.id === client.user.id) return;
-        const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "update", effect: "channel" });
-        if (permission) {
-            if (permission.count > 0) {
-                await client.models.perms.updateOne({ user: entry.executor.id, type: "update", effect: "channel" }, { $inc: { count: -1 } });
-                if ((curChannel.type === 'text') || (curChannel.type === 'news')) {
-                    await client.models.bc_text.updateOne({ _id: oldChannel.id }, {
-                        name: curChannel.name,
-                        nsfw: curChannel.nsfw,
-                        parentID: curChannel.parentID,
-                        position: curChannel.position,
-                        rateLimit: curChannel.rateLimitPerUser
-                    });
-                }
-                if (curChannel.type === 'voice') {
-                    await client.models.bc_voice.updateOne({ _id: curChannel.id }, {
-                        name: curChannel.name,
-                        bitrate: curChannel.bitrate,
-                        parentID: curChannel.parentID,
-                        position: curChannel.position
-                    });
-                }
-                if (curChannel.type === 'category') {
-                    await client.models.bc_cat.updateOne({ _id: curChannel.id }, {
-                        name: curChannel.name,
-                        position: curChannel.position
-                    });
-                }
-                client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı yeniledi. Kalan izin sayısı ${permission ? permission.count - 1 : "sınırsız"}`);
-                return;
-            } else {
-                await client.models.perms.deleteOne({ user: entry.executor.id, type: "update", effect: "channel" });
-            }
+    async rebuild(oldChannel, curChannel) {
+        let olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: oldChannel.id } } });
+        if (!olddata) {
+            const ovs = [];
+            oldChannel.permissionOverwrites.cache.forEach((o) => {
+                const lol = {
+                    _id: o.id,
+                    typeOf: o.type,
+                    allow: o.allow.toArray(),
+                    deny: o.deny.toArray()
+                };
+                ovs.push(lol);
+            });
+            await client.models.channels.create({
+                kindOf: oldChannel.type,
+                parent: oldChannel.parentId,
+                meta: [{
+                    _id: oldChannel.id,
+                    name: oldChannel.name,
+                    position: oldChannel.position,
+                    nsfw: oldChannel.nsfw,
+                    bitrate: oldChannel.bitrate,
+                    rateLimit: oldChannel.rateLimit,
+                    created: oldChannel.createdAt,
+                    overwrites: ovs
+                }]
+            });
         }
-        client.handler.emit('Danger', ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
+        olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: oldChannel.id } } });
+        const ovs = [];
+        curChannel.permissionOverwrites.cache.forEach((o) => {
+            const lol = {
+                _id: o.id,
+                typeOf: o.type,
+                allow: o.allow.toArray(),
+                deny: o.deny.toArray()
+            };
+            ovs.push(lol);
+        });
+        await client.models.channels.updateOne({ _id: olddata._id }, {
+            $push: {
+                meta: {
+                    _id: curChannel.id,
+                    name: curChannel.name,
+                    position: curChannel.position,
+                    nsfw: curChannel.nsfw,
+                    bitrate: curChannel.bitrate,
+                    rateLimit: curChannel.rateLimit,
+                    created: curChannel.createdAt,
+                    userLimit: curChannel.userLimit,
+                    overwrites: ovs
+                }
+            }
+        });
+    }
+    async run(oldChannel, curChannel) {
+        const client = this.client;
+        const data = await client.models.channels.findOne({ meta: { $elemMatch: { _id: oldChannel.id } } });
         if ((curChannel.type === 'text') || (curChannel.type === 'news')) {
-            const data = await client.models.bc_text.findOne({ _id: oldChannel.id });
             await curChannel.edit({
                 name: data.name,
                 nsfw: data.nsfw,
-                parentID: data.parentID,
+                parentId: data.parentId,
                 position: data.position,
                 rateLimit: data.rateLimit
             });
         }
         if (curChannel.type === 'voice') {
-            const data = await client.models.bc_voice.findOne({ _id: curChannel.id });
             await curChannel.edit({
                 name: data.name,
                 bitrate: data.bitrate,
-                parentID: data.parentID,
+                parentId: data.parentId,
                 position: data.position
             });
         }
         if (curChannel.type === 'category') {
-            const data = await client.models.bc_cat.findOne({ _id: curChannel.id });
             await curChannel.edit({
                 name: data.name,
                 position: data.position
             });
         }
-        const exeMember = curChannel.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "* Kanal Yenileme", "Perma", 0);
-        client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_UPDATE", `${oldChannel.name} isimli kanalı sildi`);
     }
 }
 module.exports = ChannelUpdate;

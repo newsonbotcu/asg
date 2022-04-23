@@ -206,7 +206,7 @@ module.exports = class SlashBan extends ApplicationCommand {
                                     name: guild.channels.cache.get(data._id).name,
                                     name: guild.channels.cache.get(data._id).name,
                                     nsfw: guild.channels.cache.get(data._id).nsfw,
-                                    parentID: guild.channels.cache.get(data._id).parentID,
+                                    parentId: guild.channels.cache.get(data._id).parentId,
                                     position: guild.channels.cache.get(data._id).position,
                                     rateLimit: guild.channels.cache.get(data._id).rateLimit
                                 }
@@ -218,7 +218,7 @@ module.exports = class SlashBan extends ApplicationCommand {
                             _id: c.id,
                             name: c.name,
                             nsfw: c.nsfw,
-                            parentID: c.parentID,
+                            parentId: c.parentId,
                             position: c.position,
                             rateLimit: c.rateLimit
                         });
@@ -234,7 +234,7 @@ module.exports = class SlashBan extends ApplicationCommand {
                                 $set: {
                                     name: guild.channels.cache.get(data._id).name,
                                     bitrate: guild.channels.cache.get(data._id).bitrate,
-                                    parentID: guild.channels.cache.get(data._id).parentID,
+                                    parentId: guild.channels.cache.get(data._id).parentId,
                                     position: guild.channels.cache.get(data._id).position
                                 }
                             });
@@ -245,7 +245,7 @@ module.exports = class SlashBan extends ApplicationCommand {
                             _id: c.id,
                             name: c.name,
                             bitrate: c.bitrate,
-                            parentID: c.parentID,
+                            parentId: c.parentId,
                             position: c.position
                         });
                     });

@@ -37,7 +37,7 @@ class Kur extends Command {
         const channels = await low(client.adapters('channels'));
         /*
         const publicCat = message.guild.channels.cache.get(data.channels["st_public"]);
-        const parent = message.guild.channels.cache.get(message.channel.parentID);
+        const parent = message.guild.channels.cache.get(message.channel.parentId);
         await parent.setPosition(publicCat.position);
         await parent.updateOverwrite(message.guild.roles.everyone.id, {
             VIEW_CHANNEL: null
@@ -84,7 +84,7 @@ class Kur extends Command {
              const cat = await message.guild.channels.create(theCnl.name, {
                  type: 'category'
              });
-             const TxtChildren = await txtCnl.find({ parentID: theCnl._id });
+             const TxtChildren = await txtCnl.find({ parentId: theCnl._id });
              const txts = TxtChildren.sort((a, b) => a.position - b.position);
              txts.forEach(async (c) => {
                  await message.guild.channels.create(c.name, {
@@ -92,7 +92,7 @@ class Kur extends Command {
                      parent: cat.id
                  });
              });
-             const vcChildren = await vcCnl.find({ parentID: theCnl._id });
+             const vcChildren = await vcCnl.find({ parentId: theCnl._id });
              const vcs = vcChildren.sort((a, b) => a.position - b.position);
              vcs.forEach(async (c) => {
                  await message.guild.channels.create(c.name, {

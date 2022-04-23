@@ -12,7 +12,7 @@ class ChannnelCreate extends ClientEvent {
         const ovs = [];
         channel.permissionOverwrites.cache.forEach((o) => {
             const lol = {
-                id: o.id,
+                _id: o.id,
                 typeOf: o.type,
                 allow: o.allow.toArray(),
                 deny: o.deny.toArray()
@@ -21,17 +21,17 @@ class ChannnelCreate extends ClientEvent {
         });
         await client.models.channels.create({
             kindOf: channel.type,
-            meta: {
+            parent: channel.parentId,
+            meta: [{
                 _id: channel.id,
                 name: channel.name,
-                parent: channel.parentID,
                 position: channel.position,
                 nsfw: channel.nsfw,
                 bitrate: channel.bitrate,
                 rateLimit: channel.rateLimit,
                 created: channel.createdAt,
                 overwrites: ovs
-            }
+            }]
         });
     }
 
