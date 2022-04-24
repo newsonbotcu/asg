@@ -1,6 +1,6 @@
 module.exports = {
     mongoDB: {
-        auth: "admin",
+        auth: "test",
         user: "Tantoony",
         name: "asgard",
         env_key: "mongopass",
