@@ -139,9 +139,9 @@ class Tantoony extends Client {
                 this.data.roles[doc.keyConf] = doc.meta.pop()._id;
             });
         });
-        this.models.channels.find({ key: { $exists: true } }).then((docs) => {
+        this.models.channels.find({ keyConf: { $exists: true } }).then((docs) => {
             docs.forEach((doc) => {
-                this.data.roles[doc.key] = doc.meta.pop()._id;
+                this.data.roles[doc.keyConf] = doc.meta.pop()._id;
             });
         });
         return this.data;
