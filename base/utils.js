@@ -437,7 +437,7 @@ const models = {
 		extras: Array,
 		tags: [String]
 	})),
-	invite: model("log_invite", new Schema({
+	invites: model("log_invite", new Schema({
 		inviter: String,
 		invited: String,
 		created: Date,
