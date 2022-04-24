@@ -3,7 +3,7 @@ const { SlashCommand } = require('../../../../base/utils');
 
 class SlashKayit extends SlashCommand {
     constructor(client) {
-        super(client, data = {
+        super(client, {
             name: "kayıt",
             description: "Kullanıcıyı kayıt eder",
             default_permission: false,
@@ -42,10 +42,8 @@ class SlashKayit extends SlashCommand {
                     description: "Kullanıcının Yaşı",
                     required: true,
                 }
-            ],
-            guildId: [guildId]
-        }, guild, guildId);
-        this.permissions = client.config.staff.slice(5);
+            ]
+        });
     }
     async run(client, interaction, data) {
         const target = interaction.guild.members.cache.get(interaction.options.get("kullanıcı").value);
