@@ -1,17 +1,14 @@
-const { comparedate } = require('../../../../HELPERS/functions');
-const VoiceRecords = require('../../../../MODELS/StatUses/stat_voice');
-const vmutes = require('../../../../MODELS/Moderation/mod_vmute');
-const channelXp = require('../../../../MODELS/Economy/xp_channel');
 const { ClientEvent } = require('../../../../base/utils');
 class VoiceStateUpdate extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "voiceStateUpdate"
+        });
         this.client = client;
     }
     async run(prev, cur) {
-        this.data = await this.init();
         const client = this.client;
-        const vmute = await vmutes.findOne({ _id: cur.member.user.id });
+        const vmute = await this.client.models.penalties.findOne({ type: "VMUTE", userId: cur.member.user.id, until: { $gt: new Date() } });
         if (vmute && !cur.serverMute) {
             await cur.setMute(true);
         }
@@ -31,74 +28,23 @@ class VoiceStateUpdate extends ClientEvent {
                 let count = uCount[cur.channel.id] || 0;
                 if (count === 3) await cur.guild.channels.cache.get(this.data.channels["stat-warn"]).send(`${cur.member} Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
                 if (count === 7) {
-                    client.handler.emit("vMute", cur.member, this.client.user.id, "MIC-BUG", 5);
+                    client.handler.emit("vmute", cur.member, this.client.user.id, "MIC-BUG", 5);
                     await cur.guild.channels.cache.get(this.data.channels["stat-warn"]).send(`${cur.member} Mikrofonunu çok fazla açıp kapattığın için 5 dakika mutelendin!`);
                 }
                 this.client.trollcounts[cur.member.user.id][cur.channel.id] = count + 1;
             }
             this.client.trollwait[cur.member.user.id][cur.channel.id] = Date.now() + 3000;
         }
-        const entry = client.stats[cur.member.user.id];
-        if (!prev.channel) {
-            const yeniEntry = {
-                _id: cur.member.user.id,
-                created: new Date(),
-                type: client.getPath(this.data.channels, cur.channel.parentId),
-                channelID: cur.channel.id,
-                selfMute: cur.selfMute,
-                serverMute: cur.serverMute,
-                selfDeaf: cur.selfDeaf,
-                serverDeaf: cur.serverDeaf,
-                selfVideo: cur.selfVideo,
-                streaming: cur.streaming
-            };
-            return client.stats[cur.member.user.id] = yeniEntry;
-        }
-        if (entry) {
-            const vData = await VoiceRecords.findOne({ _id: cur.member.user.id });
-            if (!vData) await VoiceRecords.create({ _id: cur.member.user.id, records: [] });
-            const condition = await channelXp.findOne({ _id: entry.channelID });
-            let calValue = Math.floor(comparedate(entry.created) / 60000) * (condition ? condition.digit : 1);
-            if (entry.streaming) calValue = calValue + Math.floor(comparedate(entry.created) / 60000) * (condition ? condition.streaming : 1);
-            if (entry.videoOn) calValue = calValue + Math.floor(comparedate(entry.created) / 60000) * (condition ? condition.videoOn : 1);
-            if (entry.serverDeaf) calValue = calValue + Math.floor(comparedate(entry.created) / 60000) * (condition ? condition.serverDeaf : 1);
-            if (entry.selfDeaf) calValue = calValue + Math.floor(comparedate(entry.created) / 60000) * (condition ? condition.selfDeaf : 1);
-            if (entry.serverMute) calValue = calValue + Math.floor(comparedate(entry.created) / 60000) * (condition ? condition.serverMute : 1);
-            if (entry.selfMute) calValue = calValue + Math.floor(comparedate(entry.created) / 60000) * (condition ? condition.selfMute : 1);
-            await VoiceRecords.updateOne({ _id: cur.member.user.id }, {
-                $push: {
-                    records: {
-                        channelType: entry.type,
-                        duration: comparedate(entry.created),
-                        enter: entry.created,
-                        exit: new Date(),
-                        channelID: entry.channelID,
-                        selfMute: entry.selfMute,
-                        serverMute: entry.serverMute,
-                        selfDeaf: entry.selfDeaf,
-                        serverDeaf: entry.serverDeaf,
-                        videoOn: entry.selfVideo,
-                        streaming: entry.streaming,
-                        xp: calValue
-                    }
-                }
-            });
-            client.handler.emit("memberXp", cur.member);
-            if (!cur.channel) return client.stats[cur.member.user.id] = null;
-            const yeniEntry = {
-                _id: cur.member.user.id,
-                created: new Date(),
-                type: client.getPath(this.data.channels, cur.channel.parentId),
-                channelID: cur.channel.id,
-                selfMute: cur.selfMute,
-                serverMute: cur.serverMute,
-                selfDeaf: cur.selfDeaf,
-                serverDeaf: cur.serverDeaf,
-                selfVideo: cur.selfVideo,
-                streaming: cur.streaming
-            };
-            client.stats[cur.member.user.id] = yeniEntry;
-        }
+        await this.client.models.voice.create({
+            channelId: cur.channelId,
+            userId: cur.member.user.id,
+            self_mute: cur.selfMute,
+            self_deaf: cur.selfDeaf,
+            server_mute: cur.serverMute,
+            server_deaf: cur.serverDeaf,
+            streaming: cur.streaming,
+            webcam: cur.selfVideo
+        });
     }
 }
 module.exports = VoiceStateUpdate;

@@ -134,24 +134,14 @@ class Tantoony extends Client {
     }
 
     updateData() {
-        this.models.key_config.find().then((docs) => {
+        this.models.roles.find({ key: { $exists: true } }).then((docs) => {
             docs.forEach((doc) => {
-                switch (doc.type) {
-                    case "ROLE":
-                        this.data.roles[doc.name] = doc.values;
-                        break;
-                    case "CHANNEL":
-                        this.data.channels[doc.name] = doc.values;
-                        break;
-                    case "EMOJI":
-                        this.data.emojis[doc.name] = doc.values;
-                        break;
-                    case "OTHER":
-                        this.data.other[doc.name] = doc.values;
-                        break;
-                    default:
-                        break;
-                }
+                this.data.roles[doc.key] = doc.meta.pop()._id;
+            });
+        });
+        this.models.channels.find({ key: { $exists: true } }).then((docs) => {
+            docs.forEach((doc) => {
+                this.data.roles[doc.key] = doc.meta.pop()._id;
             });
         });
         return this.data;

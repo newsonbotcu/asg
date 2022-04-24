@@ -28,7 +28,7 @@ class ClientEvent {
 	}
 
 	exec(...args) {
-		//this.data = this.client.updateData();
+		this.data = this.client.updateData();
 		if (this.action) {
 			this.client.guild.fetchAuditLogs({ type: this.action }).then((logs) => {
 				this.audit = logs.entries.first();
@@ -352,6 +352,7 @@ const models = {
 		}],
 		names: [{
 			username: String,
+			discriminator: String,
 			created: Date,
 			claimer: String
 		}],
@@ -375,7 +376,7 @@ const models = {
 		}]
 	}, { _id: false })),
 	penalties: model("data_penalty", new Schema({
-		user: String,
+		userId: String,
 		executor: String,
 		reason: String,
 		type: String,
@@ -471,6 +472,11 @@ const models = {
 		data: Object,
 		changes: Array,
 		created: Date
+	})),
+	forbidden: model("data_forbidden", new Schema({
+		tag: String,
+		type: String,
+		reason: String
 	}))
 };
 

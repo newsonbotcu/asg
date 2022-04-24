@@ -26,25 +26,26 @@ class GuildMemberAdd extends ClientEvent {
         }
         let inviter = "VANITY_URL";
         if (member.guild.vanityURLCode && (client.vanityUses < member.guild.vanityURLUses)) {
-            client.vanityUses = vanityURLUses;
+            client.guild.fetchVanityData().then((res) => { client.vanityUses = res.uses });
+        } else {
+            await member.guild.invites.fetch().then(async (gInvites) => {
+                let invite = gInvites.find(inv => inv.uses > client.invites.get(inv.code).uses) || client.invites.find(i => !gInvites.has(i.code));
+                if (invite) inviter = invite.inviter.id;
+            });
+            const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
+            const first = docs.length > 0;
+            await client.models.inv.create({
+                inviter: inviter,
+                invited: member.user.id,
+                created: new Date(),
+                isFirst: !first
+            });
+            client.invites = await member.guild.invites.fetch();
         }
-        await member.guild.invites.fetch().then(async (gInvites) => {
-            let invite = gInvites.find(inv => inv.uses > client.invites.get(inv.code).uses) || client.invites.find(i => !gInvites.has(i.code));
-            if (invite) inviter = invite.inviter.id;
-        });
-        const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
-        const first = docs.length > 0;
-        await client.models.inv.create({
-            inviter: inviter,
-            invited: member.user.id,
-            created: new Date(),
-            isFirst: !first
-        });
-        client.invites = await member.guild.invites.fetch();
-        const tag = client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator ? client.config.point.tagged : client.config.point.default;
-        let penals = await client.models.penal.find({ userId: member.user.id });
+        const tag = (client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator) ? client.config.point.tagged : client.config.point.default;
+        let penals = await client.models.penalties.find({ userId: member.user.id });
         penals = penals.filter((penal) => penal.until.getTime() > Date.now());
-        const recovery = await client.models.registry.find({ user: member.user.id });
+        const recovery = await client.models.members.find({ user: member.user.id });
         for (let index = 0; index < penals.length; index++) {
             const penal = penals[index];
             switch (penal.type) {
@@ -53,8 +54,8 @@ class GuildMemberAdd extends ClientEvent {
                         await client.models.penal.updateOne({ _id: penal._id }, { until: Date.now() });
                         let addRole = [];
                         await penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach(async (roleId) => {
-                            const rData = await client.models.roles.find({ aliases: roleId });
-                            addRole.push(rData.roleId);
+                            const rData = await client.models.roles.find({ meta: { $elemMatch: { _id: roleId } } });
+                            addRole.push(rData.meta.pop()._id);
                         });
                         if (recovery.length > 0) {
                             const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
@@ -97,11 +98,11 @@ class GuildMemberAdd extends ClientEvent {
         const invCnt = await client.models.inv.find({ inviter: inviter, isFirst: true });
         await member.roles.add(this.data.roles["welcome"]);
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
-        > ${this.data.emojis["welcome1"]} **Hoş Geldin** ${member},
+        > <a:cekic:957252645968551956> **Hoş Geldin** ${member},
         > buraya gelmeni sağlayan ${tutor || "özel url"} toplamda **${invCnt.length || 0} kişiyi** buraya kazandırdı.
         > Güvenli bölgede anlık olarak **${member.guild.memberCount} üye** barınıyor.
         > Giriş için lütfen **V. Confirmed** isimli kanallardan herhangi birinde yetkili birisinin seninle ilgilenmesini bekle.
-        > ${this.data.emojis["welcome2"]} __Hesap <t:${member.user.createdTimestamp}:R>  oluşturulmuş__
+        > <a:146_yldrm:948840799343353877> __Hesap <t:${member.user.createdTimestamp}:R>  oluşturulmuş__
        `);
     }
 }
