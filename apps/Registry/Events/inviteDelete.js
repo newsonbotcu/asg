@@ -17,7 +17,7 @@ class InviteDelete extends ClientEvent {
         if (data.other["root"].includes(entry.executor.id)) return;
         const exeMember = invite.guild.members.cache.get(entry.executor.id);
         if (exeMember.roles.cache.has(data.roles["root"])) return;
-        client.handler.emit("Jail", exeMember, this.client.user.id, "* Davet Silme", "Perma", 1);
+        client.handler.emit("jail", exeMember, this.client.user.id, "* Davet Silme", "Perma", 1);
         invite.guild.channels.cache.get(data.channels["guard"]).send(`${data.emojis["davet"]} ${exeMember} bir daveti sildi!`);
 
     }

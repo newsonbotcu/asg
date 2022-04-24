@@ -20,7 +20,7 @@ class GuildMemberAdd extends ClientEvent {
             } else {
                 await member.kick("Korundu");
                 const exeMember = member.guild.members.cache.get(entry.executor.id);
-                client.handler.emit("Ban", member.guild, exeMember, this.client.user.id, "* Bot Ekleme", "Perma", 1);
+                client.handler.emit("ban", member.guild, exeMember, this.client.user.id, "* Bot Ekleme", "Perma", 1);
             }
             return;
         }
