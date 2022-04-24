@@ -83,7 +83,8 @@ class SlashCommand extends ApplicationCommand {
 		intChannel = null,
 		cooldown = new Map(),
 		enabled = true,
-		time = 3000
+		time = 3000,
+		options = []
 	}) {
 		super(client, {
 			id: customId,
@@ -93,6 +94,7 @@ class SlashCommand extends ApplicationCommand {
 			name: name,
 			description: description,
 			default_permission: false,
+			options: options
 		});
 		this.props = {
 			name,
