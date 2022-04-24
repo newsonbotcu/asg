@@ -62,7 +62,6 @@ class SlashKayit extends SlashCommand {
         await client.models.member.updateOne({ _id: target.id }, {
             registries: {
                 $push: {
-
                     executor: interaction.user.id,
                     name: interaction.options.get("isim").value.split(' ').map(s => s[0].toUpperCase() + s.slice(1).toLowerCase()).join(' '),
                     age: 146,
@@ -73,7 +72,7 @@ class SlashKayit extends SlashCommand {
         });
         const registryvaris = await client.models.members.find({ registries: { $elemMatch: { executor: interaction.user.id } } });
         const total = registryvaris.registries.length || 1;
-        const myEmbed = new MessageEmbed().setDescription(`${target} kişisinin kaydı <@${interaction.user.id}> tarafından gerçekleştirildi.\nBu kişinin kayıt sayısı: \`${total}\``);
+        const myEmbed = new MessageEmbed().setDescription(`<@${target.user.id}> kişisinin kaydı <@${interaction.user.id}> tarafından gerçekleştirildi.\nBu kişinin kayıt sayısı: \`${total}\``);
         await interaction.reply({
             embeds: [myEmbed]
         });
