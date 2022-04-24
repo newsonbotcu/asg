@@ -102,7 +102,7 @@ class GuildMemberAdd extends ClientEvent {
         > buraya gelmeni sağlayan ${tutor || "özel url"} toplamda **${invCnt.length || 0} kişiyi** buraya kazandırdı.
         > Güvenli bölgede anlık olarak **${member.guild.memberCount} üye** barınıyor.
         > Giriş için lütfen **V. Confirmed** isimli kanallardan herhangi birinde yetkili birisinin seninle ilgilenmesini bekle.
-        > <a:146_yldrm:948840799343353877> __Hesap <t:${Math.round(member.user.createdTimestamp / 1000)}:R>  oluşturulmuş__
+        > <a:146_yldrm:948840799343353877> __Hesap <t:${Math.round(member.user.createdTimestamp / 1000)}:R> oluşturulmuş__
        `);
     }
 }
