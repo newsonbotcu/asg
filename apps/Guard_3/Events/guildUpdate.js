@@ -2,35 +2,24 @@ const request = require('request');
 const { ClientEvent } = require('../../../base/utils');
 class GuildUpdate extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "guildUpdate",
+            action: "GUILD_UPDATE",
+            punish: "ban",
+            privity: true
+        });
         this.client = client;
     }
 
-    async run(oldGuild, curGuild) {
-        this.data = await this.init();
+    async refix(oldGuild, curGuild) {
         const client = this.client;
-        if (curGuild.id !== client.config.server) return;
-        const entry = await client.fetchEntry("GUILD_UPDATE");
-        if (entry.createdTimestamp <= Date.now() - 5000) return;
-        if (entry.executor.id === client.user.id) return;
-        let reasonn;
-        const exeMember = curguild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "* Sunucu Güncelleme", "Perma", 0);
         if (oldGuild.banner !== curGuild.banner) {
             await curGuild.setBanner(oldGuild.bannerURL({ size: 4096 }));
-            reasonn = "Afiş Değiştirme";
         }
         if (oldGuild.icon !== curGuild.icon) {
             await curGuild.setIcon(oldGuild.iconURL({ type: 'gif', size: 4096 }));
-            reasonn = "Ikon Değiştirme";
         }
-        if (oldGuild.region !== curGuild.region) {
-            client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
-            reasonn = "Bölge Değiştirme";
-        }
-        if (curGuild.vanityURLCode && (curGuild.vanityURLCode !== this.data.other["vanityURL"])) {
-            client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
-            reasonn = "URL DEĞİŞTİRME";
+        if (curGuild.vanityURLCode && (curGuild.vanityURLCode !== client.config.vanityURL)) {
             request({
                 method: "PATCH",
                 url: `https://discord.com/api/guilds/${newGuild.id}/vanity-url`,
@@ -38,7 +27,7 @@ class GuildUpdate extends ClientEvent {
                     "Authorization": `Bot ${client.token}`
                 },
                 json: {
-                    "code": this.data.other["vanityURL"]
+                    "code": client.config.vanityURL
                 }
             });
         }

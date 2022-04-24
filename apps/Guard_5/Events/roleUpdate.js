@@ -29,7 +29,6 @@ class RoleUpdate extends ClientEvent {
                 }
             ]
         });
-
     }
 
 

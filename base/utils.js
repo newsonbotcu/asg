@@ -374,7 +374,8 @@ const models = {
 			extras: [String]
 		}]
 	}, { _id: false })),
-	penal: model("data_penalty", new Schema({
+	penalties: model("data_penalty", new Schema({
+		user: String,
 		executor: String,
 		reason: String,
 		type: String,

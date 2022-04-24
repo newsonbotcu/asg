@@ -8,6 +8,7 @@ module.exports = {
     },
     owner: "942697809080111145",
     server: "936276300518260847",
+    vanityURL: "146",
     prefix: '.',
     status: [{
         name: "Asgard Remedy Gang 💯",

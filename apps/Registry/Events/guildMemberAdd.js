@@ -4,8 +4,7 @@ const moment = require('moment');
 class GuildMemberAdd extends ClientEvent {
     constructor(client) {
         super(client, {
-            name: "guildMemberAdd",
-            audit: "BOT_ADD"
+            name: "guildMemberAdd"
         });
         this.client = client;
     }
