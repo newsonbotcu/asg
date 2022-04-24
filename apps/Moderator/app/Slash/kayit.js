@@ -44,7 +44,6 @@ class SlashKayit extends SlashCommand {
         if (!target) return interaction.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
         const docs = await client.models.member.findOne({ _id: target.id });
         const ceza = await client.models.penalties.findOne({ userId: target.id });
-        const pointed = client.config.tags.some(t => target.user.username.includes(t)) ? client.config.tag[0] : client.config.extag;
         /*
         if (docs) {
             if (ceza) return interaction.reply({ content: `Bu kullanıcı ${interaction.guild.members.cache.get(ceza.executor)} tarafından karantinaya atılmış.`, ephemeral: true, fetchReply: true });
@@ -56,6 +55,7 @@ class SlashKayit extends SlashCommand {
             return;
         }
         */
+        const pointed = (client.config.tags.some((t) => target.user.username.includes(t)) || client.config.dis === target.user.discriminator) ? client.config.point.tagged : client.config.point.default;
         await target.roles.add(data.roles[interaction.options.get("cinsiyet").value]);
         await target.roles.remove(data.roles["welcome"]);
         await target.setNickname(`${pointed} ${interaction.options.get("isim").value.split(' ').map(s => s[0].toUpperCase() + s.slice(1).toLowerCase()).join(' ')}`);
