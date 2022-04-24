@@ -10,9 +10,9 @@ class Ready extends ClientEvent {
 	
 	async run(client) {
 		client = this.client;
-		const channels = client.guild.channels.cache.map((c) => c);
+		const channels = client.guild.channels.cache.map((c) => c.id);
 		for (let index = 0; index < channels.length; index++) {
-			const channel = channels[index];
+			const channel = client.guild.channels.cache.get(channels[index]);
 			const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
 			if (!olddata) {
 				const ovs = [];

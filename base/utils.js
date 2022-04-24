@@ -362,7 +362,8 @@ const models = {
 			name: String,
 			age: Number,
 			gender: String,
-			created: Date
+			created: Date,
+			executor: String
 		}],
 		authorized: [{
 			auditType: String,
