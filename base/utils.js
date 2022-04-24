@@ -106,6 +106,7 @@ class SlashCommand extends ApplicationCommand {
 		};
 		this.customId = customId;
 		this.disabled = disabled;
+		this.cooldown = new Collection();
 	}
 
 

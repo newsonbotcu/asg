@@ -26,13 +26,14 @@ class SlashCommandCreate extends ClientEvent {
                 ephemeral: true
             });
         }
+        let uCooldown = cmd.cooldown[interaction.user.id];
         if (uCooldown && (uCooldown > Date.now())) return await interaction.reply(`Komutu tekrar kullanabilmek için lütfen **${Math.ceil((time - Date.now()) / 1000)}** saniye bekle!`, {
             ephemeral: true
         });
         try {
             const res = await cmd.run(client, interaction, this.data);
             client.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.props.name}]`, "slash");
-            if (!res) cmd.cooldown.set(interaction.user.id, Date.now());
+            if (!res) cmd.cooldown.set(interaction.user.id, Date.now() + 5000);
         } catch (e) {
             client.log(e, "error");
         }
