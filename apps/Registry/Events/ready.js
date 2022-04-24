@@ -26,14 +26,14 @@ class Ready extends ClientEvent {
 					rolex.push(doc._id);
 				});
 			});
-			const doc = await this.client.models.member.findOne({ id: member.user.id });
+			const doc = await this.client.models.member.findOne({ _id: member.user.id });
 			if (!doc) {
 				await this.client.models.member.create({
-					id: member.user.id,
+					_id: member.user.id,
 					roles: rolex,
 				});
 			} else {
-				await this.client.models.member.updateOne({ id: member.user.id }, {
+				await this.client.models.member.updateOne({ _id: member.user.id }, {
 					$set: {
 						roles: rolex
 					}
