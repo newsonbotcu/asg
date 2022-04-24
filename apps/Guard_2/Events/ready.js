@@ -15,6 +15,7 @@ class Ready extends ClientEvent {
 			const role = roles[index];
 			const roleData = await client.models.roles.findOne({ meta: { $elemMatch: { _id: role.id } } });
 			if (!roleData) await client.models.roles.create({
+				keyConf: null,
 				meta: [
 					{
 						_id: role.id,

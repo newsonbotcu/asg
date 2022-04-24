@@ -385,7 +385,7 @@ const models = {
 		created: Date
 	})),
 	roles: model("meta_roles", new Schema({
-		key: String,
+		keyConf: String,
 		commands: [String],
 		meta: [{
 			_id: String,
@@ -411,7 +411,7 @@ const models = {
 		tags: [String]
 	})),
 	channels: model("meta_channels", new Schema({
-		key: String,
+		keyConf: String,
 		kindOf: String,
 		parent: String,
 		meta: [{

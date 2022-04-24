@@ -28,6 +28,7 @@ class Ready extends ClientEvent {
 				await client.models.channels.create({
 					kindOf: channel.type,
 					parent: channel.parentId,
+					keyConf: null,
 					meta: [{
 						_id: channel.id,
 						name: channel.name,
