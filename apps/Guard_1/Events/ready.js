@@ -13,12 +13,12 @@ class Ready extends ClientEvent {
 		const channels = client.guild.channels.cache.map((c) => c);
 		for (let index = 0; index < channels.length; index++) {
 			const channel = channels[index];
-			const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { id: channel.id } } });
+			const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
 			if (!olddata) {
 				const ovs = [];
 				channel.permissionOverwrites.cache.forEach((o) => {
 					const lol = {
-						id: o.id,
+						_id: o.id,
 						typeOf: o.type,
 						allow: o.allow.toArray(),
 						deny: o.deny.toArray()
