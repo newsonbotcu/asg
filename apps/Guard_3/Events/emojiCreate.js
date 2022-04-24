@@ -2,7 +2,7 @@ const { ClientEvent } = require('../../../base/utils');
 class EmojiCreate extends ClientEvent {
     constructor(client) {
         super(client, {
-            name: "roleDelete",
+            name: "roleDeletex",
             action: "ROLE_DELETE",
             punish: "ban",
             privity: true
