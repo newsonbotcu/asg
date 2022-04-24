@@ -8,18 +8,19 @@ class EmitRunJail extends ClientEvent {
         this.client = client;
     };
 
-    async run(member, executor, reason, duration, note) {
+    async run(userId, executorId, reason, duration, note) {
+        const member = this.client.guild.members.cache.get(userId);
         const memberRoles = member.roles.cache.filter(role => role.id !== this.data.roles["booster"][0]).map(role => role.id);
         await member.roles.remove(memberRoles);
         await member.roles.add(this.data.roles["prisoner"]);
         if (duration === "p") duration = null;
         const docum = await this.client.models.penal.create({
             userId: member.user.id,
-            executor: executor,
+            executor: executorId,
             reason: reason,
             extras: [],
-            type: "JAIL",
-            until: require('moment')(new Date()).add(duration || "0s"),
+            type: "jail",
+            until: duration ? require('moment')(new Date()).add(duration) : null,
             created: new Date()
         });
         if (!duration) await this.client.models.penal.updateOne({ _id: docum._id }, {
@@ -37,7 +38,7 @@ class EmitRunJail extends ClientEvent {
                 $push: {
                     extras: [
                         {
-                            subject: "role",
+                            subject: "roles",
                             data: roleId
                         }
                     ]

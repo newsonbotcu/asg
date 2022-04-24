@@ -4,8 +4,7 @@ const { ClientEvent } = require("../../../base/utils");
 class GuildMemberUpdate extends ClientEvent {
 	constructor(client) {
 		super(client, {
-			name: "guildMemberUpdate",
-			action: "MEMBER_ROLE_UPDATE"
+			name: "guildMemberUpdate"
 		});
 		this.client = client;
 	}
@@ -23,7 +22,7 @@ class GuildMemberUpdate extends ClientEvent {
 			}
 		}
 		const entry = await cur.guild.fetchAuditLogs({ type: "MEMBER_ROLE_UPDATE" }).then(logs => logs.entries.first());
-		if (this.audit.createdTimestamp <= Date.now() - 5000) return;
+		if (entry.createdTimestamp <= Date.now() - 5000) return;
 		let ohal = false;
 		pm2.list((err, list) => {
 			if (err) return;
@@ -44,26 +43,26 @@ class GuildMemberUpdate extends ClientEvent {
 				});
 			} else {
 				await client.models.member.updateOne({ id: cur.user.id }, { $set: { roles: rolex } });
-				client.log(`${this.audit.executor.username} => [${this.audit.changes[0].key}] ${this.audit.target.username} : ${this.audit.changes[0].new[0].name}`, "mngdb");
+				client.log(`${entry.executor.username} => [${entry.changes[0].key}] ${entry.target.username} : ${entry.changes[0].new[0].name}`, "mngdb");
 			}
 		}
 		const cmute = await client.models.cmute.findOne({ _id: cur.user.id });
-		if (cmute && !cur.roles.cache.has(this.data.roles["muted"]) && !this.audit.executor.bot) {
+		if (cmute && !cur.roles.cache.has(this.data.roles["muted"]) && !entry.executor.bot) {
 			await cur.roles.add(this.data.roles["muted"]);
-			const exeMember = cur.guild.members.cache.get(this.audit.executor.id);
+			const exeMember = cur.guild.members.cache.get(entry.executor.id);
 			if (exeMember.roles.cache.has(this.data.roles["root"])) return;
-			client.handler.emit("Jail", exeMember, this.client.user.id, "* Mute Açma", "Perma", 1);
+			client.handler.emit("jail", exeMember.user.id, this.client.user.id, "* Mute Açma", "Perma", 1);
 		}
 		const pJail = await client.models.cmute.jail.findOne({ _id: cur.user.id });
-		if (pJail && !this.audit.executor.bot) {
+		if (pJail && !entry.executor.bot) {
 			await cur.roles.remove(cur.roles.cache.filter(r => r.id !== this.data.roles["booster"])
 			.filter(r => r.editable).array());
 			await cur.roles.add(this.data.roles["prisoner"]);
-			const exeMember = cur.guild.members.cache.get(this.audit.executor.id);
+			const exeMember = cur.guild.members.cache.get(entry.executor.id);
 			if (exeMember.roles.cache.has(this.data.roles["root"])) return;
-			client.handler.emit("Jail", exeMember, this.client.user.id, "* Jail Açma", "Perma", 1);
+			client.handler.emit("jail", exeMember.user.id, this.client.user.id, "* Jail Açma", "Perma", 1);
 		}
-		const role = cur.guild.roles.cache.get(this.audit.changes[0].new[0].id);
+		const role = cur.guild.roles.cache.get(entry.changes[0].new[0].id);
 		const perms = [
 			"ADMINISTRATOR",
 			"KICK_MEMBERS",
@@ -81,12 +80,12 @@ class GuildMemberUpdate extends ClientEvent {
 			"MANAGE_WEBHOOKS",
 			"MANAGE_EMOJIS"
 		];
-		if (perms.some(perm => role.permissions.has(perm)) && !this.audit.executor.bot) {
-			const key = this.audit.changes[0].key;
+		if (perms.some(perm => role.permissions.has(perm)) && !entry.executor.bot) {
+			const key = entry.changes[0].key;
 			if (key === '$add') await cur.roles.remove(role);
 			if (key === '$remove') await cur.roles.add(role);
-			const exeMember = cur.guild.members.cache.get(this.audit.executor.id);
-			client.handler.emit("Jail", exeMember, this.client.user.id, "* Rol Verme", "Perma", 1);
+			const exeMember = cur.guild.members.cache.get(entry.executor.id);
+			client.handler.emit("jail", exeMember.user.id, this.client.user.id, "* Rol Verme", "Perma", 1);
 		}
 		
 	}

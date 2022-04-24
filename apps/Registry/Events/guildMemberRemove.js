@@ -6,16 +6,14 @@ class GuildMemberRemove extends ClientEvent {
             name: "guildMemberRemove"
         })
         this.client = client;
-        this.data = this.loadMarks();
     }
 
     async run(member) {
         const client = this.client;
-        const audit = this.getAudit();
         if (member.guild.id !== client.config.server) return;
         const pruneentry = await member.guild.fetchAuditLogs({ type: "MEMBER_PRUNE" }).then(logs => logs.entries.first());
-        const model = await client.models.member.findOne({ _id: cur.user.id });
-        if (model) await client.models.member.delete({ _id: member.user.id });
+        const model = await client.models.membership.findOne({ _id: cur.user.id });
+        if (model) await client.models.membership.delete({ _id: member.user.id });
         if (pruneentry && pruneentry.createdTimestamp >= Date.now() - 10000) {
             const removed = pruneentry.extra.removed;
             const days = this.audit.extra.days;
@@ -26,7 +24,7 @@ class GuildMemberRemove extends ClientEvent {
         const entry = await member.guild.fetchAuditLogs({ type: "MEMBER_KICK" }).then(logs => logs.entries.first());
         if ((entry.target.id === member.user.id) && entry.createdTimestamp >= Date.now() - 1000) {
             const exeMember = member.guild.members.cache.get(entry.executor.id);
-            client.handler.emit("Jail", exeMember, this.client.user.id, "* Üye Atma", "Perma", 1);
+            client.handler.emit("Jail", exeMember.user.id, this.client.user.id, "* Üye Atma", "Perma", 1);
             return;
         }
     }
