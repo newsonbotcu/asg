@@ -39,7 +39,7 @@ class UserUpdate extends ClientEvent {
             }
         }
         */
-        await this.client.models.updateOne({ _id: newUser.id }, {
+        await this.client.models.member.updateOne({ _id: newUser.id }, {
             names: {
                 $push: {
                     username: newUser.username,
