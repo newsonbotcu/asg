@@ -12,6 +12,7 @@ class SlashCommandCreate extends ClientEvent {
         if (!interaction.isCommand()) return;
         if (interaction.isContextMenu()) return;
         if (interaction.targetType) return;
+        let cmd;
         if (client.responders.has(`slash:${interaction.commandName}`)) {
             cmd = client.responders.get(`slash:${interaction.commandName}`);
         } else return;
