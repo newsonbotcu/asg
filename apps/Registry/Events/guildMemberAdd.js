@@ -34,7 +34,7 @@ class GuildMemberAdd extends ClientEvent {
             });
             const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
             const first = docs.length > 0;
-            await client.models.inv.create({
+            await client.models.invites.create({
                 inviter: inviter,
                 invited: member.user.id,
                 created: new Date(),
@@ -45,13 +45,13 @@ class GuildMemberAdd extends ClientEvent {
         const tag = (client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator) ? client.config.point.tagged : client.config.point.default;
         let penals = await client.models.penalties.find({ userId: member.user.id });
         penals = penals.filter((penal) => penal.until.getTime() > Date.now());
-        const recovery = await client.models.members.find({ user: member.user.id });
+        const recovery = await client.models.member.find({ user: member.user.id });
         for (let index = 0; index < penals.length; index++) {
             const penal = penals[index];
             switch (penal.type) {
                 case "JAIL":
                     if ((penal.reason === "FORBIDDEN") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
-                        await client.models.penal.updateOne({ _id: penal._id }, { until: Date.now() });
+                        await client.models.penalties.updateOne({ _id: penal._id }, { until: Date.now() });
                         let addRole = [];
                         await penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach(async (roleId) => {
                             const rData = await client.models.roles.find({ meta: { $elemMatch: { _id: roleId } } });
@@ -95,7 +95,7 @@ class GuildMemberAdd extends ClientEvent {
             return;
         }
         const tutor = member.guild.members.cache.get(inviter);
-        const invCnt = await client.models.inv.find({ inviter: inviter, isFirst: true });
+        const invCnt = await client.models.invites.find({ inviter: inviter, isFirst: true });
         await member.roles.add(this.data.roles["welcome"]);
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
         > <a:cekic:957252645968551956> **Hoş Geldin** ${member},
