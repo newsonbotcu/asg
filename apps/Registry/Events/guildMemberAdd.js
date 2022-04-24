@@ -85,7 +85,7 @@ class GuildMemberAdd extends ClientEvent {
             }
         }
         if (client.config.tags.some(t => member.user.username.includes(t))) await member.roles.add(this.data.roles["taglı"]);
-        if (client.utils.checkDays(member.user.createdAt) < 7) return await member.roles.add(this.data.roles["suspicious"].concat(this.data.roles["karantina"]));
+        if (client.func.checkDays(member.user.createdAt) < 7) return await member.roles.add(this.data.roles["suspicious"].concat(this.data.roles["karantina"]));
         if (recovery.length > 0 && !this.data.other["taglıAlım"][0]) {
             const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
             if (record) await member.edit({
