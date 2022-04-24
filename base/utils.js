@@ -93,8 +93,7 @@ class SlashCommand extends ApplicationCommand {
 			name: name,
 			description: description,
 			default_permission: false,
-		}, client.guild, client.guild.id);
-		this.client = client;
+		});
 		this.props = {
 			name,
 			dirname,
