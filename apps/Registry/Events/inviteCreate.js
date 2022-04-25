@@ -1,7 +1,7 @@
 class InviteCreate {
     constructor(client) {
         super(client, {
-            name: "inviteDelete"
+            name: "inviteCreate"
         })
         this.client = client;
     };
