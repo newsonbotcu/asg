@@ -1,5 +1,8 @@
 class InviteCreate {
     constructor(client) {
+        super(client, {
+            name: "inviteDelete"
+        })
         this.client = client;
     };
 
