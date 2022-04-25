@@ -6,7 +6,7 @@ class InviteCreate {
     async run(invite) {
         const client = this.client;
         if (invite.guild.id !== client.config.server) return;
-        await invite.guild.fetchInvites().then(gInvites => { this.client.invites[invite.guild.id] = gInvites });
+		this.client.invites = await client.guild.invites.fetch();
     };
 }
 module.exports = InviteCreate;

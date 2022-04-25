@@ -3,17 +3,16 @@ const { ClientEvent } = require("../../../base/utils");
 class InviteDelete extends ClientEvent {
     constructor(client) {
         super(client, {
-            name: "inviteDelete",
-            audit: "INVITE_DELETE"
+            name: "inviteDelete"
         })
         this.client = client;
     }
 
     async run(invite) {
         if (invite.guild.id !== this.client.config.server) return;
+		this.client.invites = await client.guild.invites.fetch();
         const entry = await invite.guild.fetchAuditLogs({ type: "INVITE_DELETE" }).then(logs => logs.entries.first());
         if (entry.createdTimestamp <= Date.now() - 1000) return;
-        await invite.guild.fetchInvites().yhen(gInvites => { this.client.invites[invite.guild.id] = gInvites });
         if (data.other["root"].includes(entry.executor.id)) return;
         const exeMember = invite.guild.members.cache.get(entry.executor.id);
         if (exeMember.roles.cache.has(data.roles["root"])) return;
