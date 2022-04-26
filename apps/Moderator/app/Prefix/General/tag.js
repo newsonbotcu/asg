@@ -1,5 +1,5 @@
-const Command = require("../../../Base/Command");
-class Link extends Command {
+const { DotCommand } = require("../../../../../base/utils");
+class Link extends DotCommand {
 
     constructor(client) {
         super(client, {
