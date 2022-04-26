@@ -315,6 +315,7 @@ class DotCommand {
 			accaptedPerms,
 			cooldown
 		};
+		this.cooldown = new Collection()
 	}
 
 	load(props) {

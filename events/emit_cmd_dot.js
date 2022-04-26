@@ -55,16 +55,12 @@ class DotCommandCreate extends ClientEvent {
                     .setColor('#2f3136'));
             }
         }
-        let uCooldown = client.cmdCoodown[message.author.id];
-        if (!uCooldown) {
-            client.cmdCoodown[message.author.id] = {};
-            uCooldown = client.cmdCoodown[message.author.id];
-        }
-        let time = uCooldown[cmd.info.name] || 0;
-        if (time && (time > Date.now())) return message.channel.send(`${data.emojis["time"]} Komutu tekrar kullanabilmek için lütfen **${Math.ceil((time - Date.now()) / 1000)}** saniye bekle!`);
+        let uCooldown = cmd.cooldown[message.author.id];
+        if (uCooldown && (uCooldown > Date.now())) return message.channel.send(`${data.emojis["time"]} Komutu tekrar kullanabilmek için lütfen **${Math.ceil((time - Date.now()) / 1000)}** saniye bekle!`);
         client.log(`[(${message.author.id})] ${message.author.username} ran command [${cmd.info.name}]`, "cmd");
         try {
             cmd.run(client, message, args);
+            cmd.cooldown.set(message.author.id, cmd.info.cooldown);
         } catch (e) {
             console.log(e);
             return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["error"]} | Sanırım bir hata oluştu...`)
