@@ -97,7 +97,7 @@ class Tantoony extends Client {
         if (intType.toLowerCase() !== "prefix") try {
             const cmd = await client.guild.commands.create(props);
             props.id = cmd.id;
-            this.log(`Loading "${intType}" Integration in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
+            this.log(`Loading "${intType}" Command in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
             const markedRoles = await this.models.roles.find({ commands: { $in: [`${intType.toLowerCase()}:${props.name}`] } });
             const marks = markedRoles.map((roleData) => roleData.meta.sort((a, b) => b.created.getTime() - a.created.getTime())[0].id);
             if (marks.length !== 0) await client.guild.commands.permissions.set({
