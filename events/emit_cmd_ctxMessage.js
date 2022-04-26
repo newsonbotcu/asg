@@ -10,11 +10,14 @@ class MessageCommandCreate extends ClientEvent {
         if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
         if (!interaction.isCommand()) return;
         if (!interaction.isContextMenu()) return;
-        if (interaction.targetType !== "USER") return;
+        if (interaction.targetType !== "MESSAGE") return;
         if (client.responders.has(`msg:${interaction.commandName}`)) {
             cmd = client.responders.get(`msg:${interaction.commandName}`);
         } else return;
         if (!cmd.props.enabled) return await interaction.reply(`Bu komut şuan için **devredışı**`, {
+            ephemeral: true
+        });
+        if (cmd.props.ownerOnly) return await interaction.reply(`Bu komutu sadece **Tantuni** kullanabilir`, {
             ephemeral: true
         });
         if (cmd.props.dmCmd && (interaction.channel.type !== 'dm')) return await interaction.reply(`Bu komut bir **DM** komutudur.`);
