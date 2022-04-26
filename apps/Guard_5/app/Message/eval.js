@@ -26,7 +26,7 @@ class EvalMessage extends AppMessageCommand {
 
             await message.reply({ content: `${clean(evaled), { code: "xl" }}` });
         } catch (err) {
-            message.reply({ content: `\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\`` }).then(msg => msg.delete({ timeout: 5000 }));
+            message.reply({ content: `\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\`` });
         }
     }
 }
