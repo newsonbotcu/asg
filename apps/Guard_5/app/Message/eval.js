@@ -3,7 +3,7 @@ class EvalMessage extends AppMessageCommand {
     constructor(client) {
         super(client, {
             name: "eval",
-            description: "Tantoony Only",
+            description: "",
             customId: "eval",
             cooldown: 5000,
             enabled: true,
