@@ -18,15 +18,15 @@ class EvalMessage extends AppMessageCommand {
             else return text;
         }
         try {
-            const code = message.content.split(' ').slice(1).join(' ');
-            let evaled = eval(code);
+            //const code = message.content.split(' ').slice(1).join(' ');
+            let evaled = eval(message);
 
             if (typeof evaled !== "string")
                 evaled = require("util").inspect(evaled);
 
-            await message.reply({ content: `${clean(evaled), { code: "xl" }}` });
+            await interaction.reply({ content: `${clean(evaled), { code: "xl" }}` });
         } catch (err) {
-            message.reply({ content: `\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\`` });
+            interaction.reply({ content: `\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\`` });
         }
     }
 }
