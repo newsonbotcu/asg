@@ -8,7 +8,7 @@ class MessageCommandCreate extends ClientEvent {
     }
     async run(interaction) {
         console.log("a");
-        if (!interaction.isCommand()) return;
+        //if (!interaction.isCommand()) return;
         if (!interaction.isContextMenu()) return;
         console.log("3");
         if (interaction.targetType !== "MESSAGE") return;
