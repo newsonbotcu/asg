@@ -11,8 +11,8 @@ class MessageCommandCreate extends ClientEvent {
         if (!interaction.isCommand()) return;
         if (!interaction.isContextMenu()) return;
         if (interaction.targetType !== "USER") return;
-        if (client.responders.has(`message:${interaction.commandName}`)) {
-            cmd = client.responders.get(`message:${interaction.commandName}`);
+        if (client.responders.has(`msg:${interaction.commandName}`)) {
+            cmd = client.responders.get(`msg:${interaction.commandName}`);
         } else return;
         if (!cmd.props.enabled) return await interaction.reply(`Bu komut şuan için **devredışı**`, {
             ephemeral: true

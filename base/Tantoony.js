@@ -92,31 +92,12 @@ class Tantoony extends Client {
     }
 
     async load_int(intName, intType, client) {
-        if (intType.toLowerCase() !== "prefix") try {
-            const props = new (require(`./../apps/${this.name}/app/${intType}/${intName}`))(client);
-            const cmd = await client.guild.commands.create(props);
-            props.id = cmd.id;
-            client.responders.set(`${intType.toLowerCase()}:${props.name}`, props);
-            this.log(`Loading "${intType}" Command in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
-            const markedRoles = await this.models.roles.find({ commands: { $in: [`${intType.toLowerCase()}:${props.name}`] } });
-            const marks = markedRoles.map((roleData) => roleData.meta.sort((a, b) => b.created.getTime() - a.created.getTime())[0].id);
-            if (marks.length !== 0) await client.guild.commands.permissions.set({
-                command: cmd.id, permissions: marks.map(mark => {
-                    return {
-                        id: mark, type: "ROLE", permission: true
-                    }
-                })
-            });
+        try {
+            const rawCmd = new (require(`./../apps/${this.name}/app/${intType}/${intName}`))(client);
+            await rawCmd.load();
             return false;
         } catch (e) {
-            return `Unable to load "${intType}" Integration ${intName}: ${e}`;
-        } else try {
-            const props = new (require(`./../apps/${this.name}/app/${intType}/${intName}`))(client);
-            client.responders.set(`${intType.toLowerCase()}:${props.info.name}`, props);
-            this.log(`Loading "${intType}" Command in ${this.name}: ${props.info.name} [${props.id}] 👌`, "load");
-            return false;
-        } catch (e) {
-            return `Unable to load "${intType}" Integration ${intName}: ${e}`;
+            return `[HATA] "${intType}" komutu olan "${intName}" yüklenemedi: ${e}`;
         }
     }
 
