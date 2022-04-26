@@ -30,7 +30,7 @@ class Booster extends Command {
         if (ceyhan[0] == "desktop") adana = "Masaüstü Uygulama"
         if (ceyhan[0] == "web") adana = "İnternet Tarayıcısı"
         if (ceyhan[0] == "mobile") adana = "Mobil Telefon"
-        await message.inlineReply(new Discord.MessageEmbed().setDescription(`${mentioned} Kullanıcısının şu anda kullandığı cihaz: \`${adana}\``)).setColor("BLACK");
+        await message.reply(new Discord.MessageEmbed().setDescription(`${mentioned} Kullanıcısının şu anda kullandığı cihaz: \`${adana}\``)).setColor("BLACK");
 
     }
 }

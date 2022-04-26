@@ -26,7 +26,7 @@ class Staffver extends Command {
         if (isNaN(slowtime)) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         if (slowtime > 1000) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         message.channel.setRateLimitPerUser(args[0]);
-        message.inlineReply(`Bu kanalda artık ${slowtime} saniye süresinde bir yazıla bilecek.`);
+        message.reply(`Bu kanalda artık ${slowtime} saniye süresinde bir yazıla bilecek.`);
     }
 }
 

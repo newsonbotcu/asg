@@ -45,11 +45,11 @@ class EvalSync extends Types.PrefixCommand {
             if (typeof evaled !== "string")
                 evaled = require("util").inspect(evaled);
 
-            const all = await message.inlineReply(clean(evaled), { code: "xl" });
+            const all = await message.reply(clean(evaled), { code: "xl" });
             message.delete();
             all.delete({ timeout: 5000 });
         } catch (err) {
-            message.inlineReply(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``).then(msg => msg.delete({ timeout: 5000 }));
+            message.reply(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``).then(msg => msg.delete({ timeout: 5000 }));
             message.delete({ timeout: 1000 });
         }
         message.reply({

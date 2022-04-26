@@ -22,7 +22,7 @@ class Roles extends Command {
         
         const GREmbed = new Discord.MessageEmbed().setColor("Black");
         let guildRoles = message.guild.roles.cache.sort((kahve, stark) => kahve.position - stark.position).map(grol => `${grol} - (${grol.id}) - ${grol.members.size}`).join("\n");
-        clientEmbed(`${guildRoles}`, false, false, false).then((m) => m.forEach(i => message.inlineReply(i)));
+        clientEmbed(`${guildRoles}`, false, false, false).then((m) => m.forEach(i => message.reply(i)));
     }
 }
 

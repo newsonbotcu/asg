@@ -32,7 +32,7 @@ class JailSorgu extends Command {
         \`Jail türü:\` ${jailData.type}
         \`Açılacağı tarih:\` ${(jailData.type === "temp") ? jailData.duration - checkDays(jailData.created) : "Açılmayacak"}
         `).setColor('#2f3136').setFooter("İnfenro Forever <3");
-        await message.inlineReply(embed);
+        await message.reply(embed);
         client.cmdCooldown[message.author.id][this.info.name] = Date.now() + this.info.cooldown;
     }
 }

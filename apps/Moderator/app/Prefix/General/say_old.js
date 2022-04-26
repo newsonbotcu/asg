@@ -21,7 +21,7 @@ class Say extends Command {
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
         const roles = await low(client.adapters('roles'));
-        await message.inlineReply(new Discord.MessageEmbed().setDescription(stripIndent`
+        await message.reply(new Discord.MessageEmbed().setDescription(stripIndent`
         \`•\` Toplam üye: \`${message.guild.memberCount}\` (${message.guild.members.cache.filter(m => m.presence.status !== 'offline').size} online)
         \`•\` Booster sayısı: \`${message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["booster"])).size}\` (${message.guild.premiumTier}. seviye)
         \`•\` Taglı sayısı: \`${message.guild.members.cache.filter(m => client.config.tags[0].some(tag => m.user.username.includes(tag))).size}\` (${message.guild.members.cache.filter(m => m.roles.cache.has(data.roles["cmd-crew"])).size} yetkili)

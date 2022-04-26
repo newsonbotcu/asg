@@ -20,7 +20,7 @@ class Reboot extends Command {
         });
     }
     async run(client, message, args, data) {
-        await message.inlineReply(`\`Hazırlanıyor...\``);
+        await message.reply(`\`Hazırlanıyor...\``);
         (await low(this.client.adapters('utils'))).set("lastCrush", message.channel.id).write();
         process.exit();
     }

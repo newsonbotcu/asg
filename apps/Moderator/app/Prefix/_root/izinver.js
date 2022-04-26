@@ -52,7 +52,7 @@ class Kur extends Command {
         const system = await izin.findOne({ user: mentioned.user.id, type: typo, effect: efct });
         if (system) {
             await izin.updateOne({ user: mentioned.user.id, type: typo, effect: efct }, { $inc: { count: args[3] } });
-            await message.inlineReply(new Discord.MessageEmbed().setDescription(`İzin başarıyla yenilendi!`));
+            await message.reply(new Discord.MessageEmbed().setDescription(`İzin başarıyla yenilendi!`));
         } else {
             try {
                 const sex = await izin({ _id: keyz.generate(), user: mentioned.user.id, count: args[3], type: typo, effect: efct, created: new Date(), time: args[4] });
@@ -60,7 +60,7 @@ class Kur extends Command {
             } catch (error) {
                 console.log(error);
             };
-            await message.inlineReply(new Discord.MessageEmbed().setDescription(`İzin başarıyla oluşturuldu!`));
+            await message.reply(new Discord.MessageEmbed().setDescription(`İzin başarıyla oluşturuldu!`));
         }
 
     }

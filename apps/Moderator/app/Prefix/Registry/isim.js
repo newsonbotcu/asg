@@ -37,7 +37,7 @@ class Isim extends Command {
         }
         await mentioned.setNickname(`${point} ${nameAge} | ${age}`);
         await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
-        await message.inlineReply(new Discord.MessageEmbed().setDescription(`${mentioned} kişisinin adı başarıyla \`${point} ${nameAge} | ${age}\` olarak ayarlandı!`));
+        await message.reply(new Discord.MessageEmbed().setDescription(`${mentioned} kişisinin adı başarıyla \`${point} ${nameAge} | ${age}\` olarak ayarlandı!`));
     }
 }
 module.exports = Isim;

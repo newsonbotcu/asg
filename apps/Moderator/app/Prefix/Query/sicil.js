@@ -63,7 +63,7 @@ class Sicil extends Command {
 
         data.records.map(st => { karebar.push([st.id, `${st.type} ${st.punish}`, `${moment(st.created.getTime()).format("LLL")}`, client.users.cache.get(st.executor).tag, `${st.reason ? st.reason : "Belirtilmedi"}`]) })
         let page = 1;
-        const question = await message.inlineReply(` ${member} kullanıcısının sicil bilgileri aşağıda belirtilmiştir. Tekli cezaya bakmak için \`.cezasorgu ID\` yazınız. \`\`\`${table(karebar.slice(page == 1 ? 0 : page * 10 - 10, page * 10), config)}\`\`\``)
+        const question = await message.reply(` ${member} kullanıcısının sicil bilgileri aşağıda belirtilmiştir. Tekli cezaya bakmak için \`.cezasorgu ID\` yazınız. \`\`\`${table(karebar.slice(page == 1 ? 0 : page * 10 - 10, page * 10), config)}\`\`\``)
 
 
         if (data && data.length > 10) {

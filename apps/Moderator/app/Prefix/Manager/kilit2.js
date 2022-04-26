@@ -24,7 +24,7 @@ class Lock extends Command {
         
         const everyone = message.channel.permissionsFor(message.guild.id).has("SEND_MESSAGES");
         const embed = new Discord.MessageEmbed()
-       await message.inlineReply(embed
+       await message.reply(embed
                 .setFooter(`Tantoony sizi önemsiyor (:`)
                 .setColor("RANDOM")
                 .setAuthor(message.author.tag, message.author.avatarURL({ dynamic: true }))

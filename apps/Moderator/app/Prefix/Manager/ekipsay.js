@@ -61,7 +61,7 @@ class ekipsay extends Command {
         <:stark_sestekiler:871770248825696296> **Sesteki üye:** \`${ekipiki.members.filter(a => a.voice.channel).size} kişi\`
         <:stark_sesteyok:871771305408626739> **Seste olmayan üye:** \`${ekipiki.members.filter(a => a.presence.status !== 'offline' && !a.voice.channel).size} kişi\``)
 
-        message.inlineReply(embed)
+        message.reply(embed)
     }
 }
 module.exports = ekipsay;

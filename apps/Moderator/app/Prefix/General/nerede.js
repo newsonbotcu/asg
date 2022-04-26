@@ -39,7 +39,7 @@ class Nerede extends Command {
          ** • Ses Biglileri:**
         \`\`\`${whereinfo}\`\`\`
         **• Kanala gitmek için ${mentioned.voice.channel} kanalına tıklaya bilirsin.**`)
-        await message.inlineReply(neredembed).then(msg => msg.delete({ timeout: 10000 }));
+        await message.reply(neredembed).then(msg => msg.delete({ timeout: 10000 }));
         */
         function msToTime(duration) {
             var milliseconds = Math.floor((duration % 1000) / 100),
@@ -76,7 +76,7 @@ class Nerede extends Command {
         if (!entry) sorgu = `${mentioned}, ${mentioned.voice.channel} kanalında. \n \` • \` Mikrofon **:** ${mentioned.voice.mute ? `${data.emojis["offmic"]}` : `${data.emojis["onmic"]}`} \n \` • \` Kulaklık **:** ${mentioned.voice.deaf ? `:mute:` : `:loud_sound:`}`
         if (entry) sorgu = `${mentioned} kullanıcısı **${msToTime(new Date(duration))}** öncesinden beridir ${mentioned.voice.channel} kanalında. \n \` • \` Mikrofon **:** ${mentioned.voice.mute ? `${data.emojis["offmic"]}` : `${data.emojis["onmic"]}`} \n \` • \` Kulaklık **:** ${mentioned.voice.deaf ? `:mute:` : `:loud_sound:`}`
         let kembed = embed.setDescription(sorgu)
-        message.inlineReply({ embed: kembed, allowedMentions: { repliedUser: false } });
+        message.reply({ embed: kembed, allowedMentions: { repliedUser: false } });
     }
 }
 

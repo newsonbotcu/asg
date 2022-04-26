@@ -32,7 +32,7 @@ class CountByRole extends Command {
         const liste = rolelogs.rolveridb.map(a => `${client.emojis.cache.get(a.type)} Rol: <@&${a.rolid}> Yetkili: <@!${a.staffID}> \n**Tarih:** \`${moment(a.tarih).format("lll")}\` \n**─────────────────**`).reverse();
         let page = 1;
         const embed = new Discord.MessageEmbed().setAuthor(mentioned.displayName, mentioned.user.avatarURL({ dynamic: true })).setColor("RANDOM");
-        const question = await message.inlineReply(
+        const question = await message.reply(
             embed.setDescription(`${mentioned} kişisinin toplamda **${liste.length}** rol bilgisi bulunmakta son 10 rolün bilgileri aşağıda belirtilmiştir. \n\n${liste.slice(page == 1 ? 0 : page * 10 - 10, page * 10).join("\n")}`)
         );
 

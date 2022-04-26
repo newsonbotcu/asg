@@ -38,7 +38,7 @@ class Avatar extends Command {
                 embed.addField(prx + command.info.name, command.info.description, true);
             });
             if (embed.fields.length === 0) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-            message.inlineReply(embed.setTitle(args[0].toUpperCase() + " KOMUTLARI"));
+            message.reply(embed.setTitle(args[0].toUpperCase() + " KOMUTLARI"));
         } else {
             let acceptedroles = cmd.info.accaptedPerms.filter(rolename => message.guild.roles.cache.get(roles.get(rolename).value())).map(rolename => message.guild.roles.cache.get(roles.get(rolename).value()));
             if (acceptedroles.length < 1) acceptedroles = ["\`-Genel Komut-\`"];
@@ -52,7 +52,7 @@ class Avatar extends Command {
             emb.addField("Kategori", cmd.info.category);
             emb.addField("Süresi:", cmd.info.cooldown / 1000 + " Saniye");
             emb.addField("Kullanabilen Roller:", acceptedroles.join('\n'));
-            message.inlineReply(emb);
+            message.reply(emb);
         }
     }
 }

@@ -38,8 +38,8 @@ class Upgrade extends Command {
         if (!mentioned.roles.cache.has(yagmur.Yetkiler[yagmur.Yetkiler.length - 1])) {
             await mentioned.roles.add(yagmur.Yetkiler[sahipOlunanRol + 1]).catch(e => { })
             await mentioned.roles.remove(yagmur.Yetkiler[sahipOlunanRol]).catch(e => { })
-            await message.inlineReply(embed.setDescription(`${mentioned} Kullanısı <@&${yagmur.Yetkiler[sahipOlunanRol + 1]}> Yetkisine Başarılı bir Şekilde Yükseltildi.`)).catch(e => { })
-        } else { message.inlineReply(embed.setDescription(`:x: Belirtilen Kullanıcı Zaten Max Role Sahip.`)).catch(e => { }) }
+            await message.reply(embed.setDescription(`${mentioned} Kullanısı <@&${yagmur.Yetkiler[sahipOlunanRol + 1]}> Yetkisine Başarılı bir Şekilde Yükseltildi.`)).catch(e => { })
+        } else { message.reply(embed.setDescription(`:x: Belirtilen Kullanıcı Zaten Max Role Sahip.`)).catch(e => { }) }
     }
 }
 

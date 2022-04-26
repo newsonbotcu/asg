@@ -36,7 +36,7 @@ class Nerede extends Command {
         Kanal: ${message.guild.channels.cache.get(myData[args[1] || 0].channelID) || "Bilinmiyor"}
         Süre: ${Math.floor(checkMins(myData[args[1] || 0].enter) - checkMins(myData[args[1] || 0].exit))} dakika
         `);
-        message.inlineReply(embedi);
+        message.reply(embedi);
 
     }
 }

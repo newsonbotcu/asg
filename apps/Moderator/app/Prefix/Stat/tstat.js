@@ -80,7 +80,7 @@ class Invites extends Command {
             • Mikrofon kapalı: \`${msToTime(records.filter(r => r.selfMute).map(r => r.duration).reduce((a, b) => a + b, 0))}\`
             • Kulaklık kapalı: \`${msToTime(records.filter(r => r.selfDeaf).map(r => r.duration).reduce((a, b) => a + b, 0))}\`
          `).setThumbnail(mentioned.user.displayAvatarURL({ dynamic: true })).setColor(mentioned.displayHexColor).setFooter("• Tantoony seni önemsiyor- vallaha önemsiyom abi").setTitle(message.guild.name);
-            return await message.inlineReply(responseEmbed).then(msg => msg.delete({ timeout: 20000 }));
+            return await message.reply(responseEmbed).then(msg => msg.delete({ timeout: 20000 }));
         }
 
         if (args[0] === 'davet') {
@@ -91,7 +91,7 @@ class Invites extends Command {
             • Toplam Davet sayısı: ${DataInv.records.length}
             • Sunucuda olan davet ettiği kişi sayısı: ${DataInv.records.filter(rec => message.guild.members.cache.get(rec.user)).length}
             `).setThumbnail(mentioned.user.displayAvatarURL({ dynamic: true })).setColor(mentioned.displayHexColor).setTitle(message.guild.name);
-            return await message.inlineReply(embed).then(msg => msg.delete({ timeout: 10000 }));
+            return await message.reply(embed).then(msg => msg.delete({ timeout: 10000 }));
         }
 
         if (args[0] === 'teyit') {
@@ -103,7 +103,7 @@ class Invites extends Command {
             • Bugünkü kayıt sayısı: ${rain(client, datam.filter(data => checkDays(data.created) <= 1).length)} 
             • Haftalık kayıt sayısı: ${rain(client, datam.filter(data => checkDays(data.created) <= 7).length)} 
             `).setThumbnail(mentioned.user.displayAvatarURL({ dynamic: true })).setColor(mentioned.displayHexColor).setTitle(message.guild.name);
-            return await message.inlineReply(embedD).then(msg => msg.delete({ timeout: 10000 }));
+            return await message.reply(embedD).then(msg => msg.delete({ timeout: 10000 }));
         }
         if (args[0] == 'mesaj') {
             const Data = await stat_msg.findOne({ _id: mentioned.user.id });
@@ -129,7 +129,7 @@ class Invites extends Command {
             **Toplam Mesaj İstatistikleri**
              ${description}
              `).setThumbnail(mentioned.user.displayAvatarURL({ dynamic: true })).setColor(mentioned.displayHexColor).setFooter("• bla bla bla - Starks").setTitle(message.guild.name);
-            return await message.inlineReply(responseEmbed).then(msg => msg.delete({ timeout: 20000 }));
+            return await message.reply(responseEmbed).then(msg => msg.delete({ timeout: 20000 }));
         }
         return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
     }

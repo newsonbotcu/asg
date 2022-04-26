@@ -36,10 +36,10 @@ class pm2 extends Command {
         if (args[0] === 'logs') return;
         const ls = children.exec(`pm2 ${args.join(' ')}`);
         ls.stdout.on('data', function (data) {
-            if (data) message.inlineReply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
+            if (data) message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
         });
         ls.stderr.on('data', function (data) {
-            if (data) message.inlineReply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
+            if (data) message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
         });
         
 

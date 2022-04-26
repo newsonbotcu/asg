@@ -29,12 +29,12 @@ class Vip extends Command {
         
         if (!mentioned) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         if (!mentioned.roles.cache.has(roleID)) {
-            await message.inlineReply(embed
+            await message.reply(embed
                 .setDescription(`${mentioned} kişisine **${myRole.name}** adlı rolü başarıyla verdim!`));
             await mentioned.roles.add(myRole.id);
         } else {
             await mentioned.roles.remove(myRole.id);
-            await message.inlineReply(embed
+            await message.reply(embed
             .setDescription(`${mentioned} kişisinden **${myRole.name}** adlı rolü başarıyla aldım!`));
         }
         await message.react(data.emojis["ok"]);

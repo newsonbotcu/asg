@@ -35,10 +35,10 @@ class Kur extends Command {
         function Process() {
             var ls = children.exec(`cd /home/${client.config.project}/${data.other["dir"]}; git pull`);
             ls.stdout.on('data', function (data) {
-                message.inlineReply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
+                message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
             });
             ls.stderr.on('data', function (data) {
-                message.inlineReply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
+                message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
             });
             ls.on('close', function (code) {
                 if (code == 0)

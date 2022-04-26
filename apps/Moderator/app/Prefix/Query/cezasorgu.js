@@ -60,7 +60,7 @@ class BanSorgu extends Command {
         ${moment(data.created.getTime()).format("LLL")}
 
         `);
-            message.inlineReply(embed);
+            message.reply(embed);
         } else return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
 
 

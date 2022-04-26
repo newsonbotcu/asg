@@ -42,7 +42,7 @@ class Link extends Command {
             headers: ['no', 'Kullanıcı', 'miktar']
         });
         const embed = new Discord.MessageEmbed()
-        message.inlineReply(embed.setTitle("REGISTRY TOP LIST").setDescription(`\`\`\`md\n${embeddoc}\`\`\``))
+        message.reply(embed.setTitle("REGISTRY TOP LIST").setDescription(`\`\`\`md\n${embeddoc}\`\`\``))
 
 
         await message.react((await emojiler).get("ok"].split(':')[2].replace('>', ''));

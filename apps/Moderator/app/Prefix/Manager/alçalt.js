@@ -38,9 +38,9 @@ class Upgrade extends Command {
         if (!mentioned.roles.cache.has(yagmur.Yetkiler[0])) {
             await mentioned.roles.add(yagmur.Yetkiler[sahipOlunanRol - 1]).catch(e => { })
             await mentioned.roles.remove(yagmur.Yetkiler[sahipOlunanRol]).catch(e => { })
-            await message.inlineReply(embed.setDescription(`${mentioned} Kullanısı <@&${yagmur.Yetkiler[sahipOlunanRol - 1]}> Yetkisine Başarılı bir Şekilde Düşürüldü.`)).catch(e => { })
+            await message.reply(embed.setDescription(`${mentioned} Kullanısı <@&${yagmur.Yetkiler[sahipOlunanRol - 1]}> Yetkisine Başarılı bir Şekilde Düşürüldü.`)).catch(e => { })
         } else {
-            message.inlineReply(embed.setDescription(`:x: Belirtilen yetkili zaten en alt yetkide. Yetkisini almak istermisiniz? ?`)).then(async msj => {
+            message.reply(embed.setDescription(`:x: Belirtilen yetkili zaten en alt yetkide. Yetkisini almak istermisiniz? ?`)).then(async msj => {
                 await msj.react('✅');
                 const kabul = (reaction, user) => {
                     return ['✅'].includes(reaction.emoji.name) && user.id === message.author.id;

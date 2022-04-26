@@ -41,7 +41,7 @@ class Call extends Command {
         ●▬▬▬▬▬▬▬▬▬●
 
         `);
-        await message.inlineReply(embed.setColor('#2f3136').setAuthor(message.guild.name, message.guild.iconURL({ dynamic: true }), "https://tantoony.net/"));
+        await message.reply(embed.setColor('#2f3136').setAuthor(message.guild.name, message.guild.iconURL({ dynamic: true }), "https://tantoony.net/"));
     }
 }
 

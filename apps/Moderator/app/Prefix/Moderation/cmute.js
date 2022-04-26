@@ -21,24 +21,24 @@ class CMute extends Command {
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if (!mentioned) {
             await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-            return message.inlineReply(new Discord.MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kullanıcı bulunamadı!`).setColor('BLACK')).then(msg => msg.delete({ timeout: 1000 }));
+            return message.reply(new Discord.MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kullanıcı bulunamadı!`).setColor('BLACK')).then(msg => msg.delete({ timeout: 1000 }));
         }
         const sebep = args.slice(2).join(" ");
         if (!sebep) {
             await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-            return message.inlineReply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["soru"]} Bir sebep girmelisin`)).then(msg => msg.delete({ timeout: 1000 }));
+            return message.reply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["soru"]} Bir sebep girmelisin`)).then(msg => msg.delete({ timeout: 1000 }));
         }
         if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) {
             await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-            return message.inlineReply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["missingPerms"]} Bunu yapmak için yeterli yetkiye sahip değilsin`)).then(msg => msg.delete({ timeout: 1000 }));
+            return message.reply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["missingPerms"]} Bunu yapmak için yeterli yetkiye sahip değilsin`)).then(msg => msg.delete({ timeout: 1000 }));
         }
         if (!mentioned.bannable) {
             await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-            return message.inlineReply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["miisingBotPerms"]} Bu kişiyi mutelemek için yeterli yetkiye sahip değilim`)).then(msg => msg.delete({ timeout: 1000 }));
+            return message.reply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["miisingBotPerms"]} Bu kişiyi mutelemek için yeterli yetkiye sahip değilim`)).then(msg => msg.delete({ timeout: 1000 }));
         }
         if (!sayi(args[1])) {
             await message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-            return message.inlineReply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["sayifalan"]} Geçerli bir dakika girmelisin`)).then(msg => msg.delete({ timeout: 1000 }));
+            return message.reply(new Discord.MessageEmbed().setColor('BLACK').setDescription(`${data.emojis["sayifalan"]} Geçerli bir dakika girmelisin`)).then(msg => msg.delete({ timeout: 1000 }));
         }
         client.handler.emit('cMute', mentioned, message.author.id, sebep, args[1]);
         await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));

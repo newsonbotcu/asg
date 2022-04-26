@@ -39,7 +39,7 @@ class Avatar extends Command {
         await message.channel.messages.fetch(
             { limit: amount }).then(messages => {
                 message.channel.bulkDelete(messages);
-                message.inlineReply(`${messages.size} Mesaj Temizlenmiştir`)
+                message.reply(`${messages.size} Mesaj Temizlenmiştir`)
             });
 
     }

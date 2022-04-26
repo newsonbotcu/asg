@@ -20,14 +20,14 @@ class BanSorgu extends Command {
     async run(client, message, args) {
         const emojis = await low(client.adapters('emojis'));
         const banInfo = await message.guild.fetchBan(args[0]);
-        if (!banInfo) return message.inlineReply(new Discord.MessageEmbed().setColor("BLACK").setDescription(`${data.emojis["warn"]} Belirtilen **ID*'ye sahip bir banlı kullanıcı bulunamadı.`));
+        if (!banInfo) return message.reply(new Discord.MessageEmbed().setColor("BLACK").setDescription(`${data.emojis["warn"]} Belirtilen **ID*'ye sahip bir banlı kullanıcı bulunamadı.`));
         const banData = await Bans.findOne({ _id: args[0] });
         const embed = new Discord.MessageEmbed().setDescription(stripIndent`
         • Banlanan Kullanıcı: ${banInfo.user} (\`${banInfo.user.tag}\` - \`${banInfo.user.id}\`)
         • Banlanma sebebi: \`${banData ? banData.reason : "Sebeb Belirtilmemiş"}\`
         • Banlayan kullanıcı: ${message.guild.members.cache.get(banData ? banData.executor : "123") ? message.guild.members.cache.get(banData.executor) : `Sunucuda değil (${banData.executor})`}
         `).setColor('BLACK').setTimestamp().setTitle("† Dante's INFEЯИO");
-        await message.inlineReply(embed);
+        await message.reply(embed);
         client.cmdCooldown[message.author.id][this.info.name] = Date.now() + this.info.cooldown;
     }
 }

@@ -25,7 +25,7 @@ class Anonim extends Command {
         if (!itiraf) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         const kanal = client.channels.cache.get(data.channels["itiraf"]);
         kanal.send(new Discord.MessageEmbed().setDescription("Anonim: " + itiraf));
-        await message.inlineReply("Başarıyla gönderildi.");
+        await message.reply("Başarıyla gönderildi.");
         this.client.cmdCoodown[message.author.id][this.info.name] = Date.now() + this.info.cooldown;
 
     }

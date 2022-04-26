@@ -145,7 +145,7 @@ class Kur extends Command {
         // SEND TO DISCORD
 
         const attachment = new Discord.MessageAttachment(outputGifPath);
-        await message.inlineReply({ files: [attachment] })
+        await message.reply({ files: [attachment] })
 
         // AFTER SEND STUFF
         // Deleting temp files..

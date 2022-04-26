@@ -28,7 +28,7 @@ class CountByRole extends Command {
         let sessaysize = mentionedRole.members.filter(a => a.presence.status == "online" && !a.voice.channel).size
 
         let amsay = mentionedRole.members.filter(a => a.presence.status !== "online").size
-        message.inlineReply(`\`\`\`${mentionedRole.name} Rolünün istatistikleri. \n\n• Aktif olmayann üyeler: ${amsay} \n\n• Aktif olup seste olmayanlar (${sessaysize}) \n${sessay}\`\`\``)
+        message.reply(`\`\`\`${mentionedRole.name} Rolünün istatistikleri. \n\n• Aktif olmayann üyeler: ${amsay} \n\n• Aktif olup seste olmayanlar (${sessaysize}) \n${sessay}\`\`\``)
     }
 
 }

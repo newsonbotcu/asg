@@ -53,7 +53,7 @@ class Say2 extends Command {
         }
         const sesler = Object.keys(obj).filter(k => lang[k]).filter(k => obj[k] >= 10).sort((a, b) => obj[b] - obj[a]).slice(0, 3);
         const deyim = sesler.map(k => `${lang[k]} \`${obj[k]}\``).join(', ');
-        await message.inlineReply(saranembed.setDescription(stripIndent`
+        await message.reply(saranembed.setDescription(stripIndent`
        ${data.emojis["kahvehac"]} Sunucuda \`${böyle}\` üye var.
        ${data.emojis["kahvehac"]} Aktif olan \`${ağlarım}\` üye var.
        ${data.emojis["kahvehac"]} Tagımızı taşıyarak bize destek olan \`${gitme}\` üye var.

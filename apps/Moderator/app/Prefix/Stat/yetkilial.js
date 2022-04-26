@@ -27,7 +27,7 @@ class Upgrade extends Command {
 
     
         await mentioned.roles.add("848920653633028170")
-        await message.inlineReply(new Discord.MessageEmbed()
+        await message.reply(new Discord.MessageEmbed()
         .setColor("BLACK")
         .setDescription(`${mentioned.toString()} Kullanıcısı Artık Yeni Yetkilimiz!`))
         

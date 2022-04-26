@@ -18,7 +18,7 @@ class Avatar extends Command {
     async run(client, message, args) {
         const emojis = await low(client.adapters('emojis'));
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
-        message.inlineReply(mentioned.user.displayAvatarURL({ dynamic: true, size: 2048 }), { allowedMentions: { repliedUser: false } });
+        message.reply(mentioned.user.displayAvatarURL({ dynamic: true, size: 2048 }), { allowedMentions: { repliedUser: false } });
     }
 }
 

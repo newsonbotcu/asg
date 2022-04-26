@@ -27,7 +27,7 @@ class Kur extends Command {
     async run(client, message, args, data) {
 
         const role = message.guild.roles.cache.find(r => r.name.toLowerCase().slice(2) === args[0]);
-        if (!role) return await message.inlineReply("Böyle bir rol yok")
+        if (!role) return await message.reply("Böyle bir rol yok")
         await Points_config.create({
             _id: role.id,
             requiredPoint: args[1],
@@ -40,7 +40,7 @@ class Kur extends Command {
             voicePublicPerMinute: 0,
             voiceOtherPerMinute: 0
         });
-        await message.inlineReply(new Discord.MessageEmbed().setDescription(`${role} rolü için gereken görev yapılandırması oluşturuldu.`));
+        await message.reply(new Discord.MessageEmbed().setDescription(`${role} rolü için gereken görev yapılandırması oluşturuldu.`));
         
         
     }

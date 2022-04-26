@@ -52,7 +52,7 @@ class Reload extends Command {
 
             setTimeout(() => {
                 client.logger.log(`${i} COMMANDS HAS BEEN RELOADED!`, "log");
-                message.inlineReply(`\`${i} Adet Komut Başarıyla Yüklendi!\``);
+                message.reply(`\`${i} Adet Komut Başarıyla Yüklendi!\``);
             }, 1000);
 
         } else {
@@ -63,7 +63,7 @@ class Reload extends Command {
             }
             await this.client.unloadCommand(cmd.config.location, cmd.info.name);
             await this.client.loadCommand(cmd.config.location, cmd.info.name);
-            message.inlineReply(`\`Başarıyla Yenilendi\``);
+            message.reply(`\`Başarıyla Yenilendi\``);
 
         }
 

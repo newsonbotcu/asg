@@ -56,11 +56,11 @@ class Avatar extends Command {
                 "Content-Type": "application/json"
             }
         }).then(response => response.json()).then(data => {
-            message.inlineReply(
+            message.reply(
             `✅ **${message.member.voice.channel.name}** odasına kuruldu!\nℹ️ Partiye katılmak ve arkadaşlarınızı davet etmek için Yönlendirme bağlantısını kullanın.\n\nBağlantı: https://discord.gg/${data.code}`
             );
         }).catch(e => {
-            message.inlineReply(`:x: | Başlatılamadı ${activity.name}!`);
+            message.reply(`:x: | Başlatılamadı ${activity.name}!`);
         })
     }
 }

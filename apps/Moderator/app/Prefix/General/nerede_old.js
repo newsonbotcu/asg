@@ -25,7 +25,7 @@ class Where extends Command {
         const channels = await low(client.adapters('channels'));
         const embed = new Discord.MessageEmbed().setColor('#2f3136');
         const mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return message.inlineReply(new Discord.MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kullanıcı bulunamadı!`).setColor('#2f3136'));
+        if (!mentioned) return message.reply(new Discord.MessageEmbed().setDescription(`${data.emojis["kullaniciyok"]} Kullanıcı bulunamadı!`).setColor('#2f3136'));
         let desu = ``;
         let info = "";
         if (!mentioned.voice.channel) {
@@ -40,7 +40,7 @@ class Where extends Command {
         let lmc = message.guild.channels.cache.get(mentioned.lastMessageChannelID);
         if (!lmc) lmc = `Bulunamadı`;
         const embedi = embed.setDescription(`${mentioned} Anlık olarak\n\n**${desu}**\n\nEn son yazdığı kanal: ${lmc}\n${info}`);
-        message.inlineReply(embedi);
+        message.reply(embedi);
     }
 }
 

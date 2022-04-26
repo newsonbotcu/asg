@@ -56,7 +56,7 @@ class OldSicil extends Command {
         **Zaman:** \`${checkDays(ecrin.created)} gün önce\`
         **Süre:** \`${ecrin.duration}\`
         `).setTitle("† INFEЯИO EMNIYET");
-        message.inlineReply(ecrinim);
+        message.reply(ecrinim);
     }
 
 }

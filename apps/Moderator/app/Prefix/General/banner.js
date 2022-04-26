@@ -64,5 +64,5 @@ async function avatar(client, message, member, token) {
     let isavatarGIF = avatarFetch.status == 200;
     let yarrak;
     if (isavatarGIF) yarrak = avatarGIF; else yarrak = avatarPNG
-    message.inlineReply(yarrak)
+    message.reply(yarrak)
 }

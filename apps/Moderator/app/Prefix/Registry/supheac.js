@@ -30,7 +30,7 @@ class Supheac extends Command {
         await mentioned.roles.add(data.roles["welcome"]);
         await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
         //await message.guild.channels.cache.get(data.channels["mod-registry"]).send(new Discord.MessageEmbed().setDescription(`${message.member} yetkilisi ${mentioned} kullanıcısının şüphesini kaldırdı.`));
-        await message.inlineReply(new Discord.MessageEmbed().setDescription(`${mentioned} adlı kullanıcı başarıyla şüpheliden çıkarıldı.`).setColor("#c27c0e"));
+        await message.reply(new Discord.MessageEmbed().setDescription(`${mentioned} adlı kullanıcı başarıyla şüpheliden çıkarıldı.`).setColor("#c27c0e"));
         const aylar = [
             "Ocak",
             "Şubat",

@@ -31,7 +31,7 @@ class Invites extends Command {
         Sunucuda olan davet ettiği kişi sayısı: ${rain(client, Data.records.filter(rec => message.guild.members.cache.get(rec.user)).length)}
         `).setThumbnail(mentioned.user.displayAvatarURL({ type: 'gif' })).setColor(mentioned.displayHexColor).setTitle("† Dante's INFEЯИO");
 
-        await message.inlineReply(embed);
+        await message.reply(embed);
     }
 }
 module.exports = Invites;

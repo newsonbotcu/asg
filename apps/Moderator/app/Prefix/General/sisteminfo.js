@@ -40,7 +40,7 @@ class Call extends Command {
         ${data.emojis["type"]} Gecikme: \`${client.ws.ping} ms\`
         ${data.emojis["type"]} Süre: \`${Math.floor(process.uptime() / 3600)} Saat\`
         `);
-        await message.inlineReply(embed.setColor('#2f3136').setAuthor("VDS için tıklayınız", client.owner.displayAvatarURL({ dynamic: true }), "https://www.odeaweb.com/r/210"));
+        await message.reply(embed.setColor('#2f3136').setAuthor("VDS için tıklayınız", client.owner.displayAvatarURL({ dynamic: true }), "https://www.odeaweb.com/r/210"));
     }
 }
 

@@ -38,7 +38,7 @@ class Kur extends Command {
             await member.roles.add(data.roles["welcome"]);
         });
         await message.react(data.emojis["ok"].split(':')[2].replace('>', ''));
-        await message.inlineReply(new Discord.MessageEmbed().setDescription(`\`\`\`Herhangi bir rolü olmayan ${rolsuz.size} kişiye kayıtsız rolü verildi.\`\`\``).setColor('#6be4a2'));
+        await message.reply(new Discord.MessageEmbed().setDescription(`\`\`\`Herhangi bir rolü olmayan ${rolsuz.size} kişiye kayıtsız rolü verildi.\`\`\``).setColor('#6be4a2'));
 
     }
 

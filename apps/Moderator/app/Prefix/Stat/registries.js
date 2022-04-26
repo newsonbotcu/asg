@@ -34,7 +34,7 @@ class Invites extends Command {
         • Haftalık kayıt sayısı: ${rain(client, datam.filter(data => checkDays(data.created) <= 7).length)} 
         `)
 
-        await message.inlineReply(embed);
+        await message.reply(embed);
     }
 }
 module.exports = Invites;
