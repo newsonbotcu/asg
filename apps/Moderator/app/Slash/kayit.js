@@ -70,11 +70,12 @@ class SlashKayit extends SlashCommand {
                 }
             }
         });
-        const registryvaris = await client.models.members.find({ registries: { $elemMatch: { executor: interaction.user.id } } });
+        const registryvaris = await client.models.member.find({ registries: { $elemMatch: { executor: interaction.user.id } } });
         const total = registryvaris.registries.length || 1;
         const myEmbed = new MessageEmbed().setDescription(`<@${target.user.id}> kişisinin kaydı <@${interaction.user.id}> tarafından gerçekleştirildi.\nBu kişinin kayıt sayısı: \`${total}\``);
         await interaction.reply({
-            embeds: [myEmbed]
+            embeds: [myEmbed],
+            ephemeral: false
         });
 
     }
