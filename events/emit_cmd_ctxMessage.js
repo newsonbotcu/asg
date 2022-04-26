@@ -30,6 +30,7 @@ class MessageCommandCreate extends ClientEvent {
                 ephemeral: true
             });
         }
+        let uCooldown = cmd.cooldown[interaction.user.id];
         if (uCooldown && (uCooldown > Date.now())) return await interaction.reply(`Komutu tekrar kullanabilmek için lütfen **${Math.ceil((time - Date.now()) / 1000)}** saniye bekle!`, {
             ephemeral: true
         });
