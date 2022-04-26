@@ -20,7 +20,7 @@ class Say extends DotCommand {
         await message.reply(new Discord.MessageEmbed().setDescription(stripIndent`
         \`•\` Toplam üye: \`${message.guild.memberCount}\` (${message.guild.members.cache.filter((mem) => mem.presence && mem.presence.status !== 'offline').size} online)
         \`•\` Booster sayısı: \`${message.guild.members.cache.filter(m => m.roles.cache.has(client.data.roles["booster"])).size}\` (${message.guild.premiumTier}. seviye)
-        \`•\` Taglı sayısı: \`${message.guild.members.cache.filter(m => client.config.tags[0].some(tag => m.user.username.includes(tag))).size}\` (${message.guild.members.cache.filter(m => m.roles.cache.has(client.data.roles["cmd-crew"])).size} yetkili)
+        \`•\` Taglı sayısı: \`${message.guild.members.cache.filter(m => client.config.tags.some(tag => m.user.username.includes(tag)) || client.config.dis === m.user.discriminator).size}\` (${message.guild.members.cache.filter(m => m.roles.cache.has(client.data.roles["cmd-crew"])).size} yetkili)
         \`•\` Anlık ses: \`${message.guild.voiceStates.cache.filter(v => v.channel).size}\`
         `).setColor('#7bf3e3'));
     }
