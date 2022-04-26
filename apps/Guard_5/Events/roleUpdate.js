@@ -32,7 +32,7 @@ class RoleUpdate extends ClientEvent {
     }
 
 
-    async run(oldRole, curRole) {
+    async refix(oldRole, curRole) {
         let roleData = await this.client.models.roles.findOne({ meta: { $elemMatch: { _id: oldRole.id } } });
         const metadata = roleData.meta.pop();
         await curRole.edit({
