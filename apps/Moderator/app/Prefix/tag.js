@@ -12,7 +12,7 @@ class Link extends DotCommand {
     }
 
     async run(client, message, args) {
-        if (!client.config.tag) return;
+        if (client.config.tags.length === 0) return;
         message.inlineReply(`Kullanıcı adı için: **${client.config.tags.join("** - **")}**\nEtiket için: **${client.config.dis}**`);
     }
 }
