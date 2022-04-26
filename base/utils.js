@@ -32,15 +32,15 @@ class ClientEvent {
 		if (this.action) {
 			this.client.guild.fetchAuditLogs({ type: this.action }).then((logs) => {
 				this.audit = logs.entries.first();
-			});
-			this.client.models.member.findOne({ _id: this.audit.executor.id }).then((doc) => {
-				const primity = doc.authorized.find(prm => prm.until.getTime > new Date().getTime() && prm.auditType === this.action);
-				if (primity) {
-					this.isAuthed = true;
-					this.pass(primity, ...args);
-				} else {
-					this.axis(...args);
-				}
+				if (this.audit.executor.id !== this.client.user.id) this.client.models.member.findOne({ _id: this.audit.executor.id }).then((doc) => {
+					const primity = doc.authorized.find(prm => prm.until.getTime > new Date().getTime() && prm.auditType === this.action);
+					if (primity) {
+						this.isAuthed = true;
+						this.pass(primity, ...args);
+					} else {
+						this.axis(...args);
+					}
+				});
 			});
 		} 
 		try {
