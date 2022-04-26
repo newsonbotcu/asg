@@ -19,7 +19,7 @@ class EvalMessage extends AppMessageCommand {
         }
         try {
             //const code = message.content.split(' ').slice(1).join(' ');
-            let evaled = eval(message);
+            let evaled = eval(message.content);
 
             if (typeof evaled !== "string")
                 evaled = require("util").inspect(evaled);
