@@ -314,13 +314,7 @@ class AppMessageCommand extends ApplicationCommand {
 			enabled,
 			ownerOnly
 		};
-		this.label = label;
 		this.customId = customId;
-		this.style = style;
-		this.emoji = emoji;
-		this.url = url;
-		this.disabled = disabled;
-		this.perms = [];
 	}
 	async load() {
 		const cmd = await this.Tclient.guild.commands.create(this);
