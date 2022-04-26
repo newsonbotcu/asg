@@ -12,7 +12,7 @@ class EvalMessage extends AppMessageCommand {
     }
     async run(client, interaction) {
         if (interaction.user.id !== client.owner.id) return;
-        const message = interaction.channel.messages.fetch(interaction.targetId);
+        const message = await interaction.channel.messages.fetch(interaction.targetId);
         function clean(text) {
             if (typeof (text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
             else return text;
