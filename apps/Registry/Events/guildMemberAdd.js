@@ -100,7 +100,7 @@ class GuildMemberAdd extends ClientEvent {
         await member.guild.channels.cache.get(this.data.channels["welcome"]).send(stripIndents`
         > <a:cekic:957252645968551956> **Hoş Geldin** ${member},
         > buraya gelmeni sağlayan ${tutor || "özel url"} toplamda **${invCnt.length || 1} kişiyi** buraya kazandırdı.
-        > Güvenli bölgede anlık olarak **${client.func.rain(member.guild.memberCount)} üye** barınıyor.
+        > Güvenli bölgede anlık olarak **${member.guild.memberCount} üye** barınıyor.
         > Giriş için lütfen **V. Confirmed** isimli kanallardan herhangi birinde yetkili birisinin seninle ilgilenmesini bekle.
         > <a:146_yldrm:948840799343353877> __Hesap <t:${Math.round(member.user.createdTimestamp / 1000)}:R> oluşturulmuş__
        `);
