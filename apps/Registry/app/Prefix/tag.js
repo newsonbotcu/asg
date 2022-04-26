@@ -1,4 +1,4 @@
-const { DotCommand } = require("../../../../../base/utils");
+const { DotCommand } = require("../../../../base/utils");
 class Link extends DotCommand {
 
     constructor(client) {
