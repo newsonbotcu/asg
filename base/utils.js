@@ -595,9 +595,7 @@ const functions = {
 	randomNum(min, max) {
 		return Math.floor(Math.random() * (max - min)) + min;
 	},
-	rain(client, sayi) {
-		const emojis = low(client.adapters('emojis'))
-			.get("numbers");
+	rain(sayi) {
 		var basamakbir = sayi.toString()
 			.replace(/ /g, "     ");
 		var basamakiki = basamakbir.match(/([0-9])/g);
@@ -606,16 +604,16 @@ const functions = {
 		if (basamakiki) {
 			basamakbir = basamakbir.replace(/([0-9])/g, d => {
 				return {
-					"0": emojis.sfr,
-					"1": emojis.bir,
-					"2": emojis.iki,
-					"3": emojis.uch,
-					"4": emojis.drt,
-					"5": emojis.bes,
-					"6": emojis.alt,
-					"7": emojis.ydi,
-					"8": emojis.sks,
-					"9": emojis.dkz
+					"0": "<a:0:968655263664050248>",
+					"1": "<a:1:968655264574230568>",
+					"2": "<a:2:968655269909389312>",
+					"3": "<a:3:968655270588870746>",
+					"4": "<a:4:968655269078904912>",
+					"5": "<a:5:968655266918826014>",
+					"6": "<a:6:968655267669622814>",
+					"7": "<a:7:968655269699682314>",
+					"8": "<a:8:968655270949568522>",
+					"9": "<a:9:968655263865397329>"
 				}[d];
 			});
 		}
