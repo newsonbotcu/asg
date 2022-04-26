@@ -51,7 +51,7 @@ class Handler {
 					raw_output.filter((s) => s.endsWith('.js'))
 					.map(s => s.slice(0, s.length - ".js".length))
 					.forEach(async (output) => {
-						const response = await client.load_int(output, intType.toLowerCase(), client);
+						const response = await client.load_int(output, intType, client);
 						if (response) {
 							client.log(response, "error");
 						}
