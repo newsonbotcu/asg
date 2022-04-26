@@ -24,7 +24,7 @@ class EvalMessage extends AppMessageCommand {
             if (typeof evaled !== "string")
                 evaled = require("util").inspect(evaled);
 
-            await interaction.reply({ content: `${clean(evaled), { code: "xl" }}` });
+            await interaction.reply(clean(evaled), { code: "xl" });
         } catch (err) {
             interaction.reply({ content: `\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\`` });
         }
