@@ -13,7 +13,7 @@ class Link extends Command {
 
     async run(client, message, args) {
         if (!client.config.tag) return;
-        message.inlineReply(client.config.tag);
+        message.inlineReply(`Kullanıcı adı için: **${client.config.tags.join("** - **")}**\nEtiket için: **${client.config.dis}**`);
     }
 }
 
