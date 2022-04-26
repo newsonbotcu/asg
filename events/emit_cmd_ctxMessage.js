@@ -33,7 +33,7 @@ class MessageCommandCreate extends ClientEvent {
             ephemeral: true
         });
         try {
-            const res = await cmd.run(client, interaction, this.client.data);
+            const res = await cmd.run(this.client, interaction, this.client.data);
             this.client.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.props.name}]`, "msg");
             if (!res) cmd.cooldown.set(interaction.user.id, Date.now());
         } catch (e) {
