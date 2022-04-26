@@ -9,7 +9,6 @@ class EvalMessage extends AppMessageCommand {
             enabled: true,
             ownerOnly: true
         });
-        this.client = client;
     }
     async run(client, interaction) {
         if (interaction.user.id !== client.owner.id) return;
