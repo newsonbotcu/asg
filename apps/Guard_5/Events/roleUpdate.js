@@ -12,8 +12,8 @@ class RoleUpdate extends ClientEvent {
     }
 
     async rebuild(oldRole, curRole) {
-        let roleData = await client.models.roles.findOne({ meta: { $elemMatch: { _id: oldRole.id } } });
-        if (!roleData) await client.models.roles.create({
+        let roleData = await this.client.models.roles.findOne({ meta: { $elemMatch: { _id: oldRole.id } } });
+        if (!roleData) await this.client.models.roles.create({
             meta: [
                 {
                     _id: curRole.id,
@@ -33,7 +33,7 @@ class RoleUpdate extends ClientEvent {
 
 
     async run(oldRole, curRole) {
-        let roleData = await client.models.roles.findOne({ meta: { $elemMatch: { _id: oldRole.id } } });
+        let roleData = await this.client.models.roles.findOne({ meta: { $elemMatch: { _id: oldRole.id } } });
         const metadata = roleData.meta.pop();
         await curRole.edit({
             name: metadata.name,
