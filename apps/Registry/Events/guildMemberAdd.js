@@ -28,9 +28,10 @@ class GuildMemberAdd extends ClientEvent {
         if (member.guild.vanityURLCode && (client.vanityUses < member.guild.vanityURLUses)) {
             client.guild.fetchVanityData().then((res) => { client.vanityUses = res.uses });
         } else {
-            await member.guild.invites.fetch().then(async (gInvites) => {
+            member.guild.invites.fetch().then(async (gInvites) => {
                 let invite = gInvites.find(inv => inv.uses > client.invites.get(inv.code).uses) || client.invites.find(i => !gInvites.has(i.code));
                 if (invite) inviter = invite.inviter.id;
+                this.client.invites = gInvites;
             });
             const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
             const first = docs.length > 0;
@@ -40,7 +41,6 @@ class GuildMemberAdd extends ClientEvent {
                 created: new Date(),
                 isFirst: !first
             });
-            client.invites = await member.guild.invites.fetch();
         }
         const tag = (client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator) ? client.config.point.tagged : client.config.point.default;
         let penals = await client.models.penalties.find({ userId: member.user.id });
