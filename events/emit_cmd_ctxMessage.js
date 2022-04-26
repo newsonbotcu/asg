@@ -17,7 +17,7 @@ class MessageCommandCreate extends ClientEvent {
         if (!cmd.props.enabled) return await interaction.reply(`Bu komut şuan için **devredışı**`, {
             ephemeral: true
         });
-        if (cmd.props.ownerOnly) return await interaction.reply(`Bu komutu sadece **Tantuni** kullanabilir`, {
+        if (cmd.props.ownerOnly && interaction.user.id !== this.client.owner.id) return await interaction.reply(`Bu komutu sadece **Tantuni** kullanabilir`, {
             ephemeral: true
         });
         if (cmd.props.dmCmd && (interaction.channel.type !== 'dm')) return await interaction.reply(`Bu komut bir **DM** komutudur.`);
