@@ -17,8 +17,8 @@ class DotCommandCreate extends ClientEvent {
         let cmd;
         let args = message.content.split(' ')
             .slice(1);
-        if (client.responders.has(`dot:${interaction.commandName}`)) {
-            cmd = client.responders.get(`dot:${interaction.commandName}`);
+        if (client.responders.has(`dot:${command}`)) {
+            cmd = client.responders.get(`dot:${command}`);
         } else if (client.aliases.has(command)) {
             cmd = client.commands.get(client.aliases.get(command));
         } else return;
