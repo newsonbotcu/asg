@@ -7,12 +7,10 @@ class MessageCommandCreate extends ClientEvent {
         this.client = client;
     }
     async run(interaction) {
-        console.log("a");
+        if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
         //if (!interaction.isCommand()) return;
         if (!interaction.isContextMenu()) return;
-        console.log("3");
         if (interaction.targetType !== "MESSAGE") return;
-        console.log("a");
         let cmd;
         if (this.client.responders.has(`msg:${interaction.commandName}`)) {
             cmd = this.client.responders.get(`msg:${interaction.commandName}`);
