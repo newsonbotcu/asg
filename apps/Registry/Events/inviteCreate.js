@@ -1,4 +1,6 @@
-class InviteCreate {
+const { ClientEvent } = require("../../../base/utils");
+
+class InviteCreate extends ClientEvent {
     constructor(client) {
         super(client, {
             name: "inviteCreate"
