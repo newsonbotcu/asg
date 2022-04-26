@@ -11,6 +11,7 @@ class MessageCommandCreate extends ClientEvent {
         if (!interaction.isCommand()) return;
         if (!interaction.isContextMenu()) return;
         if (interaction.targetType !== "MESSAGE") return;
+        let cmd;
         if (client.responders.has(`msg:${interaction.commandName}`)) {
             cmd = client.responders.get(`msg:${interaction.commandName}`);
         } else return;
