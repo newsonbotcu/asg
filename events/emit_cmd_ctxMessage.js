@@ -22,7 +22,7 @@ class MessageCommandCreate extends ClientEvent {
         });
         if (cmd.props.dmCmd && (interaction.channel.type !== 'dm')) return await interaction.reply(`Bu komut bir **DM** komutudur.`);
         if (interaction.guild && cmd.props.intChannel) {
-            const recnl = interaction.guild.channels.cache.get(this.data.channels[cmd.props.cmdChannel]);
+            const recnl = interaction.guild.channels.cache.get(this.client.data.channels[cmd.props.cmdChannel]);
             if (recnl && recnl.id !== interaction.channel.id) return await interaction.reply(`Bu komutu ${recnl} kanalında kullanmayı dene!`, {
                 ephemeral: true
             });
@@ -31,8 +31,8 @@ class MessageCommandCreate extends ClientEvent {
             ephemeral: true
         });
         try {
-            const res = await cmd.run(client, interaction, this.data);
-            client.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.props.name}]`, "slash");
+            const res = await cmd.run(client, interaction, this.client.data);
+            client.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.props.name}]`, "msg");
             if (!res) cmd.cooldown.set(interaction.user.id, Date.now());
         } catch (e) {
             client.log(e, "error");
