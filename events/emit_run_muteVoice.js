@@ -15,7 +15,7 @@ class EmitRunMuteV extends ClientEvent {
             executor: executorId,
             reason: reason,
             extras: [],
-            type: "VMUTE",
+            typeOf: "VMUTE",
             until: require('moment')().add(duration),
             created: new Date()
         });

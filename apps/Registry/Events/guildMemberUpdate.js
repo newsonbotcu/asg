@@ -8,7 +8,7 @@ class GuildMemberUpdate extends ClientEvent {
 		});
 		this.client = client;
 	}
-	
+
 	async run(prev, cur) {
 		const client = this.client;
 		if (cur.guild.id !== client.config.server) return;
@@ -46,17 +46,17 @@ class GuildMemberUpdate extends ClientEvent {
 				client.log(`${entry.executor.username} => [${entry.changes[0].key}] ${entry.target.username} : ${entry.changes[0].new[0].name}`, "mngdb");
 			}
 		}
-		const cmute = await client.models.cmute.findOne({ _id: cur.user.id });
+		const cmute = await client.models.penalties.findOne({ userId: cur.user.id, typeOf: "CMUTE", until: { $gt: new Date() } });
 		if (cmute && !cur.roles.cache.has(this.data.roles["muted"]) && !entry.executor.bot) {
 			await cur.roles.add(this.data.roles["muted"]);
 			const exeMember = cur.guild.members.cache.get(entry.executor.id);
 			if (exeMember.roles.cache.has(this.data.roles["root"])) return;
 			client.handler.emit("jail", exeMember.user.id, this.client.user.id, "* Mute Açma", "Perma", 1);
 		}
-		const pJail = await client.models.cmute.jail.findOne({ _id: cur.user.id });
+		const pJail = await client.models.cmute.jail.findOne({ _id: cur.user.id, typeOf: "JAIL", until: { $gt: new Date() } });
 		if (pJail && !entry.executor.bot) {
 			await cur.roles.remove(cur.roles.cache.filter(r => r.id !== this.data.roles["booster"])
-			.filter(r => r.editable).array());
+				.filter(r => r.editable).array());
 			await cur.roles.add(this.data.roles["prisoner"]);
 			const exeMember = cur.guild.members.cache.get(entry.executor.id);
 			if (exeMember.roles.cache.has(this.data.roles["root"])) return;
@@ -87,7 +87,7 @@ class GuildMemberUpdate extends ClientEvent {
 			const exeMember = cur.guild.members.cache.get(entry.executor.id);
 			client.handler.emit("jail", exeMember.user.id, this.client.user.id, "* Rol Verme", "Perma", 1);
 		}
-		
+
 	}
 }
 

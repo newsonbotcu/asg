@@ -384,7 +384,7 @@ const models = {
 		userId: String,
 		executor: String,
 		reason: String,
-		type: String,
+		typeOf: String,
 		extras: Array,
 		until: Date,
 		created: Date

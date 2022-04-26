@@ -22,7 +22,7 @@ class EmitRunBan extends ClientEvent {
             executor: executor,
             reason: reason,
             extras: [],
-            type: "BAN",
+            typeOf: "BAN",
             until: require('moment')(new Date()).add(duration || "0s"),
             created: new Date()
         });

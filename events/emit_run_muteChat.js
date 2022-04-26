@@ -14,7 +14,7 @@ class EmitRunMuteC extends ClientEvent {
             executor: executorId,
             reason: reason,
             extras: [],
-            type: "CMUTE",
+            typeOf: "CMUTE",
             until: require('moment')().add(duration),
             created: new Date()
         });
