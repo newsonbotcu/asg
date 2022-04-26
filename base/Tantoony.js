@@ -113,7 +113,7 @@ class Tantoony extends Client {
         } else try {
             const props = new (require(`./../apps/${this.name}/app/${intType}/${intName}`))(client);
             client.responders.set(`${intType.toLowerCase()}:${props.name}`, props);
-            this.log(`Loading "${intType}" Command in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
+            this.log(`Loading "${intType}" Command in ${this.name}: ${props.name} [${props.id}] 👌`, "load");
             return false;
         } catch (e) {
             return `Unable to load "${intType}" Integration ${intName}: ${e}`;
