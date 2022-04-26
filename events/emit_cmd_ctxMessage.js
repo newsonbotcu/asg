@@ -12,8 +12,8 @@ class MessageCommandCreate extends ClientEvent {
         if (!interaction.isContextMenu()) return;
         if (interaction.targetType !== "MESSAGE") return;
         let cmd;
-        if (client.responders.has(`msg:${interaction.commandName}`)) {
-            cmd = client.responders.get(`msg:${interaction.commandName}`);
+        if (this.client.responders.has(`msg:${interaction.commandName}`)) {
+            cmd = this.client.responders.get(`msg:${interaction.commandName}`);
         } else return;
         if (!cmd.props.enabled) return await interaction.reply(`Bu komut şuan için **devredışı**`, {
             ephemeral: true
@@ -33,10 +33,10 @@ class MessageCommandCreate extends ClientEvent {
         });
         try {
             const res = await cmd.run(client, interaction, this.client.data);
-            client.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.props.name}]`, "msg");
+            this.client.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.props.name}]`, "msg");
             if (!res) cmd.cooldown.set(interaction.user.id, Date.now());
         } catch (e) {
-            client.log(e, "error");
+            this.client.log(e, "error");
         }
     }
 }
