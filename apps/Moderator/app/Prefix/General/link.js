@@ -1,5 +1,4 @@
 const Command = require("../../../Base/Command");
-const low = require('lowdb');
 class Link extends Command {
 
     constructor(client) {
@@ -15,8 +14,9 @@ class Link extends Command {
 
     async run(client, message, args) {
         if (!message.guild.vanityURLCode) return;
-        const emojis = await low(client.adapters('emojis'));
+        //const emojis = await low(client.adapters('emojis'));
         message.reply(`discord.gg/${message.guild.vanityURLCode}`);
+        /*
         function bar(point, maxPoint) {
             const deger = Math.trunc(point * 10 / maxPoint);
             let str = "";
@@ -36,6 +36,7 @@ class Link extends Command {
             }
             return str;
         }
+        */
     }
 }
 
