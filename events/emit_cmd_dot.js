@@ -46,8 +46,7 @@ class DotCommandCreate extends ClientEvent {
                 allowedRoles.push(message.guild.roles.cache.get(data.roles[rolValue]));
             });
             let deyim = `${data.emojis["rolereq"]} Bu komutu kullanabilmek için ${allowedRoles[0]} rolüne sahip olmalısın!`;
-            if (allowedRoles.length > 1) deyim = `${data.emojis["rolereq"]} Bu komutu kollanabilmek için aşağıdaki rollerden birisine sahip olmalısın:\n${requiredRoles.map(r => `${data.emojis["rolereq"]} ${message.guild.roles.cache.get(roles.get(r)
-                .value())}`)
+            if (allowedRoles.length > 1) deyim = `${data.emojis["rolereq"]} Bu komutu kollanabilmek için aşağıdaki rollerden birisine sahip olmalısın:\n${requiredRoles.map(r => `${data.emojis["rolereq"]} ${message.guild.roles.cache.get(data.roles[r])}`)
                 .join(` `)}`;
             if ((allowedRoles.length >= 1) && !allowedRoles.some(role => message.member.roles.cache.has(role.id)) && !message.member.permissions.has("ADMINISTRATOR") && (message.author.id !== client.config.owner)) {
                 return message.channel.send(embed.setDescription(deyim)
