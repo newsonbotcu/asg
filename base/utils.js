@@ -312,7 +312,6 @@ class AppMessageCommand extends ApplicationCommand {
 			intChannel,
 			cooldown,
 			enabled,
-			isconst,
 			ownerOnly
 		};
 		this.label = label;
