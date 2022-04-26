@@ -11,17 +11,22 @@ client.on('ready', async () => {
     setInterval(async () => {
         const member = array[i];
         if (i === array.length && !member) return pm2.delete(`CD${process.argv.pop()}`);
-        
-        let rolesDataOfMember = await this.client.models.members.findOne({ _id: member.user.id });
-        if (rolesDataOfMember) {
-            const newRoles = await rolesDataOfMember.roles.filter((roleName) => guild.roles.cache.map(role => role.name).includes(roleName)).map((roleName) => guild.roles.cache.find(role => role.name === roleName).id);
-            try {
-                console.log(`[BULUNDU]: ${member.displayName}`);
-                await member.roles.add(newRoles);
-            } catch (error) {
-                console.log(error);
+        client.models.member.findOne({ _id: member.user.id }).then((rolesDataOfMember) => {
+            if (rolesDataOfMember) {
+                let newRoles = [];
+                rolesDataOfMember.roles.forEach((r_doc) => {
+                    client.models.roles.findOne({ _id: r_doc._id }).then((doc) => {
+                        if (guild.roles.cache.has(doc.meta.pop()._id)) newRoles.push(doc.meta.pop()._id);
+                    });
+                });
+                try {
+                    console.log(`[BULUNDU]: ${member.displayName}`);
+                    await member.roles.add(newRoles);
+                } catch (error) {
+                    console.log(error);
+                }
             }
-        }
+        });
         i = i + 1;
     }, 300);
 });
