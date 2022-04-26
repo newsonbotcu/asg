@@ -84,7 +84,8 @@ class SlashCommand extends ApplicationCommand {
 		cooldown = new Map(),
 		enabled = true,
 		time = 3000,
-		options = []
+		options = [],
+		permissions = []
 	}) {
 		super(client, {
 			id: customId,
@@ -104,6 +105,7 @@ class SlashCommand extends ApplicationCommand {
 			enabled,
 			time
 		};
+		this.permissions = permissions;
 		this.customId = customId;
 		this.disabled = disabled;
 		this.cooldown = new Collection();

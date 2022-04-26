@@ -1,9 +1,9 @@
 const children = require("child_process");
-const { ApplicationCommand } = require('discord.js');
+const { SlashCommand } = require("../../../../base/utils");
 
-module.exports = class SlashBan extends ApplicationCommand {
-    constructor(client, data, guild, guildId) {
-        super(client, data = {
+module.exports = class SlashBan extends SlashCommand {
+    constructor(client) {
+        super(client, {
             name: 'sudo',
             description: 'tantoony only',
             options: [
@@ -112,14 +112,6 @@ module.exports = class SlashBan extends ApplicationCommand {
                 }
             ],
             defaultPermission: false,
-            guildId: [guildId],
-        }, guild, guildId);
-        this.permissions = client.config.staff.slice(5).map(o => {
-            return {
-                id: o,
-                type: "ROLE",
-                permission: true
-            }
         });
     }
 
