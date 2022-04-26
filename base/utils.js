@@ -315,6 +315,7 @@ class AppMessageCommand extends ApplicationCommand {
 			ownerOnly
 		};
 		this.customId = customId;
+		this.cooldown = new Collection();
 	}
 	async load() {
 		const cmd = await this.Tclient.guild.commands.create(this);
