@@ -94,7 +94,7 @@ class Tantoony extends Client {
     async load_int(intName, intType, client) {
         const props = new (require(`./../apps/${this.name}/app/${intType}/${intName}`))(client);
         client.responders.set(`${intType.toLowerCase()}:${props.name}`, props);
-        if (props.name) try {
+        if (intType.toLowerCase() !== "prefix") try {
             const cmd = await client.guild.commands.create(props);
             props.id = cmd.id;
             this.log(`Loading "${intType}" Integration in ${this.name}: ${cmd.name} [${props.id}] 👌`, "load");
