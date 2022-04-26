@@ -19,8 +19,6 @@ class DotCommandCreate extends ClientEvent {
             .slice(1);
         if (client.responders.has(`dot:${command}`)) {
             cmd = client.responders.get(`dot:${command}`);
-        } else if (client.aliases.has(command)) {
-            cmd = client.commands.get(client.aliases.get(command));
         } else return;
         const embed = new MessageEmbed();
         if (!cmd.config.enabled) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["disabledcmd"]} Bu komut şuan için **devredışı**`)
