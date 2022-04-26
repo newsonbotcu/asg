@@ -43,7 +43,8 @@ class DotCommandCreate extends ClientEvent {
             const requiredRoles = cmd.info.accaptedPerms || [];
             let allowedRoles = [];
             await requiredRoles.forEach((rolValue) => {
-                allowedRoles.push(message.guild.roles.cache.get(data.roles[rolValue]));
+                const role = message.guild.roles.cache.get(data.roles[rolValue]);
+                if (role) allowedRoles.push(role);
             });
             let deyim = `${data.emojis["rolereq"]} Bu komutu kullanabilmek için ${allowedRoles[0]} rolüne sahip olmalısın!`;
             if (allowedRoles.length > 1) deyim = `${data.emojis["rolereq"]} Bu komutu kollanabilmek için aşağıdaki rollerden birisine sahip olmalısın:\n${requiredRoles.map(r => `${data.emojis["rolereq"]} ${message.guild.roles.cache.get(data.roles[r])}`)
