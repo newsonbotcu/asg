@@ -20,7 +20,7 @@ class EmitRunJail extends ClientEvent {
             reason: reason,
             extras: [],
             typeOf: "jail",
-            until: duration ? require('moment')(new Date()).add(duration) : null,
+            until: duration ? require('moment')(new Date()).add(`${duration}m`) : null,
             created: new Date()
         });
         if (!duration) await this.client.models.penal.updateOne({ _id: docum._id }, {

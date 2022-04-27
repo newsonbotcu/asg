@@ -1,8 +1,9 @@
 const { ApplicationCommand } = require('discord.js');
+const { SlashCommand } = require('../../../../base/utils');
 
-module.exports = class SlashJail extends ApplicationCommand {
-    constructor(client, data, guild, guildId) {
-        super(client, data = {
+module.exports = class SlashJail extends SlashCommand {
+    constructor(client) {
+        super(client, {
             name: "jail",
             description: "Kullanıcıyı cezalıya atar",
             default_permission: false,
@@ -31,10 +32,8 @@ module.exports = class SlashJail extends ApplicationCommand {
                     description: "Ceza notu",
                     required: false,
                 }
-            ],
-            guildId: [guildId]
-        }, guild, guildId);
-        this.permissions = client.config.staff.slice(5);
+            ]
+        });
     }
     async run(intg) {
         const target = intg.guild.members.cache.get(intg.options["kullanıcı"]);
@@ -48,6 +47,7 @@ module.exports = class SlashJail extends ApplicationCommand {
         });
         let typo = "perma";
         if (intg.options["süre"]) typo = "temp";
-        await client.handler.emit('Jail', target, intg.user.id, intg.options["sebep"], typo, intg.options["süre"], intg.options["not"]);
+        await client.handler.emit('Jail', target.user.id, intg.user.id, intg.options["sebep"], typo, intg.options["süre"], intg.options["not"]);
     }
 }
+module.exports = SlashJail;

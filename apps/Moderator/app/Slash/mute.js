@@ -20,11 +20,11 @@ module.exports = class SlashMute extends ApplicationCommand {
                     choices: [
                         {
                             name: "chat",
-                            value: "cMute"
+                            value: "cmute"
                         },
                         {
                             name: "voice",
-                            value: "vMute"
+                            value: "vmute"
                         }
                     ],
                     required: true,
@@ -50,11 +50,18 @@ module.exports = class SlashMute extends ApplicationCommand {
         const target = intg.guild.members.cache.get(intg.options["kullanıcı"]);
         if (!target) return intg.reply({ content: `Kullanıcı bulunamadı. Lütfen etiketleyerek işlem yapmayı deneyin.`, ephemeral: true, fetchReply: true });
 
-        if (intg.member.roles.highest.rawPosition <= target.roles.highest.rawPosition) return await intg.reply(`${data.emojis["missingPerms"]} Bunu yapmak için yeterli yetkiye sahip değilsin`, {
+        if (intg.member.roles.highest.rawPosition <= target.roles.highest.rawPosition) return await intg.reply(`Bunu yapmak için yeterli yetkiye sahip değilsin`, {
             ephemeral: true
         });
-        await client.handler.emit(intg.options["tür"], target, intg.user.id, intg.options["sebep"], intg.options["süre"]);
-
+        if (!intg.member.roles.cache.has(this.client.data.roles[intg.options["tür"]])) return await intg.reply({
+            content: `Bunu yapmak için belirlenmiş yetkiye sahip değilsin`,
+            ephemeral: true
+        });
+        await client.handler.emit(intg.options["tür"], target.user.id, intg.user.id, intg.options["sebep"], intg.options["süre"]);
+        await intg.reply({
+            content: `<@${targer.user.id}> başarıyla susturuldu`,
+            ephemeral: true
+        });
 
     }
 }
