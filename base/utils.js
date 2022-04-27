@@ -386,7 +386,7 @@ class DotCommand {
 
 	load() {
 		this.client.log(`Prefix komutu yükleniyor: ${this.info.name} 👌`, "load");
-		this.client.responders.set(`dot:${this.name}`, this);
+		this.client.responders.set(`dot:${this.info.name}`, this);
 	}
 }
 
