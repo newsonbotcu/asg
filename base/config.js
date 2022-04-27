@@ -28,7 +28,7 @@ module.exports = {
     },
     point: {
         default: "•",
-        tagged: "∗"
+        tagged: "✱"
     },
     tags: ["146", "x)"],
     untag: 'XXXXXXXXXXXXXXXX',
