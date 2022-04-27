@@ -1,8 +1,9 @@
-const { ApplicationCommand } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
+const { SlashCommand } = require('../../../../base/utils');
 
-module.exports = class SlashMute extends ApplicationCommand {
-    constructor(client, data, guild, guildId) {
-        super(client, data = {
+class SlashMute extends SlashCommand {
+    constructor(client) {
+        super(client, {
             name: "mute",
             description: "Kullanıcıya mute atar",
             default_permission: false,
@@ -41,10 +42,8 @@ module.exports = class SlashMute extends ApplicationCommand {
                     description: "Ceza sebebi",
                     required: true,
                 }
-            ],
-            guildId: [guildId]
-        }, guild, guildId);
-        this.permissions = client.config.staff.slice(5);
+            ]
+        });
     }
     async run(intg) {
         const target = intg.guild.members.cache.get(intg.options["kullanıcı"]);
@@ -65,3 +64,4 @@ module.exports = class SlashMute extends ApplicationCommand {
 
     }
 }
+module.exports = SlashMute;

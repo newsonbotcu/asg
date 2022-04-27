@@ -1,4 +1,4 @@
-const { ApplicationCommand } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { SlashCommand } = require('../../../../base/utils');
 
 module.exports = class SlashJail extends SlashCommand {
