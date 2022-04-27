@@ -1,4 +1,4 @@
-const { ApplicationCommand } = require('discord.js');
+//const { ApplicationCommand } = require('discord.js');
 
 module.exports = class SlashRol extends ApplicationCommand {
     constructor(client, data, guild, guildId) {

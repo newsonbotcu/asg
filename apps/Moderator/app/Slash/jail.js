@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommand } = require('../../../../base/utils');
 
-module.exports = class SlashJail extends SlashCommand {
+class SlashJail extends SlashCommand {
     constructor(client) {
         super(client, {
             name: "jail",
