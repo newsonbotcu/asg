@@ -197,7 +197,7 @@ class ButtonCommand extends MessageButton {
 
 }
 
-class ButtonCommand extends MessageSelectMenu {
+class MenuCommand extends MessageSelectMenu {
 	constructor(client, {
 		name = null,
 		custom_id = null,
