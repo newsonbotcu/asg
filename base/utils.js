@@ -197,14 +197,16 @@ class ButtonCommand extends MessageButton {
 
 }
 
-class MenuCommand extends MessageSelectMenu {
+class ButtonCommand extends MessageSelectMenu {
 	constructor(client, {
+		name = null,
 		custom_id = null,
 		options = [],
 		placeholder = null,
 		min_values = 0,
 		max_values = 0,
 		disabled = false,
+		cooldown = 10000,
 	}) {
 		super({
 			custom_id,
@@ -214,7 +216,12 @@ class MenuCommand extends MessageSelectMenu {
 			max_values,
 			disabled
 		});
+		this.name = name;
+		this.propz = {
+			cooldown
+		};
 		this.client = client;
+		this.cooldown = new Collection();
 
 	}
 }
@@ -257,6 +264,7 @@ class AppUserCommand extends ApplicationCommand {
 		this.url = url;
 		this.disabled = disabled;
 		this.perms = [];
+		this.cooldown = new Collection();
 	}
 	async load() {
 		const cmd = await this.Tclient.guild.commands.create(this);

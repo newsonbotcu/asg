@@ -1,0 +1,48 @@
+module.exports = {
+    mongoDB: {
+        auth: "XXXXXXXXXXXXX",      // Auth DB
+        user: "XXXXXXXXXXXXX",      // DB username
+        name: "XXXXXXXXXXXXX",      // DB name
+        env_key: "mongopass",       // .env ip tanımı
+        port: 27017
+    },
+    owner: "XXXXXXXXXXXXX",         // Bot owner ID
+    server: "XXXXXXXXXXXXX",        // Sunucu ID
+    vanityURL: "XXXXXXXXXXXXX",        //Sunucu url
+    prefix: '.',
+    status: [{
+        name: "XXXXXXXXXXXXX",
+        type: "LISTENING"
+    }],
+    cdStatus: {
+        name: "XXXXXXXXXXXXX",
+        type: "LISTENING"
+    },
+    point: {            // isim belirteçleri
+        default: "•",                   // tagsızlar için
+        tagged: "✱"                    // tagsızlar için
+    },
+    tags: ["XXXXXXXXXXXXX"],             // nick tagları
+    dis: '0000',                        // etiket tagı
+    vars: {                             //.env token tanımları
+        Moderator: "mod",
+        Registry: "reg",
+        Guard_1: "grd",
+        Guard_2: "grd",
+        Guard_3: "grd",
+        Guard_4: "grd",
+        Guard_5: "grd",
+        calm_down: [
+            "XXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXX"
+        ],
+        SES: [
+            "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+        ]
+    }
+}
