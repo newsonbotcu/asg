@@ -13,8 +13,8 @@ class SlashCommandCreate extends ClientEvent {
         if (interaction.isContextMenu()) return;
         if (interaction.targetType) return;
         let cmd;
-        if (client.responders.has(`slash:${interaction.commandName}`)) {
-            cmd = client.responders.get(`slash:${interaction.commandName}`);
+        if (client.responders.has(`slash_${interaction.commandName}`)) {
+            cmd = client.responders.get(`slash_${interaction.commandName}`);
         } else return;
         if (!cmd.props.enabled) return await interaction.reply(`Bu komut şuan için **devredışı**`, {
             ephemeral: true
