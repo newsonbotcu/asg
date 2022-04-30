@@ -123,7 +123,9 @@ class SlashCommand extends ApplicationCommand {
 		const markedRoles = await this.Tclient.models.roles.find({ commands: { $in: [`slash:${this.props.name}`] } });
 		const marks = markedRoles.map((roleData) => roleData.meta.pop()._id);
 		if (this.props.ownerOnly) {
-			await gCmd.permissions.set({
+			await this.Tclient.guild.commands.permissions.set({
+				guild: this.Tclient.guild.id,
+				command: gCmd.id,
 				permissions: [
 					{
 						id: this.Tclient.owner.id,
@@ -150,7 +152,11 @@ class SlashCommand extends ApplicationCommand {
 				type: "ROLE",
 				permission: false
 			})
-			await gCmd.permissions.set(perms)
+			await this.Tclient.guild.commands.permissions.set({
+				guild: this.Tclient.guild.id,
+				command: gCmd.id,
+				permissions: perms
+			})
 		}
 		return false;
 	}
