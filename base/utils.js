@@ -137,19 +137,23 @@ class SlashCommand extends ApplicationCommand {
 					}
 				]
 			});
-		} else if (marks.length !== 0) await gCmd.permissions.set({
-			permissions: marks.map(mark => {
+		} else if (marks.length !== 0) {
+			let perms = marks.map(mark => {
 				return {
 					id: mark,
 					type: "ROLE",
 					permission: true
 				}
-			}).push({
+			});
+			perms.push({
 				id: this.Tclient.guild.roles.everyone.id,
 				type: "ROLE",
 				permission: false
 			})
-		});
+			await gCmd.permissions.set({
+				permissions: perms
+			})
+		}
 		return false;
 	}
 
