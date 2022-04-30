@@ -115,15 +115,18 @@ class SlashCommand extends ApplicationCommand {
 	}
 
 	async load() {
-		const cmd = await this.Tclient.guild.commands.create(this);
-		this.id = cmd.id;
-		this.Tclient.log(`Komut etkileşimi yükleniyor: ${cmd.name} [${this.id}] 👌`, "load");
-		this.Tclient.responders.set(`slash_${this.props.name}`, this);
-		const markedRoles = await this.Tclient.models.roles.find({ commands: { $in: [`slash_${this.props.name}`] } });
+		let gCmd = this.Tclient.guild.commands.cache.find((c) => c.name === this.props.name);
+		if (!gCmd) {
+			gCmd = await this.Tclient.guild.commands.create(this);
+		}
+		this.id = gCmd.id;
+		this.Tclient.log(`Komut etkileşimi yükleniyor: ${gCmd.name} [${this.id}] 👌`, "load");
+		this.Tclient.responders.set(`slash:${this.props.name}`, this);
+		const markedRoles = await this.Tclient.models.roles.find({ commands: { $in: [`slash:${this.props.name}`] } });
 		const marks = markedRoles.map((roleData) => roleData.meta.pop()._id);
 		if (this.props.ownerOnly) {
-			await this.Tclient.guild.commands.permissions.add({
-				command: cmd.id, permissions: [{
+			await gCmd.permissions.set({
+				permissions: [{
 						id: this.Tclient.owner.id, type: "USER", permission: true
 				}].push({
 					id: this.Tclient.guild.roles.everyone.id,
@@ -131,8 +134,8 @@ class SlashCommand extends ApplicationCommand {
 					permission: false
 				})
 			});
-		} else if (marks.length !== 0) await this.Tclient.guild.commands.permissions.add({
-			command: cmd.id, permissions: marks.map(mark => {
+		} else if (marks.length !== 0) await gCmd.permissions.set({
+			permissions: marks.map(mark => {
 				return {
 					id: mark, type: "ROLE", permission: true
 				}
