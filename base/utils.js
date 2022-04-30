@@ -42,7 +42,7 @@ class ClientEvent {
 					}
 				});
 			});
-		} 
+		}
 		try {
 			this.run(...args);
 		} catch (error) {
@@ -120,22 +120,29 @@ class SlashCommand extends ApplicationCommand {
 		this.id = gCmd.id;
 		this.Tclient.log(`Komut etkileşimi yükleniyor: ${gCmd.name} [${this.id}] 👌`, "load");
 		this.Tclient.responders.set(`slash:${this.props.name}`, this);
-		const markedRoles = await this.Tclient.models.roles.find({ commands: `slash:${this.props.name}`});
+		const markedRoles = await this.Tclient.models.roles.find({ commands: { $in: [`slash:${this.props.name}`] } });
 		const marks = markedRoles.map((roleData) => roleData.meta.pop()._id);
 		if (this.props.ownerOnly) {
 			await gCmd.permissions.set({
-				permissions: [{
-						id: this.Tclient.owner.id, type: "USER", permission: true
-				}].push({
-					id: this.Tclient.guild.roles.everyone.id,
-					type: "ROLE",
-					permission: false
-				})
+				permissions: [
+					{
+						id: this.Tclient.owner.id,
+						type: "USER",
+						permission: true
+					},
+					{
+						id: this.Tclient.guild.roles.everyone.id,
+						type: "ROLE",
+						permission: false
+					}
+				]
 			});
 		} else if (marks.length !== 0) await gCmd.permissions.set({
 			permissions: marks.map(mark => {
 				return {
-					id: mark, type: "ROLE", permission: true
+					id: mark,
+					type: "ROLE",
+					permission: true
 				}
 			}).push({
 				id: this.Tclient.guild.roles.everyone.id,
@@ -285,7 +292,7 @@ class AppUserCommand extends ApplicationCommand {
 		if (this.props.ownerOnly) {
 			await this.Tclient.guild.commands.permissions.set({
 				command: cmd.id, permissions: [{
-						id: this.Tclient.owner.id, type: "USER", permission: true
+					id: this.Tclient.owner.id, type: "USER", permission: true
 				}]
 			});
 		} else if (marks.length !== 0) await this.Tclient.guild.commands.permissions.set({
@@ -344,7 +351,7 @@ class AppMessageCommand extends ApplicationCommand {
 		if (this.props.ownerOnly) {
 			await this.Tclient.guild.commands.permissions.set({
 				command: cmd.id, permissions: [{
-						id: this.Tclient.owner.id, type: "USER", permission: true
+					id: this.Tclient.owner.id, type: "USER", permission: true
 				}]
 			});
 		} else if (marks.length !== 0) await this.Tclient.guild.commands.permissions.set({
