@@ -85,7 +85,6 @@ class SlashCommand extends ApplicationCommand {
 		enabled = true,
 		time = 3000,
 		options = [],
-		permissions = [],
 		ownerOnly = false
 	}) {
 		super(client, {
@@ -108,7 +107,6 @@ class SlashCommand extends ApplicationCommand {
 			time,
 			ownerOnly
 		};
-		this.permissions = permissions;
 		this.customId = customId;
 		this.disabled = disabled;
 		this.cooldown = new Collection();
