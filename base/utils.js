@@ -150,9 +150,7 @@ class SlashCommand extends ApplicationCommand {
 				type: "ROLE",
 				permission: false
 			})
-			await gCmd.permissions.set({
-				permissions: perms
-			})
+			await gCmd.permissions.set(perms)
 		}
 		return false;
 	}
