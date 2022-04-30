@@ -95,7 +95,7 @@ class SlashCommand extends ApplicationCommand {
 			guild_id: client.guild.id,
 			name: name,
 			description: description,
-			default_permission: false,
+			default_member_permissions: false,
 			options: options
 		});
 		this.Tclient = client;
