@@ -125,13 +125,21 @@ class SlashCommand extends ApplicationCommand {
 			await this.Tclient.guild.commands.permissions.set({
 				command: cmd.id, permissions: [{
 						id: this.Tclient.owner.id, type: "USER", permission: true
-				}]
+				}].push({
+					id: this.Tclient.guild.roles.everyone.id,
+					type: "ROLE",
+					permission: false
+				})
 			});
 		} else if (marks.length !== 0) await this.Tclient.guild.commands.permissions.set({
 			command: cmd.id, permissions: marks.map(mark => {
 				return {
 					id: mark, type: "ROLE", permission: true
 				}
+			}).push({
+				id: this.Tclient.guild.roles.everyone.id,
+				type: "ROLE",
+				permission: false
 			})
 		});
 		return false;
