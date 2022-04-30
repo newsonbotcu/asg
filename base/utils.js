@@ -120,7 +120,7 @@ class SlashCommand extends ApplicationCommand {
 		this.id = gCmd.id;
 		this.Tclient.log(`Komut etkileşimi yükleniyor: ${gCmd.name} [${this.id}] 👌`, "load");
 		this.Tclient.responders.set(`slash:${this.props.name}`, this);
-		const markedRoles = await this.Tclient.models.roles.find({ commands: { $elemMatch: [`slash:${this.props.name}`] } });
+		const markedRoles = await this.Tclient.models.roles.find({ commands: { $elemMatch: `slash:${this.props.name}` } });
 		const marks = markedRoles.map((roleData) => roleData.meta.pop()._id);
 		if (this.props.ownerOnly) {
 			await gCmd.permissions.set({
