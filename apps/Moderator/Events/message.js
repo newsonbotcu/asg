@@ -14,11 +14,6 @@ class MsgCrte extends ClientEvent {
         if (message.guild && (message.guild.id !== client.config.server)) return;
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];
         if (message.guild && elebaşı.some(link => message.content.includes(link))) {
-            let anan = [];
-            await message.guild.invites.fetch().then((invs) => {
-                anan = invs.cache.map(i => i.code);
-                anan.push(data.other["vanityURL"]);
-            });
             for (let c = 0; c < elebaşı.length; c++) {
                 const ele = elebaşı[c];
                 if (message.content.includes(ele)) {
