@@ -21,7 +21,7 @@ class MsgCrte extends ClientEvent {
                         const reklam = await client.fetchInvite(code);
                         if (!reklam.guild) return;
                         if (reklam.guild.id !== client.guild.id) {
-                            client.emit("ban", message.author.id, client.user.id, `${reklam.guild.name} [${reklam.guild.id}] sunucusunun reklamını ${message.channel.name} kanalına attı.`, "p", `#REKLAM`, 2);
+                            client.emit("ban", message.author.id, client.user.id, `\`${reklam.guild.name}\` [${reklam.guild.id}] sunucusunun reklamını \`${message.channel.name}\` [${message.channel.id}] kanalına attı.`, "p", `#REKLAM`, 2);
                         }
                     });
                 }
