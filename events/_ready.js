@@ -9,10 +9,7 @@ class Ready extends ClientEvent {
 
     async run(client) {
         client = this.client;
-        this.client.guild = await client.guilds.fetch({
-            guild: client.config.server,
-            withCounts: false
-        });
+        this.client.guild = client.guilds.cache.get(client.config.server);
         this.client.owner = client.users.cache.get(client.config.owner);
         client.log(`${client.user.tag}, ${client.users.cache.size} kişi için hizmet vermeye hazır!`, "ready");
         client.user.setPresence({ activities: client.config.status, status: "idle" });
