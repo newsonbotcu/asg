@@ -11,7 +11,7 @@ class Ready extends ClientEvent {
         client = this.client;
         this.client.guild = await client.guilds.fetch({
             guild: client.config.server,
-            withCounts: true
+            withCounts: false
         });
         this.client.owner = client.users.cache.get(client.config.owner);
         client.log(`${client.user.tag}, ${client.users.cache.size} kişi için hizmet vermeye hazır!`, "ready");
