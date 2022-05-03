@@ -17,11 +17,11 @@ module.exports = class {
             for (let c = 0; c < elebaşı.length; c++) {
                 const ele = elebaşı[c];
                 if (message.content.includes(ele)) {
-                    const mesaj = message.content.split(ele).slice(1).join(" ").split(' ');
-                    mesaj.forEach(async msg => {
-                        if (!anan.some(kod => msg === kod) && !message.member.permissions.has("ADMINISTRATOR")) {
-                            message.guild.members.ban(message.author.id, { days: 2, reason: 'REKLAM' });
-                            await message.delete();
+                    message.content.split(" ").filter((str) => str.includes(ele)).map(el => el.slice(ele.length)).forEach(async (code) => {
+                        const reklam = await client.fetchInvite(code);
+                        if (!reklam.guild) return;
+                        if (reklam.guild.id !== client.guild.id) {
+                            client.emit("ban", message.author.id, client.user.id, "REKLAM", "p", `${guild.name} [${guild.id}] sunucusunun reklamını ${message.channel.name} kanalına attı.`, 2);
                         }
                     });
                 }
