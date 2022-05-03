@@ -15,16 +15,13 @@ class MsgCrte extends ClientEvent {
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];
         if (message.guild && elebaşı.some(link => message.content.includes(link))) {
             for (let c = 0; c < elebaşı.length; c++) {
-                const ele = elebaşı[c];
-                if (message.content.includes(ele)) {
-                    message.content.split(" ").filter((str) => str.includes(ele)).map(el => el.slice(ele.length)).forEach(async (code) => {
-                        const reklam = await client.fetchInvite(code);
-                        if (!reklam.guild) return;
-                        if (reklam.guild.id !== client.guild.id) {
-                            client.emit("ban", message.author.id, client.user.id, `\`${reklam.guild.name}\` [${reklam.guild.id}] sunucusunun reklamını\n\`${message.channel.name}\` [${message.channel.id}] kanalına attı.\n${reklam.inviter ? reklam.inviter.username + '#' + reklam.inviter.discriminator + " [" + reklam.inviter.id + "] " : ""}`, "p", `#REKLAM`, 2);
-                        }
-                    });
-                }
+                message.content.split(" ").filter(s => s.includes(elebaşı[c])).map(s => s.split(elebaşı[c]).pop()).forEach(async (code) => {
+                    const reklam = await client.fetchInvite(code);
+                    if (!reklam.guild) return;
+                    if (reklam.guild.id !== client.guild.id) {
+                        client.emit("ban", message.author.id, client.user.id, `\`${reklam.guild.name}\` [${reklam.guild.id}] sunucusunun reklamını\n\`${message.channel.name}\` [${message.channel.id}] kanalına attı.\n${reklam.inviter ? reklam.inviter.username + '#' + reklam.inviter.discriminator + " [" + reklam.inviter.id + "] " : ""}`, "p", `#REKLAM`, 2);
+                    }
+                });
             }
         }
         /*
