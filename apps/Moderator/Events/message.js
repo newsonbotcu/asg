@@ -32,6 +32,7 @@ class MsgCrte extends ClientEvent {
                 }
             }
         }
+        /*
         let uCooldownz = client.spamwait[message.author.id];
         if (!uCooldownz) {
             client.spamwait[message.author.id] = {};
@@ -79,6 +80,7 @@ class MsgCrte extends ClientEvent {
                 });
             }
         }
+        */
 
     }
 }
