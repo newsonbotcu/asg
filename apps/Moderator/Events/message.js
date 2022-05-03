@@ -1,11 +1,16 @@
 const Discord = require("discord.js");
+const { ClientEvent } = require('../../../base/utils');
 
-module.exports = class {
+class MsgCrte extends ClientEvent {
     constructor(client) {
+        super(client, {
+            name: "messageCreate"
+        });
         this.client = client;
     }
     async run(message) {
         const client = this.client;
+        const data = this.data;
         if (message.guild && (message.guild.id !== client.config.server)) return;
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];
         if (message.guild && elebaşı.some(link => message.content.includes(link))) {
@@ -77,3 +82,4 @@ module.exports = class {
 
     }
 }
+module.exports = MsgCrte;
