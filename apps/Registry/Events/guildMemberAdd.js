@@ -25,8 +25,8 @@ class GuildMemberAdd extends ClientEvent {
             return;
         }
         let inviter;
-        console.log(this.client.invites);
         member.guild.invites.fetch().then((gInvites) => {
+            console.log(gInvites);
             let invite = gInvites.find((inv) => inv.uses > this.client.invites.get(inv.code).uses);
             if (invite) {
                 inviter = invite.inviter.id
