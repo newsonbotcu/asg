@@ -24,14 +24,16 @@ class GuildMemberAdd extends ClientEvent {
             }
             return;
         }
-        let inviter = "VANITY_URL";
-        await member.guild.invites.fetch().then(async (gInvites) => {
-            let invite = gInvites.find((inv) => inv.uses > this.client.invites.get(inv.code).uses) || this.client.invites.find(i => !gInvites.has(i.code));
+        let inviter;
+        member.guild.invites.fetch().then((gInvites) => {
+            let invite = gInvites.find((inv) => inv.uses > this.client.invites.get(inv.code).uses);
             if (invite) {
                 inviter = invite.inviter.id
             } else {
-                const vanityData = await member.guild.fetchVanityData();
-                this.client.vanityUses = vanityData.uses;
+                await member.guild.fetchVanityData().then((dData) => {
+                    this.client.vanityUses = dData.uses;
+                    inviter = "VANITY_URL";
+                });
             };
             this.client.invites = gInvites;
         });
