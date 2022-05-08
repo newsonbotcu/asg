@@ -25,7 +25,7 @@ class GuildMemberAdd extends ClientEvent {
             return;
         }
         let inviter = "VANITY_URL";
-        const vanityData = member.guild.fetchVanityData();
+        const vanityData = await member.guild.fetchVanityData();
         if (vanityData && (this.client.vanityUses < vanityData.uses)) {
             this.client.vanityUses = vanityData.uses;
         } else {
