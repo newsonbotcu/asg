@@ -29,7 +29,7 @@ class GuildMemberAdd extends ClientEvent {
             client.guild.fetchVanityData().then((res) => { this.client.vanityUses = res.uses });
         } else {
             member.guild.invites.fetch().then((gInvites) => {
-                let invite = gInvites.find(inv => inv.uses > client.invites.get(inv.code).uses) || client.invites.find(i => !gInvites.has(i.code));
+                let invite = gInvites.find(inv => inv.uses > this.client.invites.get(inv.code).uses) || this.client.invites.find(i => !gInvites.has(i.code));
                 if (invite) inviter = invite.inviter.id;
                 this.client.invites = gInvites;
             });
