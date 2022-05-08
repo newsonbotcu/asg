@@ -174,7 +174,7 @@ class Eval extends DotCommand {
                             customId: "rol_katılımcı",
                             maxValues: 5,
                             minValues: 0,
-                            placeholder: "Çekiliş Katılımcısı Rolleri",
+                            placeholder: "Katılımcı Rolleri",
                             options: [
                                 {
                                     label: "Etkinlik Katılımcısı",
@@ -227,7 +227,7 @@ class Eval extends DotCommand {
                             customId: "rol_etkinlik",
                             maxValues: 5,
                             minValues: 0,
-                            placeholder: "Sunucu Etkinlikleri Rolleri",
+                            placeholder: "Etkinlik Katılımcısı Rolleri",
                             options: [
                                 {
                                     label: "Vampir Köylü",
