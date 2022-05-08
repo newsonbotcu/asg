@@ -77,8 +77,7 @@ class GuildMemberUpdate extends ClientEvent {
 			"MOVE_MEMBERS",
 			"MANAGE_NICKNAMES",
 			"MANAGE_ROLES",
-			"MANAGE_WEBHOOKS",
-			"MANAGE_EMOJIS"
+			"MANAGE_WEBHOOKS"
 		];
 		if (perms.some(perm => role.permissions.has(perm)) && !entry.executor.bot) {
 			const key = entry.changes[0].key;
