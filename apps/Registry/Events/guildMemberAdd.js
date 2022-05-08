@@ -25,16 +25,17 @@ class GuildMemberAdd extends ClientEvent {
             return;
         }
         let inviter = "VANITY_URL";
-        const vanityData = await member.guild.fetchVanityData();
-        if (vanityData && (this.client.vanityUses < vanityData.uses)) {
-            this.client.vanityUses = vanityData.uses;
-        } else {
-            member.guild.invites.fetch().then((gInvites) => {
-                let invite = gInvites.find((inv) => inv.uses > this.client.invites.get(inv.code).uses) || this.client.invites.find(i => !gInvites.has(i.code));
-                if (invite) inviter = invite.inviter.id;
-                this.client.invites = gInvites;
-            });
-        }
+        member.guild.invites.fetch().then((gInvites) => {
+            let invite = gInvites.find((inv) => inv.uses > this.client.invites.get(inv.code).uses) || this.client.invites.find(i => !gInvites.has(i.code));
+            if (invite) {
+                inviter = invite.inviter.id
+            } else {
+                const vanityData = await member.guild.fetchVanityData();
+                this.client.vanityUses = vanityData.uses;
+
+            };
+            this.client.invites = gInvites;
+        });
         const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
         const first = docs.length > 0;
         await client.models.invites.create({
@@ -82,7 +83,7 @@ class GuildMemberAdd extends ClientEvent {
                     case "CMUTE":
                         await member.roles.add(this.data.roles["muted"]);
                         break;
-    
+
                     default:
                         break;
                 }
