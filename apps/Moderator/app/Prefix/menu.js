@@ -109,6 +109,13 @@ class Eval extends DotCommand {
                                         name: "oyun_csgo",
                                         id: "956800147566776411"
                                     }
+                                },
+                                {
+                                    label: "Temizle",
+                                    value: "oyun_clear",
+                                    emoji: {
+                                        name: "🗑️"
+                                    }
                                 }
                             ]
                         }
@@ -126,7 +133,7 @@ class Eval extends DotCommand {
                             options: [
                                 {
                                     label: "Spotify Avcısı",
-                                    value: "spotify_hunter",
+                                    value: "hunt_spotify",
                                     emoji: {
                                         name: "146_spotify",
                                         id: "965676553780494387"
@@ -134,7 +141,7 @@ class Eval extends DotCommand {
                                 },
                                 {
                                     label: "Nitro Avcısı",
-                                    value: "nitro_hunter",
+                                    value: "hunt_nitro",
                                     emoji: {
                                         name: "146_nitro",
                                         id: "972917532669399060"
@@ -142,10 +149,17 @@ class Eval extends DotCommand {
                                 },
                                 {
                                     label: "Netflix Avcısı",
-                                    value: "netflix_hunter",
+                                    value: "hunt_netflix",
                                     emoji: {
                                         name: "146_netflix",
                                         id: "965676551716888626"
+                                    }
+                                },
+                                {
+                                    label: "Temizle",
+                                    value: "hunt_clear",
+                                    emoji: {
+                                        name: "🗑️"
                                     }
                                 }
                             ]
@@ -193,6 +207,13 @@ class Eval extends DotCommand {
                                     emoji: {
                                         name: "🏆"
                                     }
+                                },
+                                {
+                                    label: "Temizle",
+                                    value: "sub_clear",
+                                    emoji: {
+                                        name: "🗑️"
+                                    }
                                 }
                             ]
                         }
@@ -204,7 +225,7 @@ class Eval extends DotCommand {
                         {
                             type: "SELECT_MENU",
                             customId: "rol_etkinlik",
-                            maxValues: 7,
+                            maxValues: 4,
                             minValues: 0,
                             placeholder: "Sunucu Etkinlikleri Rolleri",
                             options: [
@@ -227,6 +248,13 @@ class Eval extends DotCommand {
                                     label: "Tahmin Tuttur",
                                     value: "etkinlik_tt",
                                     description: "DC'yi tersine sevenler için"
+                                },
+                                {
+                                    label: "Temizle",
+                                    value: "etkinlik_clear",
+                                    emoji: {
+                                        name: "🗑️"
+                                    }
                                 }
                             ]
                         },
@@ -236,7 +264,7 @@ class Eval extends DotCommand {
                                 {
                                     type: "SELECT_MENU",
                                     customId: "rol_hobi",
-                                    maxValues: 7,
+                                    maxValues: 8,
                                     minValues: 0,
                                     placeholder: "İlgi Alanı Rolleri",
                                     options: [
@@ -267,6 +295,13 @@ class Eval extends DotCommand {
                                         {
                                             label: "Yabancı Dil",
                                             value: "hobi_dil"
+                                        },
+                                        {
+                                            label: "Temizle",
+                                            value: "hobi_clear",
+                                            emoji: {
+                                                name: "🗑️"
+                                            }
                                         }
                                     ]
                                 }
