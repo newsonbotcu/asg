@@ -9,8 +9,8 @@ class Eval extends DotCommand {
             description: "sunucunun linkini gönderir",
             usage: "link",
             examples: ["link"],
-            cmmChannel: "bot-komut",
-            cooldown: 300000
+            cooldown: 300000,
+            ownerOnly: true
         });
     }
     async run(client, message, args) {
