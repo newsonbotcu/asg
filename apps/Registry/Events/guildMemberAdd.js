@@ -26,7 +26,7 @@ class GuildMemberAdd extends ClientEvent {
         }
         let inviter = "VANITY_URL";
         if (member.guild.vanityURLCode && (client.vanityUses < member.guild.vanityURLUses)) {
-            client.guild.fetchVanityData().then((res) => { client.vanityUses = res.uses });
+            client.guild.fetchVanityData().then((res) => { this.client.vanityUses = res.uses });
         } else {
             member.guild.invites.fetch().then(async (gInvites) => {
                 let invite = gInvites.find(inv => inv.uses > client.invites.get(inv.code).uses) || client.invites.find(i => !gInvites.has(i.code));
