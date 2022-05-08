@@ -26,8 +26,7 @@ class GuildMemberAdd extends ClientEvent {
         }
         let inviter;
         member.guild.invites.fetch().then((gInvites) => {
-            console.log(gInvites);
-            let invite = gInvites.find((inv) => inv.uses > this.client.invites.get(inv.code).uses);
+            let invite = gInvites.find((inv) => inv.uses > client.invites.get(inv.code).uses);
             if (invite) {
                 inviter = invite.inviter.id
             } else {
@@ -36,6 +35,7 @@ class GuildMemberAdd extends ClientEvent {
                     inviter = "VANITY_URL";
                 });
             };
+            console.log(inviter);
             this.client.invites = gInvites;
         });
         const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
