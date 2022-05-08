@@ -2,7 +2,7 @@ const { ClientEvent } = require('../../../../base/utils');
 class VoiceStateUpdate extends ClientEvent {
     constructor(client) {
         super(client, {
-            name: "voiceStateUpdate"
+            name: "voiceStateUpdatex"
         });
         this.client = client;
     }

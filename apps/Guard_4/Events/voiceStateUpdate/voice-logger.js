@@ -2,7 +2,7 @@ const { ClientEvent } = require('../../../../base/utils');
 class MessageDelete extends ClientEvent {
     constructor(client) {
         super(client, {
-            name: "voiceStateUpdates"
+            name: "voiceStateUpdatesxx"
         });
         this.client = client;
     }
