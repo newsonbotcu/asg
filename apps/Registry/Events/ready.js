@@ -10,9 +10,9 @@ class Ready extends ClientEvent {
 	}
 
 	async run(client) {
-		this.client.invites = await client.guild.invites.fetch();
 		client = this.client;
-		//console.log(this.client.invites);
+		this.client.invites = await client.guild.invites.fetch();
+		console.log(this.client.invites);
 		if (this.client.guild.vanityURLCode) {
 			await client.guild.fetchVanityData()
 			.then((res) => {
