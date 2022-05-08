@@ -42,46 +42,49 @@ class GuildMemberAdd extends ClientEvent {
                 isFirst: !first
             });
         }
+        const recovery = await client.models.member.find({ _id: member.user.id });
         const tag = (client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator) ? client.config.point.tagged : client.config.point.default;
         let penals = await client.models.penalties.find({ userId: member.user.id });
         penals = penals.filter((penal) => penal.until.getTime() > Date.now());
-        const recovery = await client.models.member.find({ _id: member.user.id });
-        for (let index = 0; index < penals.length; index++) {
-            const penal = penals[index];
-            switch (penal.type) {
-                case "JAIL":
-                    if ((penal.reason === "FORBIDDEN") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
-                        await client.models.penalties.updateOne({ _id: penal._id }, { $set: { until: Date.now() } });
-                        let addRole = [];
-                        await penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach(async (roleId) => {
-                            const rData = await client.models.roles.find({ meta: { $elemMatch: { _id: roleId } } });
-                            addRole.push(rData.meta.pop()._id);
-                        });
-                        if (recovery.length > 0) {
-                            const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
-                            if (record) await member.edit({
-                                nick: `${tag} ${record.name} | ${record.age}`,
-                                roles: this.data.roles[record.gender].concat(this.data.roles["member"])
-                            }, "Önceden Kayıtlıdır");
-                            return;
+        if (penals.length > 0) {
+            console.log(penals);
+            for (let index = 0; index < penals.length; index++) {
+                const penal = penals[index];
+                switch (penal.type) {
+                    case "JAIL":
+                        if ((penal.reason === "FORBIDDEN") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
+                            await client.models.penalties.updateOne({ _id: penal._id }, { $set: { until: Date.now() } });
+                            let addRole = [];
+                            await penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach(async (roleId) => {
+                                const rData = await client.models.roles.find({ meta: { $elemMatch: { _id: roleId } } });
+                                addRole.push(rData.meta.pop()._id);
+                            });
+                            if (recovery.length > 0) {
+                                const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
+                                if (record) await member.edit({
+                                    nick: `${tag} ${record.name} | ${record.age}`,
+                                    roles: this.data.roles[record.gender].concat(this.data.roles["member"])
+                                }, "Önceden Kayıtlıdır");
+                                return;
+                            }
+                        } else {
+                            if (recovery.length > 0) {
+                                const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
+                                if (record) await member.edit({
+                                    nick: `${tag} ${record.name} | ${record.age}`,
+                                    roles: this.data.roles["prisoner"].concat(this.data.roles["karantina"])
+                                }, "Önceden Kayıtlıdır, rol verilmedi.");
+                                return;
+                            }
                         }
-                    } else {
-                        if (recovery.length > 0) {
-                            const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
-                            if (record) await member.edit({
-                                nick: `${tag} ${record.name} | ${record.age}`,
-                                roles: this.data.roles["prisoner"].concat(this.data.roles["karantina"])
-                            }, "Önceden Kayıtlıdır, rol verilmedi.");
-                            return;
-                        }
-                    }
-                    break;
-                case "CMUTE":
-                    await member.roles.add(this.data.roles["muted"]);
-                    break;
-
-                default:
-                    break;
+                        break;
+                    case "CMUTE":
+                        await member.roles.add(this.data.roles["muted"]);
+                        break;
+    
+                    default:
+                        break;
+                }
             }
         }
         if (client.config.tags.some(t => member.user.username.includes(t))) await member.roles.add(this.data.roles["taglı"]);
