@@ -24,7 +24,7 @@ class GuildMemberAdd extends ClientEvent {
             }
             return;
         }
-        const gInvites = await member.guild.invites.fetch();
+        const gInvites = await member.guild.invites.fetch({ cache: false });
         const invite = gInvites.find((inv) => inv.uses > this.client.invites.find(i => i.code === inv.code).uses);
         let inviter = invite ? invite.inviterId : "VANITY_URL";
         member.guild.fetchVanityData().then((dData) => {
