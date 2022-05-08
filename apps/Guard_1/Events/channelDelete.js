@@ -80,7 +80,7 @@ class ChannelDelete extends ClientEvent {
                     await subChnl.setParent(newChannel.id, { lockPermissions: false });
                     await subChnl.permissionOverwrites.set(chn.overwrites.map(o => {
                         return {
-                            _id: o.id,
+                            id: o.id,
                             type: o.typeOf,
                             allow: o.allow,
                             deny: o.deny
@@ -124,7 +124,7 @@ class ChannelDelete extends ClientEvent {
             const metaData = olddata.meta.pop();
             await newChannel.permissionOverwrites.set(metaData.overwrites.map(o => {
                 return {
-                    _id: o.id,
+                    id: o.id,
                     type: o.typeOf,
                     allow: o.allow,
                     deny: o.deny

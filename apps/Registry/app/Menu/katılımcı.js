@@ -5,7 +5,7 @@ const low = require('lowdb');
 class RolSeçim extends Component {
     constructor(client) {
        super(client, {
-            name: "katılımcı_secim",
+            name: "rol_katılımcı",
             channel: "rol-al",
             accaptedPerms: [],
             cooldown: 10000,

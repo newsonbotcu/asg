@@ -22,6 +22,12 @@ class DotCommandCreate extends ClientEvent {
         } else return;
         const embed = new MessageEmbed();
         const data = client.data;
+        /*
+        message.options = {};
+        cmd.options.forEach((opts) => {
+
+        })
+        */
         if (!cmd.config.enabled) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["disabledcmd"]} Bu komut şuan için **devredışı**`)
             .setColor('#2f3136'));
         if (cmd.config.dmCmd && (message.channel.type !== 'dm')) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["dmcmd"]} Bu komut bir **DM** komutudur.`)

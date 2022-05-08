@@ -7,32 +7,54 @@ class OverwriteCreate extends ClientEvent {
 
     async run(oldChannel, curChannel) {
         const client = this.client;
-        if (curChannel.guild.id !== client.config.server) return;
-        const entry = await curChannel.guild.fetchAuditLogs({ type: "CHANNEL_OVERWRITE_CREATE" }).then(logs => logs.entries.first());
-        if (entry.createdTimestamp <= Date.now() - 1000) return;
-        if (entry.executor.id === client.user.id) return;
-        if (entry.target.id !== curChannel.id) return;
-        const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        if ((permission && (permission.count > 0))) {
-            if (permission) await client.models.perms.updateOne({
-                user: entry.executor.id,
-                type: "overwrite",
-                effect: "channel"
-            }, { $inc: { count: -1 } });
-            const newPerm = curChannel.permissionOverwrites.get(entry.extra.id);
-            const document = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
-            if (!document) await client.models.bc_ovrts.create({ _id: curChannel.id, overwrites: [] });
-            await client.models.bc_ovrts.updateOne({ _id: curChannel.id }, { $push: { overwrites: newPerm } });
-            client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_OVERWRITE_CREATE", `${curChannel.name} isimli kanalda izin oluşturdu. Kalan izin sayısı ${permission.count - 1}`);
-            return;
+        const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
+        const ovs = [];
+        curChannel.permissionOverwrites.cache.forEach((o) => {
+            const lol = {
+                _id: o.id,
+                typeOf: o.type,
+                allow: o.allow.toArray(),
+                deny: o.deny.toArray()
+            };
+            ovs.push(lol);
+        });
+        if (!olddata) {
+            await client.models.channels.create({
+                kindOf: curChannel.type,
+                parent: curChannel.parentId,
+                meta: [{
+                    _id: curChannel.id,
+                    name: curChannel.name,
+                    position: curChannel.position,
+                    nsfw: curChannel.nsfw,
+                    bitrate: curChannel.bitrate,
+                    rateLimit: curChannel.rateLimit,
+                    created: curChannel.createdAt
+                }],
+                overwrites: ovs
+            });
+        } else {
+            olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: curChannel.id } } });
+            await client.models.channels.updateOne({ _id: olddata._id }, {
+                $set: {
+                    overwrites: lol
+                }
+            });
         }
-        await client.models.perms.deleteOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
-        const overwrits = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
-        const exeMember = curChannel.guild.members.cache.get(entry.executor.id);
-        client.handler.emit('Jail', exeMember, client.user.id, "* İzin Oluşturma", "Perma", 0);
-        client.handler.emit('Logger', 'KDE', entry.executor.id, "CHANNEL_OVERWRITE_CREATE", `${oldChannel.name} isimli kanalın izinleriyle oynadı`);
-        await curChannel.overwritePermissions(overwrits.overwrites);
+    }
+
+    async refix(oldChannel, curChannel) {
+        const olddata = await this.client.models.channels.findOne({ meta: { $elemMatch: { _id: oldChannel.id } } });
+        const metaData = olddata.meta.pop();
+        await curChannel.permissionOverwrites.set(metaData.overwrites.map(o => {
+            return {
+                id: o._id,
+                type: o.typeOf,
+                allow: o.allow,
+                deny: o.deny
+            }
+        }));
+
     }
 }
 

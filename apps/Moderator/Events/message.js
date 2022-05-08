@@ -10,14 +10,13 @@ class MsgCrte extends ClientEvent {
     }
     async run(message) {
         const client = this.client;
-        const data = this.data;
         if (message.guild && (message.guild.id !== client.config.server)) return;
         const elebaşı = ["discord.gg/", "discord.com/invite/", "discordapp.com/invite/", "discord.me/"];
         if (message.guild && elebaşı.some(link => message.content.includes(link))) {
             for (let c = 0; c < elebaşı.length; c++) {
                 message.content.split(" ").filter(s => s.includes(elebaşı[c])).map(s => s.split(elebaşı[c]).pop()).forEach(async (code) => {
                     const reklam = await client.fetchInvite(code);
-                    if (!reklam.guild) return;
+                    if (!reklam.guild || message.member.permissions.has("ADMINISTRATOR")) return;
                     if (reklam.guild.id !== client.guild.id) {
                         client.emit("ban", message.author.id, client.user.id, `\`${reklam.guild.name}\` [${reklam.guild.id}] sunucusunun reklamını\n\`${message.channel.name}\` [${message.channel.id}] kanalına attı.\n${reklam.inviter ? reklam.inviter.username + '#' + reklam.inviter.discriminator + " [" + reklam.inviter.id + "] " : ""}`, "p", `#REKLAM`, 2);
                     }
@@ -25,11 +24,12 @@ class MsgCrte extends ClientEvent {
             }
         }
         /*
-        let uCooldownz = client.spamwait[message.author.id];
-        if (!uCooldownz) {
+        let uCooldownz = client.actionlist.textspam.get(message.author.id);
+        if (uCooldownz && uCooldownz[message.content] && uCooldownz[message.content] > Date.now()) {
             client.spamwait[message.author.id] = {};
             uCooldownz = client.spamwait[message.author.id];
         }
+        client.actionlist.textspam.set(message.author.id, Date.now());
         let timez = uCooldownz[message.content] || 0;
         if (timez && (timez > Date.now())) {
             let uCount = client.spamcounts[message.author.id];

@@ -1,11 +1,12 @@
 const { ClientEvent } = require('../../../../base/utils');
 class VoiceStateUpdate extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "voiceStateUpdate"
+        });
         this.client = client;
     }
     async run(prev, cur) {
-        this.data = this.init();
         const client = this.client;
         const leaves = client.leaves;
         const deleteChnl = client.deleteChnl;

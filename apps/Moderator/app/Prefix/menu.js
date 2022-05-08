@@ -41,8 +41,8 @@ class Eval extends DotCommand {
                     components: [
                         {
                             type: "SELECT_MENU",
-                            customId: "menu_oyun",
-                            placeholder: "Oyun Rolleri",
+                            customId: "rol_oyun",
+                            placeholder: "Video Oyunları Rolleri",
                             maxValues: 6,
                             minValues: 0,
                             options: [
@@ -50,64 +50,64 @@ class Eval extends DotCommand {
                                     label: "League of Legends",
                                     value: "oyun_lol",
                                     emoji: {
-                                        name: "lol",
-                                        id: "940032438585933924"
+                                        name: "oyun_lol",
+                                        id: "956800147734536232"
                                     }
                                 },
                                 {
                                     label: "PUBG",
                                     value: "oyun_pubg",
                                     emoji: {
-                                        name: "pubglite",
-                                        id: "940032442570534963"
+                                        name: "oyun_pubg",
+                                        id: "956800148070101012"
                                     }
                                 },
                                 {
                                     label: "Valorant",
                                     value: "oyun_valo",
                                     emoji: {
-                                        name: "valorantlogo",
-                                        id: "940032437851930674"
+                                        name: "oyun_valo",
+                                        id: "956800147751333889"
                                     }
                                 },
                                 {
                                     label: "GTA V",
                                     value: "oyun_gta",
                                     emoji: {
-                                        name: "GTAV",
-                                        id: "940032442373373962"
+                                        name: "oyun_gta",
+                                        id: "972914955298963546"
                                     }
                                 },
                                 {
                                     label: "Minecraft",
-                                    value: "oyun_minecraft",
+                                    value: "oyun_mc",
                                     emoji: {
                                         name: "oyun_mc",
-                                        id: "940032442138505249"
+                                        id: "972914762633580704"
                                     }
                                 },
                                 {
-                                    label: "Apex",
+                                    label: "Apex Legends",
                                     value: "oyun_apex",
                                     emoji: {
-                                        name: "apex",
-                                        id: "940032437881294848"
+                                        name: "oyun_apex",
+                                        id: "972914705381339187"
                                     }
                                 },
                                 {
                                     label: "Mobile Legends",
                                     value: "oyun_ml",
                                     emoji: {
-                                        name: "minecraft",
-                                        id: "940032442138505249"
+                                        name: "oyun_ml",
+                                        id: "956800147776499762"
                                     }
                                 },
                                 {
                                     label: "CSGO",
                                     value: "oyun_csgo",
                                     emoji: {
-                                        name: "apex",
-                                        id: "940032437881294848"
+                                        name: "oyun_csgo",
+                                        id: "956800147566776411"
                                     }
                                 }
                             ]
@@ -119,36 +119,33 @@ class Eval extends DotCommand {
                     components: [
                         {
                             type: "SELECT_MENU",
-                            customId: "menu_cekilis",
+                            customId: "rol_cekilis",
                             maxValues: 6,
                             minValues: 0,
-                            placeholder: "Katılımcı Rolleri",
+                            placeholder: "Çekiliş Avcısı Rolleri",
                             options: [
                                 {
                                     label: "Spotify Avcısı",
-                                    value: "katılımcı_konser",
-                                    description: "Buluşmalara katılmak istiyorsan buyur",
+                                    value: "spotify_hunter",
                                     emoji: {
-                                        name: "katilimci_konser",
-                                        id: "869301954587803688"
+                                        name: "146_spotify",
+                                        id: "965676553780494387"
                                     }
                                 },
                                 {
                                     label: "Nitro Avcısı",
-                                    value: "katılımcı_mc",
-                                    description: "MC Sunucumuzda katkı sağla",
+                                    value: "nitro_hunter",
                                     emoji: {
-                                        name: "pandomc",
-                                        id: "859934355388497970"
+                                        name: "146_nitro",
+                                        id: "972917532669399060"
                                     }
                                 },
                                 {
                                     label: "Netflix Avcısı",
-                                    value: "katılımcı_etkinlik",
-                                    description: "Dc, vk gibi oyunlar için",
+                                    value: "netflix_hunter",
                                     emoji: {
-                                        name: "katilimci_etkinlik",
-                                        id: "869301953975418940"
+                                        name: "146_netflix",
+                                        id: "965676551716888626"
                                     }
                                 }
                             ]
@@ -157,41 +154,41 @@ class Eval extends DotCommand {
                 },
                 {
                     type: "SELECT_MENU",
-                    customId: "menu_bildirim",
+                    customId: "rol_katılımcı",
                     maxValues: 1,
                     minValues: 0,
-                    placeholder: "Bildirim Rolleri",
+                    placeholder: "Çekiliş Katılımcısı Rolleri",
                     options: [
                         {
-                            label: "Etkinlik Bildirimleri",
-                            value: "burc_boga",
+                            label: "Etkinlik Katılımcısı",
+                            value: "sub_etkinlik",
+                            description: "Sunucu içi oyunlardan haberdar ol",
                             emoji: {
-                                name: "burc_boga",
-                                id: "865090197296513024"
+                                name: "🎉"
                             }
                         },
                         {
-                            label: "Çekiliş Bildirimleri",
-                            value: "burc_ikizler",
+                            label: "Çekiliş Katılımcısı",
+                            value: "sub_cekilis",
+                            description: "Çekilişlerimizi kaçırma",
                             emoji: {
-                                name: "burc_ikizler",
-                                id: "865090196960968715"
+                                name: "🎁"
                             }
                         },
                         {
-                            label: "Konser Bildirimleri",
-                            value: "burc_yengec",
+                            label: "Konser Katılımcısı",
+                            value: "sub_konser",
+                            description: "Konsere de bekleriz",
                             emoji: {
-                                name: "burc_yengec",
-                                id: "865090195598737428"
+                                name: "🎵"
                             }
                         },
                         {
-                            label: "Turnuva Bildirimleri",
-                            value: "burc_aslan",
+                            label: "Turnuva Katılımcısı",
+                            value: "sub_turnuva",
+                            description: "İddialı oyuncular buraya da tıklasın",
                             emoji: {
-                                name: "burc_aslan",
-                                id: "865090195337248808"
+                                name: "🏆"
                             }
                         }
                     ]
@@ -201,73 +198,30 @@ class Eval extends DotCommand {
                     components: [
                         {
                             type: "SELECT_MENU",
-                            customId: "etkinlik_secim",
+                            customId: "rol_etkinlik",
                             maxValues: 7,
                             minValues: 0,
-                            placeholder: "Etkinlik Rolleri",
+                            placeholder: "Sunucu Etkinlikleri Rolleri",
                             options: [
                                 {
                                     label: "Vampir Köylü",
                                     value: "etkinlik_vk",
-                                    description: "Orda bir köy var Discord'da..",
-                                    emoji: {
-                                        name: "etkinlik_vk",
-                                        id: "869301434594787409"
-                                    }
+                                    description: "Orda bir köy var Discord'da.."
                                 },
                                 {
                                     label: "Kırmızı Koltuk",
                                     value: "etkinlik_kk",
-                                    description: "Soran gizli, dürüstlük zorunlu.",
-                                    emoji: {
-                                        name: "etkinlik_kk",
-                                        id: "869301433579761705"
-                                    }
+                                    description: "Soranlar gizli, dürüstlük zorunlu."
                                 },
                                 {
                                     label: "Soru Cevap",
                                     value: "etkinlik_sc",
-                                    description: "Discord işi doğruluk/cesaret.",
-                                    emoji: {
-                                        name: "etkinlik_sc",
-                                        id: "869301434666086400"
-                                    }
+                                    description: "Discord işi doğruluk/cesaret."
                                 },
                                 {
-                                    label: "MC Etkinlikleri",
-                                    value: "etkinlik_mc",
-                                    description: "MC sunucumuzdan haberdar olun.",
-                                    emoji: {
-                                        name: "pandomc",
-                                        id: "859934355388497970"
-                                    }
-                                },
-                                {
-                                    label: "Baskın Etkinlikleri",
-                                    value: "etkinlik_baskın",
-                                    description: "Baskın zamanında bildirim al.",
-                                    emoji: {
-                                        name: "pando",
-                                        id: "825933532962488361"
-                                    }
-                                },
-                                {
-                                    label: "Satranç Etkinlikleri",
-                                    value: "etkinlik_satranc",
-                                    description: "Satranç turnuvalarımıza katıl.",
-                                    emoji: {
-                                        name: "piyon",
-                                        id: "843288747873140776"
-                                    }
-                                },
-                                {
-                                    label: "Zirve Etkinlikleri",
-                                    value: "etkinlik_zirve",
-                                    description: "Geleneksel Pando zirvelerinde bizimle buluş.",
-                                    emoji: {
-                                        name: "zirve",
-                                        id: "869323496940011520"
-                                    }
+                                    label: "Tahmin Tuttur",
+                                    value: "etkinlik_tt",
+                                    description: "DC'yi tersine sevenler için"
                                 }
                             ]
                         },
@@ -276,73 +230,38 @@ class Eval extends DotCommand {
                             components: [
                                 {
                                     type: "SELECT_MENU",
-                                    customId: "etkinlik_secim",
+                                    customId: "rol_hobi",
                                     maxValues: 7,
                                     minValues: 0,
                                     placeholder: "İlgi Alanı Rolleri",
                                     options: [
                                         {
                                             label: "Yazılım",
-                                            value: "etkinlik_vk",
-                                            description: "Orda bir köy var Discord'da..",
-                                            emoji: {
-                                                name: "etkinlik_vk",
-                                                id: "869301434594787409"
-                                            }
+                                            value: "hobi_yazılım"
                                         },
                                         {
                                             label: "Müzik",
-                                            value: "etkinlik_kk",
-                                            description: "Soran gizli, dürüstlük zorunlu.",
-                                            emoji: {
-                                                name: "etkinlik_kk",
-                                                id: "869301433579761705"
-                                            }
+                                            value: "hobi_müzik"
                                         },
                                         {
                                             label: "Bilim",
-                                            value: "etkinlik_sc",
-                                            description: "Discord işi doğruluk/cesaret.",
-                                            emoji: {
-                                                name: "etkinlik_sc",
-                                                id: "869301434666086400"
-                                            }
+                                            value: "hobi_bilim"
                                         },
                                         {
                                             label: "Felsefe",
-                                            value: "etkinlik_mc",
-                                            description: "MC sunucumuzdan haberdar olun.",
-                                            emoji: {
-                                                name: "pandomc",
-                                                id: "859934355388497970"
-                                            }
+                                            value: "hobi_felsefe"
                                         },
                                         {
                                             label: "Tasarım",
-                                            value: "etkinlik_baskın",
-                                            description: "Baskın zamanında bildirim al.",
-                                            emoji: {
-                                                name: "pando",
-                                                id: "825933532962488361"
-                                            }
+                                            value: "hobi_tasarım"
                                         },
                                         {
                                             label: "Tarih",
-                                            value: "etkinlik_satranc",
-                                            description: "Satranç turnuvalarımıza katıl.",
-                                            emoji: {
-                                                name: "piyon",
-                                                id: "843288747873140776"
-                                            }
+                                            value: "hobi_tarih"
                                         },
                                         {
                                             label: "Yabancı Dil",
-                                            value: "etkinlik_zirve",
-                                            description: "Geleneksel Pando zirvelerinde bizimle buluş.",
-                                            emoji: {
-                                                name: "zirve",
-                                                id: "869323496940011520"
-                                            }
+                                            value: "hobi_dil"
                                         }
                                     ]
                                 }

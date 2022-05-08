@@ -29,9 +29,9 @@ class MenuCommandCreate extends ClientEvent {
             ephemeral: true
         });
         try {
-            const res = await cmd.run(client, interaction, this.data);
+            cmd.run(client, interaction, this.data);
             client.log(`[(${interaction.user.id})] ${interaction.user.username} ran command [${cmd.props.name}]`, "slash");
-            if (!res) cmd.cooldown.set(interaction.user.id, Date.now());
+            cmd.cooldown.set(interaction.user.id, Date.now());
         } catch (e) {
             client.log(e, "error");
         }

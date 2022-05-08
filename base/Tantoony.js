@@ -32,7 +32,11 @@ class Tantoony extends Client {
         this.func = require('./utils').functions;
         this.responders = new Collection();
         this.vanityUses = 0;
-        this.actionlist = new Collection();
+        this.actionlist = {
+            textspam: new Collection(),
+            voicespam: new Collection(),
+            voicecut: new Collection()
+        };
         this.handler = new (require('./handler'))(this);
         /*
         this.leaves = new Map();

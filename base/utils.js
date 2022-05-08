@@ -33,8 +33,8 @@ class ClientEvent {
 			this.client.guild.fetchAuditLogs({ type: this.action }).then((logs) => {
 				this.audit = logs.entries.first();
 				if (this.audit.executor.id !== this.client.user.id) this.client.models.member.findOne({ _id: this.audit.executor.id }).then((doc) => {
-					const primity = doc.authorized.find(prm => prm.until.getTime > new Date().getTime() && prm.auditType === this.action);
-					if (primity) {
+					const primity = doc.authorized.filter((prm) => prm.auditType === this.action).find((prm) => prm.until.getTime > new Date().getTime() || !prm.until);
+					if (primity.length > 0) {
 						this.isAuthed = true;
 						this.pass(primity, ...args);
 					} else {
@@ -51,7 +51,7 @@ class ClientEvent {
 	}
 
 	async pass(peer, ...params) {
-		await this.client.models.member.updateOne({ _id: this.audit.executor.id }, { $pull: { authorized: peer } });
+		if (prm.until) await this.client.models.member.updateOne({ _id: this.audit.executor.id }, { $pull: { authorized: peer } });
 		try {
 			this.rebuild(...params);
 		} catch (error) {
