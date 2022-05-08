@@ -30,7 +30,7 @@ class GuildMemberAdd extends ClientEvent {
             if (invite) {
                 inviter = invite.inviter.id
             } else {
-                await member.guild.fetchVanityData().then((dData) => {
+                member.guild.fetchVanityData().then((dData) => {
                     this.client.vanityUses = dData.uses;
                     inviter = "VANITY_URL";
                 });
