@@ -8,10 +8,10 @@ class MenuCommandCreate extends ClientEvent {
     }
     async run(interaction) {
         if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
-        console.log(interaction);
+        const client = this.client;
         if (interaction.isContextMenu()) return;
-        if (client.responders.has(`menu:${interaction.commandName}`)) {
-            cmd = client.responders.get(`menu:${interaction.commandName}`);
+        if (client.responders.has(`menu:${interaction.customId}`)) {
+            cmd = client.responders.get(`menu:${interaction.customId}`);
         } else return;
         if (!cmd.props.enabled) return await interaction.reply(`Bu komut şuan için **devredışı**`, {
             ephemeral: true
