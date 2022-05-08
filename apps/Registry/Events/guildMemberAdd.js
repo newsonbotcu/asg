@@ -45,7 +45,7 @@ class GuildMemberAdd extends ClientEvent {
         const tag = (client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator) ? client.config.point.tagged : client.config.point.default;
         let penals = await client.models.penalties.find({ userId: member.user.id });
         penals = penals.filter((penal) => penal.until.getTime() > Date.now());
-        const recovery = await client.models.member.find({ user: member.user.id });
+        const recovery = await client.models.member.find({ _id: member.user.id });
         for (let index = 0; index < penals.length; index++) {
             const penal = penals[index];
             switch (penal.type) {
