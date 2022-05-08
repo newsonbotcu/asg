@@ -6,11 +6,11 @@ class RolKatilimci extends ButtonCommand {
         super(client, {
             name: "rol_katılımcı",
             cooldown: 10000
-        }); 
+        });
+        this.client = client;
     }
 
     async run(client, interaction, data) {
-        const client = this.client;
         const mentioned = client.guild.members.cache.get(interaction.user.id);
         if (interaction.values.includes("sub_clear") && interaction.values.length === 1) {
             return await mentioned.roles.remove(Object.keys(data.roles).filter(key => key.startsWith("sub_")).map(key => data.roles[key]));

@@ -7,10 +7,10 @@ class RolCekilis extends ButtonCommand {
             name: "rol_cekilis",
             cooldown: 10000
         });
+        this.client = client;
     }
 
     async run(client, interaction, data) {
-        const client = this.client;
         const mentioned = client.guild.members.cache.get(interaction.user.id);
         if (interaction.values.includes("hunt_clear") && interaction.values.length === 1) {
             return await mentioned.roles.remove(Object.keys(data.roles).filter(key => key.startsWith("hunt_")).map(key => data.roles[key]));
