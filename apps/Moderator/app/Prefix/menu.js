@@ -153,43 +153,48 @@ class Eval extends DotCommand {
                     ]
                 },
                 {
-                    type: "SELECT_MENU",
-                    customId: "rol_katılımcı",
-                    maxValues: 1,
-                    minValues: 0,
-                    placeholder: "Çekiliş Katılımcısı Rolleri",
-                    options: [
+                    type: "ACTION_ROW",
+                    components: [
                         {
-                            label: "Etkinlik Katılımcısı",
-                            value: "sub_etkinlik",
-                            description: "Sunucu içi oyunlardan haberdar ol",
-                            emoji: {
-                                name: "🎉"
-                            }
-                        },
-                        {
-                            label: "Çekiliş Katılımcısı",
-                            value: "sub_cekilis",
-                            description: "Çekilişlerimizi kaçırma",
-                            emoji: {
-                                name: "🎁"
-                            }
-                        },
-                        {
-                            label: "Konser Katılımcısı",
-                            value: "sub_konser",
-                            description: "Konsere de bekleriz",
-                            emoji: {
-                                name: "🎵"
-                            }
-                        },
-                        {
-                            label: "Turnuva Katılımcısı",
-                            value: "sub_turnuva",
-                            description: "İddialı oyuncular buraya da tıklasın",
-                            emoji: {
-                                name: "🏆"
-                            }
+                            type: "SELECT_MENU",
+                            customId: "rol_katılımcı",
+                            maxValues: 1,
+                            minValues: 0,
+                            placeholder: "Çekiliş Katılımcısı Rolleri",
+                            options: [
+                                {
+                                    label: "Etkinlik Katılımcısı",
+                                    value: "sub_etkinlik",
+                                    description: "Sunucu içi oyunlardan haberdar ol",
+                                    emoji: {
+                                        name: "🎉"
+                                    }
+                                },
+                                {
+                                    label: "Çekiliş Katılımcısı",
+                                    value: "sub_cekilis",
+                                    description: "Çekilişlerimizi kaçırma",
+                                    emoji: {
+                                        name: "🎁"
+                                    }
+                                },
+                                {
+                                    label: "Konser Katılımcısı",
+                                    value: "sub_konser",
+                                    description: "Konsere de bekleriz",
+                                    emoji: {
+                                        name: "🎵"
+                                    }
+                                },
+                                {
+                                    label: "Turnuva Katılımcısı",
+                                    value: "sub_turnuva",
+                                    description: "İddialı oyuncular buraya da tıklasın",
+                                    emoji: {
+                                        name: "🏆"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
