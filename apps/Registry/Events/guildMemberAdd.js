@@ -35,9 +35,9 @@ class GuildMemberAdd extends ClientEvent {
                     inviter = "VANITY_URL";
                 });
             };
-            console.log(inviter);
             this.client.invites = gInvites;
         });
+        console.log(inviter);
         const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
         const first = docs.length > 0;
         await client.models.invites.create({
