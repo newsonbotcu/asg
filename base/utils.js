@@ -164,59 +164,31 @@ class SlashCommand extends ApplicationCommand {
 
 }
 
-class ButtonCommand extends MessageButton {
+class ButtonCommand {
 	constructor(client, {
 		name = null,
-		label = null,
-		customId = null,
-		style = "PRIMARY" | "SECONDARY" | "SUCCESS" | "DANGER" | "LINK",
-		emoji = null,
-		url = null,
-		disabled = false,
 		isconst = false,
 		dirname = null,
 		intChannel = null,
 		cooldown = 5000,
 		enabled = true
 	}) {
-		super({
-			label,
-			customId,
-			style,
-			emoji,
-			url,
-			disabled
-		});
 		this.client = client;
 		this.props = {
 			name,
-			type,
 			dirname,
 			intChannel,
 			cooldown,
 			enabled,
 			isconst
 		};
-		this.info = {
-			label,
-			customId,
-			style,
-			emoji,
-			url,
-			disabled
-		};
 		this.perms = [];
-	}
+		this.cooldown = new Collection();
 
-	loadPerms() {
-		this.client.models.cmd_perms.findOne({
-			cmd_type: "BUTTON",
-			_id: this.customId
-		})
-			.then(doc => {
-				this.props.perms = doc.permissions;
-			});
-		return this.perms;
+	}
+	load() {
+		this.client.log(`Menu komutu yükleniyor: ${this.info.name} 👌`, "load");
+		this.client.responders.set(`menu:${this.info.name}`, this);
 	}
 
 }
@@ -247,6 +219,10 @@ class MenuCommand extends MessageSelectMenu {
 		this.client = client;
 		this.cooldown = new Collection();
 
+	}
+	load() {
+		this.client.log(`Prefix komutu yükleniyor: ${this.info.name} 👌`, "load");
+		this.client.responders.set(`button:${this.info.name}`, this);
 	}
 }
 
