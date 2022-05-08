@@ -25,23 +25,24 @@ class GuildMemberAdd extends ClientEvent {
             return;
         }
         let inviter = "VANITY_URL";
-        if (member.guild.vanityURLCode && (this.client.vanityUses < member.guild.vanityURLUses)) {
-            client.guild.fetchVanityData().then((res) => { this.client.vanityUses = res.uses });
+        const vanityData = member.guild.fetchVanityData();
+        if (vanityData && (this.client.vanityUses < vanityData.uses)) {
+            this.client.vanityUses = vanityData.uses;
         } else {
             member.guild.invites.fetch().then((gInvites) => {
-                let invite = gInvites.find(inv => inv.uses > this.client.invites.get(inv.code).uses) || this.client.invites.find(i => !gInvites.has(i.code));
+                let invite = gInvites.find((inv) => inv.uses > this.client.invites.get(inv.code).uses) || this.client.invites.find(i => !gInvites.has(i.code));
                 if (invite) inviter = invite.inviter.id;
                 this.client.invites = gInvites;
             });
-            const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
-            const first = docs.length > 0;
-            await client.models.invites.create({
-                inviter: inviter,
-                invited: member.user.id,
-                created: new Date(),
-                isFirst: !first
-            });
         }
+        const docs = await client.models.invites.find({ inviter: inviter, invited: member.user.id, isFirst: true });
+        const first = docs.length > 0;
+        await client.models.invites.create({
+            inviter: inviter,
+            invited: member.user.id,
+            created: new Date(),
+            isFirst: !first
+        });
         const recovery = await client.models.member.find({ _id: member.user.id });
         const tag = (client.config.tags.some(tag => member.user.username.includes(tag)) || client.config.dis === member.user.discriminator) ? client.config.point.tagged : client.config.point.default;
         let penals = await client.models.penalties.find({ userId: member.user.id });
