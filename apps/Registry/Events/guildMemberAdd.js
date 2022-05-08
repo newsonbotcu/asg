@@ -51,7 +51,7 @@ class GuildMemberAdd extends ClientEvent {
             switch (penal.type) {
                 case "JAIL":
                     if ((penal.reason === "FORBIDDEN") && !this.data.other["forbidden"].some(tag => member.user.username.includes(tag))) {
-                        await client.models.penalties.updateOne({ _id: penal._id }, { until: Date.now() });
+                        await client.models.penalties.updateOne({ _id: penal._id }, { $set: { until: Date.now() } });
                         let addRole = [];
                         await penal.extras.filter((extra) => extra.subject === "role").map((extra) => extra.data).forEach(async (roleId) => {
                             const rData = await client.models.roles.find({ meta: { $elemMatch: { _id: roleId } } });
@@ -86,7 +86,7 @@ class GuildMemberAdd extends ClientEvent {
         }
         if (client.config.tags.some(t => member.user.username.includes(t))) await member.roles.add(this.data.roles["taglı"]);
         if (client.func.checkDays(member.user.createdAt) < 7) return await member.roles.add(this.data.roles["suspicious"].concat(this.data.roles["karantina"]));
-        if (recovery.registries && recovery.registries.length > 0 && !this.data.other["taglıAlım"]) {
+        if (recovery && recovery.registries && recovery.registries.length > 0 && !this.data.other["taglıAlım"]) {
             const record = recovery.filter((doc) => moment(doc.gone).add("3M").toDate().getTime() < Date.now()).sort((a, b) => a.created.getTime() - b.created.getTime())[0];
             if (record) await member.edit({
                 nick: `${tag} ${record.name} | ${record.age}`,
