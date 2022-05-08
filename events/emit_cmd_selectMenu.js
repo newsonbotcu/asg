@@ -8,7 +8,6 @@ class MenuCommandCreate extends ClientEvent {
     }
     async run(interaction) {
         if (interaction.guild && (interaction.guild.id !== this.client.config.server)) return;
-        if (!interaction.isButton()) return;
         console.log(interaction);
         if (interaction.isContextMenu()) return;
         if (client.responders.has(`menu:${interaction.commandName}`)) {
