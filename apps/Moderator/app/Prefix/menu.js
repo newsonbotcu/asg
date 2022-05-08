@@ -43,7 +43,7 @@ class Eval extends DotCommand {
                             type: "SELECT_MENU",
                             customId: "rol_oyun",
                             placeholder: "Video Oyunları Rolleri",
-                            maxValues: 6,
+                            maxValues: 9,
                             minValues: 0,
                             options: [
                                 {
@@ -127,7 +127,7 @@ class Eval extends DotCommand {
                         {
                             type: "SELECT_MENU",
                             customId: "rol_cekilis",
-                            maxValues: 6,
+                            maxValues: 4,
                             minValues: 0,
                             placeholder: "Çekiliş Avcısı Rolleri",
                             options: [
@@ -172,7 +172,7 @@ class Eval extends DotCommand {
                         {
                             type: "SELECT_MENU",
                             customId: "rol_katılımcı",
-                            maxValues: 1,
+                            maxValues: 5,
                             minValues: 0,
                             placeholder: "Çekiliş Katılımcısı Rolleri",
                             options: [
@@ -225,7 +225,7 @@ class Eval extends DotCommand {
                         {
                             type: "SELECT_MENU",
                             customId: "rol_etkinlik",
-                            maxValues: 4,
+                            maxValues: 5,
                             minValues: 0,
                             placeholder: "Sunucu Etkinlikleri Rolleri",
                             options: [
