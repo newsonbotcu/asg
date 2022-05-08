@@ -258,52 +258,52 @@ class Eval extends DotCommand {
                                 }
                             ]
                         },
+                    ]
+                },
+                {
+                    type: "ACTION_ROW",
+                    components: [
                         {
-                            type: "ACTION_ROW",
-                            components: [
+                            type: "SELECT_MENU",
+                            customId: "rol_hobi",
+                            maxValues: 8,
+                            minValues: 0,
+                            placeholder: "İlgi Alanı Rolleri",
+                            options: [
                                 {
-                                    type: "SELECT_MENU",
-                                    customId: "rol_hobi",
-                                    maxValues: 8,
-                                    minValues: 0,
-                                    placeholder: "İlgi Alanı Rolleri",
-                                    options: [
-                                        {
-                                            label: "Yazılım",
-                                            value: "hobi_yazılım"
-                                        },
-                                        {
-                                            label: "Müzik",
-                                            value: "hobi_müzik"
-                                        },
-                                        {
-                                            label: "Bilim",
-                                            value: "hobi_bilim"
-                                        },
-                                        {
-                                            label: "Felsefe",
-                                            value: "hobi_felsefe"
-                                        },
-                                        {
-                                            label: "Tasarım",
-                                            value: "hobi_tasarım"
-                                        },
-                                        {
-                                            label: "Tarih",
-                                            value: "hobi_tarih"
-                                        },
-                                        {
-                                            label: "Yabancı Dil",
-                                            value: "hobi_dil"
-                                        },
-                                        {
-                                            label: "Temizle",
-                                            value: "hobi_clear",
-                                            emoji: {
-                                                name: "🗑️"
-                                            }
-                                        }
-                                    ]
+                                    label: "Yazılım",
+                                    value: "hobi_yazılım"
+                                },
+                                {
+                                    label: "Müzik",
+                                    value: "hobi_müzik"
+                                },
+                                {
+                                    label: "Bilim",
+                                    value: "hobi_bilim"
+                                },
+                                {
+                                    label: "Felsefe",
+                                    value: "hobi_felsefe"
+                                },
+                                {
+                                    label: "Tasarım",
+                                    value: "hobi_tasarım"
+                                },
+                                {
+                                    label: "Tarih",
+                                    value: "hobi_tarih"
+                                },
+                                {
+                                    label: "Yabancı Dil",
+                                    value: "hobi_dil"
+                                },
+                                {
+                                    label: "Temizle",
+                                    value: "hobi_clear",
+                                    emoji: {
+                                        name: "🗑️"
+                                    }
                                 }
                             ]
                         }
