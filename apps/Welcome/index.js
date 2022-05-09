@@ -13,8 +13,7 @@ for (let j = 0; j < tokens.length; j++) {
         intents: [
             Intents.FLAGS.GUILDS,
             Intents.FLAGS.GUILD_PRESENCES,
-            Intents.FLAGS.GUILD_MESSAGES,
-            Intents.FLAGS.GUILD_INTEGRATIONS
+            Intents.FLAGS.GUILD_VOICE_STATES
         ]
     });
     client.login(token);
@@ -41,8 +40,7 @@ for (let i = 0; i < wcm.length; i++) {
         intents: [
             Intents.FLAGS.GUILDS,
             Intents.FLAGS.GUILD_PRESENCES,
-            Intents.FLAGS.GUILD_VOICE_STATES,
-            Intents.FLAGS.GUILD_INTEGRATIONS
+            Intents.FLAGS.GUILD_VOICE_STATES
         ]
     });
     client.login(process.env[`ses${i + 1}`]);

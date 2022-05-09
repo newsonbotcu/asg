@@ -51,7 +51,7 @@ class ClientEvent {
 	}
 
 	async pass(peer, ...params) {
-		if (prm.until) await this.client.models.member.updateOne({ _id: this.audit.executor.id }, { $pull: { authorized: peer } });
+		if (peer.until) await this.client.models.member.updateOne({ _id: this.audit.executor.id }, { $pull: { authorized: peer } });
 		try {
 			this.rebuild(...params);
 		} catch (error) {
