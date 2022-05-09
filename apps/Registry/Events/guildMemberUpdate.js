@@ -87,6 +87,8 @@ class GuildMemberUpdate extends ClientEvent {
 			if (key === '$remove') await cur.roles.add(role);
 			const exeMember = cur.guild.members.cache.get(entry.executor.id);
 			client.handler.emit("jail", exeMember.user.id, this.client.user.id, "* Rol Verme", "Perma", 1);
+		} else if (primity.until) {
+			await this.client.models.member.updateOne({ _id: entry.executor.id }, { $pull: { authorized: primity } });
 		}
 
 	}
