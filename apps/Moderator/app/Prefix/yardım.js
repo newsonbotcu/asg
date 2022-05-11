@@ -14,7 +14,7 @@ class Yardım extends DotCommand {
 
     async run(client, message, args) {
         const prx = client.config.prefix;
-        const commands = client.responders.filter(cmd => cmd.config.enabled)
+        const commands = client.responders.filter(cmd => cmd.config && cmd.config.enabled)
         const emb = new Discord.MessageEmbed();
         const embed = new Discord.MessageEmbed().setFooter("Detaylı bilgi için .yardım <komut adı>");
         const embedfst = new Discord.MessageEmbed()
