@@ -9,7 +9,6 @@ class Avatar extends Command {
             usage: "yardım",
             examples: ["yardım", "yardım cmute"],
             category: "Genel",
-            cmdChannel: "bot-komut",
             cooldown: 10000
         });
     }
