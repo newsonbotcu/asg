@@ -9,7 +9,7 @@ class CMute extends DotCommand {
             examples: ["cmute 674565119161794560 10 botları kötü yapıyor"],
             category: "Moderasyon",
             aliases: ["cm", "chatmute", "mute"],
-            accaptedPerms: ["root", "owner", "cmd-ceo", "cmd-double", "cmd-single", "cmd-mute"],
+            accaptedPerms: ["cmute", "yt"],
             cooldown: 10000
         })
     }
