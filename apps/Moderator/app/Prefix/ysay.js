@@ -17,7 +17,7 @@ class Ysay extends DotCommand {
     async run(client, message, args) {
         let rol = message.guild.roles.cache.get(args[0]);
         if (!rol) return await message.reply(`Böyle bir rol bulunmamaktadır.`);
-        const members = rol.members.array();
+        const members = rol.members.map(m => `<@${m.id}>`);
         await message.reply(`\`\`\`${rol.name} Rolüne Sahip Olan ${members.length} Kişi Bulunmaktadır \`\`\``);
         for (let index = 0; index < Math.floor(members.length / 40) + 1; index++) {
             await message.reply(`BÖLÜM ${index + 1}:` + `${members.slice(index * 40, (index + 1) * 40).join(', ')}`);
