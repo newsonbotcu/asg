@@ -1,51 +1,60 @@
 const Command = require("../../../Base/Command");
 const low = require('lowdb');
+const Discord = require('discord.js');
 const { stripIndents } = require("common-tags");
-const children = require("child_process");
-class pm2 extends Command {
+const chp = require("child_process");
+const VoiceChannels = require("../../../../../MODELS/Datalake/VoiceChannels");
+const nameData = require('../../../../../MODELS/Datalake/Registered');
+
+class Eval extends Command {
 
     constructor(client) {
         super(client, {
-            name: "pm2",
+            name: "eval",
             description: "Açıklama Belirtilmemiş.",
             usage: "Kullanım Belirtilmemiş.",
             examples: ["Örnek Bulunmamakta"],
             category: "OWNER",
             aliases: [],
-            accaptedPerms: [],
+            accaptedPerms: ["root"],
             cooldown: 5000,
             enabled: true,
             adminOnly: false,
-            ownerOnly: false,
+            ownerOnly: true,
             onTest: false,
-            rootOnly: true,
+            rootOnly: false,
             dmCmd: false
         });
     }
 
-    async run(client, message, args, data) {
-
+    async run(client, message, args) {
         const utils = await low(client.adapters('utils'));
         const roles = await low(client.adapters('roles'));
         const emojis = await low(client.adapters('emojis'));
         const channels = await low(client.adapters('channels'));
+
         function clean(text) {
             if (typeof (text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
             else return text;
         }
-        if (args[0] === 'logs') return;
-        const ls = children.exec(`pm2 ${args.join(' ')}`);
-        ls.stdout.on('data', function (data) {
-            if (data) message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
-        });
-        ls.stderr.on('data', function (data) {
-            if (data) message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
-        });
-        
+        try {
+            const code = message.content.split(' ').slice(1).join(' ');
+            let evaled = eval(code);
+
+            if (typeof evaled !== "string")
+                evaled = require("util").inspect(evaled);
+
+            const all = await message.reply(clean(evaled), { code: "xl" });
+            message.delete();
+            all.delete({ timeout: 5000 });
+        } catch (err) {
+            message.reply(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``).then(msg => msg.delete({ timeout: 5000 }));
+            message.delete({ timeout: 1000 });
+        }
 
 
     }
 
 }
 
-module.exports = pm2;
+module.exports = Eval;

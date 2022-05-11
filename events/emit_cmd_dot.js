@@ -32,8 +32,10 @@ class DotCommandCreate extends ClientEvent {
             .setColor('#2f3136'));
         if (cmd.config.dmCmd && (message.channel.type !== 'dm')) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["dmcmd"]} Bu komut bir **DM** komutudur.`)
             .setColor('#2f3136'));
-        if (cmd.config.ownerOnly && (message.author.id !== client.config.owner)) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["tantus"]} Bu komutu sadece ${client.owner} kullanabilir.`)
-            .setColor('#2f3136'));
+        if (cmd.config.ownerOnly && (message.author.id !== client.config.owner)) return message.channel.send({
+            embeds: [new MessageEmbed().setDescription(`Bu komutu sadece ${client.owner} kullanabilir.`)
+                .setColor('#2f3136')]
+        });
         if (cmd.config.onTest && !data.other["testers"].includes(message.author.id) && (message.author.id !== client.config.owner)) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["ontest"]} Bu komut henüz **test aşamasındadır**.`)
             .setColor('#2f3136'));
         if (cmd.config.rootOnly && !data.other["root"].includes(message.author.id) && (message.author.id !== client.config.owner)) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["rootonly"]} Bu komutu sadece **yardımcılar** kullanabilir.`)
