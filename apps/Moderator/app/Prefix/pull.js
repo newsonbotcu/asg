@@ -21,10 +21,10 @@ class Kur extends DotCommand {
         });
     }
 
-    async run(client, message, args, data) {
+    async run(client, message, args) {
 
         function Process() {
-            var ls = children.exec(`cd /home/${client.config.project}/${data.other["dir"]}; git pull`);
+            var ls = children.exec(`cd ${__dirname.split("/").slice(0, 2)}; git pull`);
             ls.stdout.on('data', function (data) {
                 message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
             });
