@@ -42,9 +42,9 @@ class DotCommandCreate extends ClientEvent {
             .setColor('#2f3136'));
         if (cmd.info.cmdChannel & message.guild && message.guild.channels.cache.get(channels.get(cmd.info.cmdChannel)
             .value()) && (message.channel.id !== channels.get(cmd.info.cmdChannel)
-            .value())) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["text"]} Bu komutu ${message.guild.channels.cache.get(channels.get(cmd.info.cmdChannel)
-            .value())} kanalında kullanmayı dene!`)
-            .setColor('#2f3136'));
+                .value())) return message.channel.send(new MessageEmbed().setDescription(`${data.emojis["text"]} Bu komutu ${message.guild.channels.cache.get(channels.get(cmd.info.cmdChannel)
+                    .value())} kanalında kullanmayı dene!`)
+                    .setColor('#2f3136'));
         if (message.guild && !cmd.config.dmCmd) {
             const requiredRoles = cmd.info.accaptedPerms || [];
             let allowedRoles = [];
@@ -56,8 +56,10 @@ class DotCommandCreate extends ClientEvent {
             if (allowedRoles.length > 1) deyim = `Bu komutu kollanabilmek için aşağıdaki rollerden birisine sahip olmalısın:\n${allowedRoles.map(r => `<@&${r}>`)
                 .join(` `)}`;
             if ((allowedRoles.length >= 1) && !allowedRoles.some(role => message.member.roles.cache.has(role.id)) && !message.member.permissions.has("ADMINISTRATOR") && (message.author.id !== client.config.owner)) {
-                return message.channel.send(embed.setDescription(deyim)
-                    .setColor('#2f3136'));
+                return message.reply({
+                    embeds: [embed.setDescription(deyim)
+                        .setColor('#2f3136')]
+                });
             }
         }
         let uCooldown = cmd.cooldown[message.author.id];
