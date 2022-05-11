@@ -1,12 +1,5 @@
-const Command = require("../../../Base/Command");
-const low = require('lowdb');
-const Discord = require('discord.js');
-const { stripIndents } = require("common-tags");
-const chp = require("child_process");
-const VoiceChannels = require("../../../../../MODELS/Datalake/VoiceChannels");
-const nameData = require('../../../../../MODELS/Datalake/Registered');
-
-class Eval extends Command {
+const { DotCommand } = require("../../../../base/utils");
+class Eval extends DotCommand {
 
     constructor(client) {
         super(client, {
@@ -28,11 +21,6 @@ class Eval extends Command {
     }
 
     async run(client, message, args) {
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
-
         function clean(text) {
             if (typeof (text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
             else return text;
