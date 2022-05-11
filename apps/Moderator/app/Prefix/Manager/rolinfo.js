@@ -26,9 +26,9 @@ class RoleInfo extends Command {
         if (!mentionedRole) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let mentionedRoleMembers = mentionedRole.members.map(role => `${message.guild.members.cache.get(role.id)} (\`${role.id}\`) `)
         message.reply(`• \`${mentionedRole.name}\` rolündeki üyeler.
-• Roldeki üye sayısı: \`${mentionedRole.members.size}\`
-─────────────────
-${mentionedRoleMembers.join("\n")})`, { split: true })
+        • Roldeki üye sayısı: \`${mentionedRole.members.size}\`
+        ─────────────────
+        ${mentionedRoleMembers.join("\n")})`, { split: true })
 
     }
 }
