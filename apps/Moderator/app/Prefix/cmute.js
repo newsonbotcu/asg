@@ -18,28 +18,28 @@ class CMute extends DotCommand {
         if (!mentioned) {
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setDescription(`Kullanıcı bulunamadı!`).setColor('BLACK')]
-            }).then(msg => msg.delete({ timeout: 1000 }));
+            }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         const sebep = args.slice(2).join(" ");
         if (!sebep) {
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Bir sebep girmelisin`)]
-            }).then(msg => msg.delete({ timeout: 1000 }));
+            }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) {
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Bunu yapmak için yeterli yetkiye sahip değilsin`)]
-            }).then(msg => msg.delete({ timeout: 1000 }));
+            }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         if (!mentioned.bannable) {
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Bu kişiyi mutelemek için yeterli yetkiye sahip değilim`)]
-            }).then(msg => msg.delete({ timeout: 1000 }));
+            }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         if (!client.func.sayi(args[1])) {
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Geçerli bir dakika girmelisin`)]
-            }).then(msg => msg.delete({ timeout: 1000 }));
+            }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         client.handler.emit('cmute', mentioned, message.author.id, sebep, args[1]);
         await message.react("👍");
