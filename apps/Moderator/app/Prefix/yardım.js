@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
-const Command = require("../../../Base/Command");
-class Avatar extends Command {
-
+const { DotCommand } = require("../../../../base/utils");
+class Yardım extends DotCommand {
     constructor(client) {
         super(client, {
             name: "yardım",
@@ -47,4 +46,4 @@ class Avatar extends Command {
     }
 }
 
-module.exports = Avatar;
+module.exports = Yardım;
