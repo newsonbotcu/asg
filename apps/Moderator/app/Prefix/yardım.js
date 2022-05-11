@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const Command = require("../../../Base/Command");
-const low = require('lowdb');
 class Avatar extends Command {
 
     constructor(client) {
@@ -16,10 +15,6 @@ class Avatar extends Command {
     }
 
     async run(client, message, args) {
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
         const prx = client.config.prefix;
         const commands = client.commands.filter(cmd => cmd.config.enabled)
         const emb = new Discord.MessageEmbed();
@@ -40,7 +35,7 @@ class Avatar extends Command {
             if (embed.fields.length === 0) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
             message.reply(embed.setTitle(args[0].toUpperCase() + " KOMUTLARI"));
         } else {
-            let acceptedroles = cmd.info.accaptedPerms.filter(rolename => message.guild.roles.cache.get(roles.get(rolename).value())).map(rolename => message.guild.roles.cache.get(roles.get(rolename).value()));
+            let acceptedroles = cmd.info.accaptedPerms.filter(rolename => message.guild.roles.cache.get(client.data.roles[rolename])).map(rolename => message.guild.roles.cache.get(client.data.roles[rolename]));
             if (acceptedroles.length < 1) acceptedroles = ["\`-Genel Komut-\`"];
             let allias = cmd.info.aliases.join(', ');
             if (cmd.info.aliases.length === 0) allias = ["\`EŞDEĞERİ YOK\`"]
@@ -52,7 +47,7 @@ class Avatar extends Command {
             emb.addField("Kategori", cmd.info.category);
             emb.addField("Süresi:", cmd.info.cooldown / 1000 + " Saniye");
             emb.addField("Kullanabilen Roller:", acceptedroles.join('\n'));
-            message.reply(emb);
+            message.reply({ embeds: [emb] });
         }
     }
 }
