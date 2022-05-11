@@ -1,8 +1,8 @@
 const { stripIndents } = require("common-tags");
 const children = require("child_process");
-const { DotCommand } = require("../../../../base/utils");
 const pm2 = require("pm2");
 const stringTable = require('string-table');
+const { DotCommand } = require("../../../../base/utils");
 class pm2c extends DotCommand {
 
     constructor(client) {
