@@ -25,7 +25,7 @@ class Yardım extends DotCommand {
             .addField(".yardım stats", "Stat komutları gösterir")
             .addField(".yardım kayıt", "Kayıt komutlarını gösterir");
         if (!args[0]) return message.reply({ embeds: [embedfst] })
-        let cmd = commands.get(`dot` + args[0]);
+        let cmd = commands.get(`dot:` + args[0]);
         if (!cmd) {
             commands.filter(cmdz => cmdz.info.category.toLowerCase() == args[0].toLowerCase()).forEach(async (command) => {
                 embed.addField(prx + command.info.name, command.info.description, true);
