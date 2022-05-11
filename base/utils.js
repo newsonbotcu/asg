@@ -629,7 +629,7 @@ const functions = {
 	},
 	sayi(number) {
 		var reg = new RegExp("^\\d+$");
-		var valid = reg.test(numbdate1er);
+		var valid = reg.test(number);
 		return valid;
 	},
 	checkDays(date) {
