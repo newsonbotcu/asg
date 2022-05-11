@@ -41,7 +41,7 @@ class CMute extends DotCommand {
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Geçerli bir dakika girmelisin`)]
             }).then(msg => msg.delete({ timeout: 10_000 }));
         }
-        client.handler.emit('cmute', mentioned, message.author.id, sebep, args[1]);
+        client.emit('cmute', mentioned.user.id, message.author.id, sebep, args[1]);
         await message.react("👍");
         /*
         this.client.cmdCooldown[message.author.id][this.info.name] = Date.now() + this.info.cooldown;
