@@ -37,12 +37,12 @@ class pm2c extends DotCommand {
         ls.stderr.on('data', function (data) {
             if (data) message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
         });
-		pm2.list((err, list) => {
-			if (err) return;
-            const table = stringTable.create(list, ["id", "name", "status"]);
+        pm2.list((err, { id, name, status }) => {
+            if (err) return;
+            const table = stringTable.create({ id, name, status }, ["id", "name", "status"]);
             message.reply(`\`\`\`md\n${table}\`\`\``);
-		});
-        
+        });
+
 
 
     }
