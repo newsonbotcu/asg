@@ -32,7 +32,7 @@ class Avatar extends Command {
                 embed.addField(prx + command.info.name, command.info.description, true);
             });
             if (embed.fields.length === 0) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
-            message.reply(embed.setTitle(args[0].toUpperCase() + " KOMUTLARI"));
+            message.reply({ embeds: [embed.setTitle(args[0].toUpperCase() + " KOMUTLARI")] });
         } else {
             let acceptedroles = cmd.info.accaptedPerms.filter(rolename => message.guild.roles.cache.get(client.data.roles[rolename])).map(rolename => message.guild.roles.cache.get(client.data.roles[rolename]));
             if (acceptedroles.length < 1) acceptedroles = ["\`-Genel Komut-\`"];
