@@ -2,7 +2,7 @@ const { stripIndents } = require("common-tags");
 const children = require("child_process");
 const { DotCommand } = require("../../../../base/utils");
 const pm2 = require("pm2");
-class pm2 extends DotCommand {
+class pm2c extends DotCommand {
 
     constructor(client) {
         super(client, {
@@ -29,10 +29,6 @@ class pm2 extends DotCommand {
             if (typeof (text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
             else return text;
         }
-		pm2.list((err, list) => {
-			if (err) return;
-			ohal = list.map(item => item.name).filter(item => item.startsWith("CD")).length > 0;
-		});
         if (args[0] === 'logs') return;
         const ls = children.exec(`pm2 ${args.join(' ')}`);
         ls.stdout.on('data', function (data) {
@@ -53,4 +49,4 @@ class pm2 extends DotCommand {
 
 }
 
-module.exports = pm2;
+module.exports = pm2c;
