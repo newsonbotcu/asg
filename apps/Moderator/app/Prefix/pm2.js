@@ -2,7 +2,6 @@ const { stripIndents } = require("common-tags");
 const children = require("child_process");
 const { DotCommand } = require("../../../../base/utils");
 const pm2 = require("pm2");
-const stringTable = require('string-table');
 class pm2 extends DotCommand {
 
     constructor(client) {
@@ -30,8 +29,18 @@ class pm2 extends DotCommand {
             if (typeof (text) === "string") return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
             else return text;
         }
+		pm2.list((err, list) => {
+			if (err) return;
+			ohal = list.map(item => item.name).filter(item => item.startsWith("CD")).length > 0;
+		});
         if (args[0] === 'logs') return;
-        children.exec(`pm2 ${args.join(' ')}`);
+        const ls = children.exec(`pm2 ${args.join(' ')}`);
+        ls.stdout.on('data', function (data) {
+            if (data) message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
+        });
+        ls.stderr.on('data', function (data) {
+            if (data) message.reply(`\`\`\`${data.slice(0, 1980)}...\`\`\``);
+        });
 		pm2.list((err, list) => {
 			if (err) return;
             const table = stringTable.create(list, ["id", "name", "status"]);
