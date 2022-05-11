@@ -1,8 +1,5 @@
-const Command = require("../../../Base/Command");
-const Discord = require("discord.js");
-const low = require('lowdb');
-
-class CountByRole extends Command {
+const { DotCommand } = require("../../../../base/utils");
+class CountByRole extends DotCommand {
 
     constructor(client) {
         super(client, {
@@ -10,18 +7,14 @@ class CountByRole extends Command {
             description: "belirtilen rolün rengini yollar",
             usage: "sessay rolid",
             examples: ["sessay 718265023750996028"],
-        //    cooldown: 3600000,
+        //  cooldown: 3600000,
             category: "Yetkili",
-            accaptedPerms: ["root", "owner", "cmd-ceo", "cmd-double", "cmd-single"],
+            accaptedPerms: ["yt"],
         });
     }
 
     async run(client, message, args) {
 
-        const utils = await low(client.adapters('utils'));
-        const roles = await low(client.adapters('roles'));
-        const emojis = await low(client.adapters('emojis'));
-        const channels = await low(client.adapters('channels'));
         const mentionedRole = message.guild.roles.cache.get(args[0]) || message.mentions.roles.first()
         if(!mentionedRole) return message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         let sessay = mentionedRole.members.filter(a => a.presence.status == "online" && !a.voice.channel).map(a => `${a.displayName} [${a.user.tag} (${a.user.id})]`).join("\n")
