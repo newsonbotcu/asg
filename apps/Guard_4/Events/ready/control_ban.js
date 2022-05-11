@@ -3,35 +3,76 @@ const { CronJob } = require('cron');
 
 class ControlBan extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "_ready"
+        });
         this.client = client;
     }
 
     async run(client) {
         this.data = await this.init();
         const Banneds = new Map();
-        const mapcron = new CronJob('*/30 * * * * *', async () => {
+        const mapcron = new CronJob('*/1 * * * * *', async () => {
             const now = new Date();
-            let asd = await this.client.models.mod_ban.find();
-            asd.filter((ban) => ban.type === "temp" && now.getTime() - ban.created.getTime() >= (ban.duration - 1) * 3600000).forEach(async (ban) => {
-                const date = require('moment')(ban.created).add(ban.duration, 'd').toDate();
-                if (now.getTime() - ban.created.getTime() > date.getTime()) {
-                    await this.client.guild.members.unban(doc._id);
-                    await this.client.models.mod_ban.deleteOne({ _id: doc._id });
+            let asd = await this.client.models.penals.find();
+            asd.filter((ban) => ban.duration !== "p" && now.getTime() - ban.created.getTime() >= (ban.duration - 1) * 3600000).forEach(async (ban) => {
+                if (now.getTime() - ban.created.getTime() > ban.until.getTime()) {
+                    switch (ban.typeOf) {
+                        case "BAN":
+                            await this.client.guild.members.unban(ban.userId);
+                            break;
+
+                        case "CMUTE":
+                            if (this.client.guild.members.cache.get(ban.userId)) await this.client.guild.members.members.cache.get(ban.userId).roles.remove(this.data.roles["muted"]);
+                            break;
+
+                        case "JAIL":
+                            await this.client.guild.members.cache.get(ban.userId).roles.add(ban.roles.map(rname => this.client.guild.roles.cache.find(role => role.name === rname) || this.data["member"]));
+                            await this.client.guild.members.cache.get(ban.userId).roles.remove(this.data["prisoner"]);
+
+                            break;
+
+                        case "VMUTE":
+                            if (this.client.guild.members.cache.get(doc.userId) && this.client.guild.members.cache.get(doc.userId).voice.channel) await this.client.guild.members.cache.get(doc.userId).voice.setMute(false);
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
                 if (!Banneds.has(ban._id)) Banneds.set(ban._id, {
                     id: ban._id,
-                    ms: (d) => date.getTime() - d.getTime()
+                    ms: (d) => ban.until.getTime() - d.getTime()
                 });
             });
         });
         mapcron.start();
-        const checkbans = new CronJob('* */2 * * * *', () => {
+        const checkbans = new CronJob('* * * * * *', () => {
             while (Banneds.size !== 0) {
                 Banneds.forEach((ban) => {
                     setTimeout(async () => {
-                        await this.client.guild.members.unban(ban.id);
-                        await this.client.models.mod_ban.deleteOne({ _id: ban.id });
+                        switch (ban.typeOf) {
+                            case "BAN":
+                                await this.client.guild.members.unban(ban.userId);
+                                break;
+    
+                            case "CMUTE":
+                                if (this.client.guild.members.cache.get(ban.userId)) await this.client.guild.members.members.cache.get(ban.userId).roles.remove(this.data.roles["muted"]);
+                                break;
+    
+                            case "JAIL":
+                                await this.client.guild.members.cache.get(ban.userId).roles.add(ban.roles.map(rname => this.client.guild.roles.cache.find(role => role.name === rname) || this.data["member"]));
+                                await this.client.guild.members.cache.get(ban.userId).roles.remove(this.data["prisoner"]);
+    
+                                break;
+    
+                            case "VMUTE":
+                                if (this.client.guild.members.cache.get(doc.userId) && this.client.guild.members.cache.get(doc.userId).voice.channel) await this.client.guild.members.cache.get(doc.userId).voice.setMute(false);
+                                break;
+    
+                            default:
+                                break;
+                        }
                         Banneds.delete(ban.id);
                     }, ban.ms(new Date()));
                 });
