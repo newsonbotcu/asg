@@ -30,7 +30,7 @@ class VoiceStateUpdate extends ClientEvent {
             const count = uCount.length;
             if (count === 3) await cur.guild.channels.cache.get(this.data.channels["chat"]).send(`<@${cur.member.user.id}> Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
             if (count > 3) {
-                client.handler.emit("vmute", cur.member.user.id, this.client.user.id, "MIC-BUG", 5);
+                client.emit("vmute", cur.member.user.id, this.client.user.id, "MIC-BUG", 5);
                 await cur.guild.channels.cache.get(this.data.channels["chat"]).send(`<@${cur.member.user.id}> Mikrofonunu çok fazla açıp kapattığın için 5 dakika mutelendin!`);
             }
         }
