@@ -1,11 +1,16 @@
 const { ClientEvent } = require('../../../../base/utils');
 class OverwriteCreate extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "channelUpdatex",
+            privity: true,
+            action: "CHANNEL_OVERWRITE_CREATE",
+            punish: "jail"
+        });
         this.client = client;
     }
 
-    async run(oldChannel, curChannel) {
+    async rebuild(oldChannel, curChannel) {
         const client = this.client;
         const olddata = await client.models.channels.findOne({ meta: { $elemMatch: { _id: channel.id } } });
         const ovs = [];

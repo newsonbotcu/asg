@@ -2,37 +2,37 @@ const Discord = require('discord.js');
 const { ClientEvent } = require('../../../../base/utils');
 class OverwriteDelete extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "channelUpdates",
+            privity: true,
+            action: "CHANNEL_OVERWRITE_DELETE",
+            punish: "jail"
+        });
         this.client = client;
     }
 
-    async run(oldChannel, curChannel) {
+    async rebuildx(oldc, curc) {
+        const ovs = [];
+        curc.permissionOverwrites.cache.forEach((o) => {
+            const lol = {
+                _id: o.id,
+                typeOf: o.type,
+                allow: o.allow.toArray(),
+                deny: o.deny.toArray()
+            };
+            ovs.push(lol);
+        });
+        await client.models.channels.updateOne({ meta: { $elemMatch: { _id: oldc.id } } }, { $set: { overwrites: ovs } });
+    }
+
+
+    async refixx(oldc, curc) {
+
+    }
+
+
+    async runx(oldChannel, curChannel) {
         const client = this.client;
-        if (curChannel.guild.id !== client.config.server) return;
-        const entry = await curChannel.guild.fetchAuditLogs({ type: "CHANNEL_OVERWRITE_DELETE" }).then(logs => logs.entries.first());
-        if (entry.createdTimestamp <= Date.now() - 1000) return;
-        if (entry.executor.id === client.user.id) return;
-        if (entry.target.id !== curChannel.id) return;
-        const permission = await client.models.perms.findOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        if ((permission && (permission.count > 0))) {
-            if (permission) await client.models.perms.updateOne({
-                user: entry.executor.id,
-                type: "overwrite",
-                effect: "channel"
-            }, { $inc: { count: -1 } });
-            const document = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
-            if (!document) {
-               await client.models.bc_ovrts.create({ _id: curChannel.id, overwrites: [] });
-            } else {
-                const data = document.overwrites.find(o => o.id === entry.changes[0].old);
-                await client.models.bc_ovrts.updateOne({ _id: curChannel.id }, { $pull: { overwrites: data } });
-            }
-            return client.handler.emit('Logger', 'Guard', entry.executor.id, "CHANNEL_OVERWRITE_DELETE", `${curChannel.name} isimli kanalda izin sildi. Kalan izin sayısı ${permission.count - 1}`);
-        }
-        await client.models.perms.deleteOne({ user: entry.executor.id, type: "overwrite", effect: "channel" });
-        client.handler.emit("Danger", ["ADMINISTRATOR", "BAN_MEMBERS", "MANAGE_CHANNELS", "KICK_MEMBERS", "MANAGE_GUILD", "MANAGE_WEBHOOKS", "MANAGE_ROLES"]);
-        const overwrits = await client.models.bc_ovrts.findOne({ _id: curChannel.id });
-        const data = overwrits.overwrites.find(o => o.id === entry.changes[0].old);
         const options = {};
         new Discord.Permissions(data.allow.bitfield).toArray().forEach(p => options[p] = true);
         new Discord.Permissions(data.deny.bitfield).toArray().forEach(p => options[p] = false);

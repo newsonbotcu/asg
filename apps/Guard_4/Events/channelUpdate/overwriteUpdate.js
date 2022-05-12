@@ -2,7 +2,12 @@ const Discord = require('discord.js');
 const { ClientEvent } = require('../../../../base/utils');
 class OverwriteUpdate extends ClientEvent {
     constructor(client) {
-        super(client);
+        super(client, {
+            name: "channelUpdatex",
+            privity: true,
+            action: "CHANNEL_OVERWRITE_UPDATE",
+            punish: "jail"
+        });
         this.client = client;
     }
 
