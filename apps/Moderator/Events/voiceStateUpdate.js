@@ -21,12 +21,14 @@ class VoiceStateUpdate extends ClientEvent {
                         date: Date.now()
                     }
                 ]);
+                uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
             } else {
                 const reCdwn = uCooldown.push({
                     channel: cur.channel.id,
                     date: Date.now()
                 })
                 client.actionlist.voicespam.set(cur.member.user.id, reCdwn);
+                uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
             }
             uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
             let uCount = uCooldown.filter(d => d.channel === cur.channel.id && d.date - Date.now() < 5000);
