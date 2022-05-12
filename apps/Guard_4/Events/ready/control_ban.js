@@ -14,7 +14,7 @@ class ControlBan extends ClientEvent {
         const Banneds = new Map();
         const mapcron = new CronJob('*/1 * * * * *', async () => {
             const now = new Date();
-            let asd = await this.client.models.penals.find();
+            let asd = await this.client.models.penalties.find();
             asd.filter((ban) => ban.duration !== "p" && now.getTime() - ban.created.getTime() >= (ban.duration - 1) * 3600000).forEach(async (ban) => {
                 if (now.getTime() - ban.created.getTime() > ban.until.getTime()) {
                     switch (ban.typeOf) {
