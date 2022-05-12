@@ -14,7 +14,7 @@ class EmitRunJail extends ClientEvent {
         await member.roles.remove(memberRoles);
         await member.roles.add(this.data.roles["prisoner"]);
         if (duration === "p") duration = null;
-        const docum = await this.client.models.penal.create({
+        const docum = await this.client.models.penalties.create({
             userId: member.user.id,
             executor: executorId,
             reason: reason,
@@ -23,7 +23,7 @@ class EmitRunJail extends ClientEvent {
             until: duration ? require('moment')(new Date()).add(`${duration}m`) : null,
             created: new Date()
         });
-        if (!duration) await this.client.models.penal.updateOne({ _id: docum._id }, {
+        if (!duration) await this.client.models.penalties.updateOne({ _id: docum._id }, {
             $push: {
                 extras: [
                     {
@@ -34,7 +34,7 @@ class EmitRunJail extends ClientEvent {
             }
         });
         await memberRoles.forEach(async (roleId) => {
-            await this.client.models.penal.updateOne({ _id: docum._id }, {
+            await this.client.models.penalties.updateOne({ _id: docum._id }, {
                 $push: {
                     extras: [
                         {
@@ -45,7 +45,7 @@ class EmitRunJail extends ClientEvent {
                 }
             });
         });
-        if (note) await this.client.models.penal.updateOne({ _id: docum._id }, {
+        if (note) await this.client.models.penalties.updateOne({ _id: docum._id }, {
             $push: {
                 extras: [
                     {

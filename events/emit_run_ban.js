@@ -17,7 +17,7 @@ class EmitRunBan extends ClientEvent {
             days: clear || 0
         });
         if (duration === "p") duration = null;
-        const docum = await this.client.models.penal.create({
+        const docum = await this.client.models.penalties.create({
             userId: member.user.id,
             executor: executor,
             reason: reason,
@@ -26,7 +26,7 @@ class EmitRunBan extends ClientEvent {
             until: require('moment')(new Date()).add(duration || "0s"),
             created: new Date()
         });
-        if (!duration) await this.client.models.penal.updateOne({ _id: docum._id }, {
+        if (!duration) await this.client.models.penalties.updateOne({ _id: docum._id }, {
             $push: {
                 extras: [
                     {
@@ -36,7 +36,7 @@ class EmitRunBan extends ClientEvent {
                 ]
             }
         });
-        if (note) await this.client.models.penal.updateOne({ _id: docum._id }, {
+        if (note) await this.client.models.penalties.updateOne({ _id: docum._id }, {
             $push: {
                 extras: {
                     subject: "note",

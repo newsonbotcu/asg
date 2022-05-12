@@ -9,7 +9,7 @@ class EmitRunMuteC extends ClientEvent {
     async run(targetId, executorId, reason, duration, note) {
         const member = this.client.guild.members.cache.get(targetId);
         await member.roles.add(this.data.roles["muted"]);
-        const docum = await this.client.models.penal.create({
+        const docum = await this.client.models.penalties.create({
             userId: targetId,
             executor: executorId,
             reason: reason,
@@ -18,7 +18,7 @@ class EmitRunMuteC extends ClientEvent {
             until: require('moment')().add(`${duration}m`),
             created: new Date()
         });
-        if (note) await this.client.models.penal.updateOne({ _id: docum._id }, {
+        if (note) await this.client.models.penalties.updateOne({ _id: docum._id }, {
             $push: {
                 extras: [
                     {

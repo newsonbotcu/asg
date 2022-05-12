@@ -10,7 +10,7 @@ class EmitRunMuteV extends ClientEvent {
         const member = this.client.guild.members.cache.get(targetId);
         const voice = member.voice;
         if (voice && voice.channel) await voice.setMute(true, reason);
-        const docum = await this.client.models.penal.create({
+        const docum = await this.client.models.penalties.create({
             userId: targetId,
             executor: executorId,
             reason: reason,
@@ -19,7 +19,7 @@ class EmitRunMuteV extends ClientEvent {
             until: require('moment')().add(`${duration}m`),
             created: new Date()
         });
-        if (note) await this.client.models.penal.updateOne({ _id: docum._id }, {
+        if (note) await this.client.models.penalties.updateOne({ _id: docum._id }, {
             $push: {
                 extras: [
                     {
