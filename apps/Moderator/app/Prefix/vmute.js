@@ -18,7 +18,7 @@ class vMute extends DotCommand {
     }
     async run(client, message, args) {
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
-        if (!mentioned) return messasayige.reply({
+        if (!mentioned) return message.reply({
             embeds: [
                 new Discord.MessageEmbed().setDescription(`Kullanıcı bulunamadı!`).setColor('#2f3136')
             ]
