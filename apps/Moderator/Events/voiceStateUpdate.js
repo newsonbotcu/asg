@@ -18,6 +18,7 @@ class VoiceStateUpdate extends ClientEvent {
         if (prev && cur && prev.selfMute && !cur.selfMute) {
             let uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             if (!uCooldown) this.client.actionlist.voicespam.set(cur.member.user.id, []);
+            console.log(uCooldown);
             uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             const reCdwn = uCooldown.push({
                 channel: cur.channel.id,
@@ -25,6 +26,7 @@ class VoiceStateUpdate extends ClientEvent {
             })
             this.client.actionlist.voicespam.set(cur.member.user.id, reCdwn);
             uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
+            console.log(uCooldown);
             let uCount = uCooldown.filter(d => d.channel === cur.channel.id && d.date - Date.now() < 5000);
             const count = uCount.size;
             if (count === 3) await cur.guild.channels.cache.get(this.data.channels["chat"]).send(`<@${cur.member.user.id}> Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
