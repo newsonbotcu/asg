@@ -18,7 +18,6 @@ class VoiceStateUpdate extends ClientEvent {
         if (prev && cur && prev.selfMute && !cur.selfMute) {
             let uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             if (!uCooldown) this.client.actionlist.voicespam.set(cur.member.user.id, []);
-            console.log(uCooldown);
             uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             uCooldown.push({
                 channel: cur.channel.id,
