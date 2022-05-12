@@ -20,7 +20,7 @@ class cunMute extends DotCommand {
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if (!mentioned) return await message.react("🚫");// message.react(data.emojis["error"].split(':')[2].replace('>', ''));
         if (message.guild.members.cache.get(vData.executor).roles.highest.rawPosition > message.member.roles.highest.rawPosition) return await message.react("🚫");// message.react(client.data.emojis["error"].split(':')[2].replace('>', ''));
-        await client.models.penalties.updateOne({ userId: mentioned.user.id, typeOf: "CMUTE" }, { $set: { until: new Date() } })
+        await client.models.penalties.updateOne({ userId: mentioned.user.id, typeOf: "CMUTE" }, { $set: { until: new Date() } });
         await mentioned.roles.remove(client.data.roles["muted"]);
         await message.react("👍");
         /*
@@ -33,7 +33,7 @@ class cunMute extends DotCommand {
         **${mentioned.user.tag}** (\`${mentioned.user.id}\`) adlı kullanıcının \`Metin kanallarındaki\` susturulması kaldırıldı.
         \` • \` Kaldıran Yetkili: ${message.member} (\`${message.author.id}\`)
         \` • \` Kaldırılma Tarihi: \`${moment(Date.now()).format("LLL")}\``);
-        await message.guild.channels.cache.get(data.channels["log_cmute"]).send(embed);
+        //await message.guild.channels.cache.get(data.channels["log_cmute"]).send(embed);
     }
 }
 module.exports = cunMute;
