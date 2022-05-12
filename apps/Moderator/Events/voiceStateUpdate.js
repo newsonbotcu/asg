@@ -8,29 +8,32 @@ class VoiceStateUpdate extends ClientEvent {
     }
     async run(prev, cur) {
         const client = this.client;
-        const vmute = await this.client.models.penalties.findOne({ type: "VMUTE", userId: cur.member.user.id, until: { $gt: new Date() } });
+        const vmute = await this.client.models.penalties.findOne({ typeOf: "VMUTE", userId: cur.member.user.id, until: { $gt: new Date() } });
         if (vmute && !cur.serverMute) {
             await cur.setMute(true);
         }
+        if (!vmute && cur.serverMute) {
+            await cur.setMute(false);
+        }
         if (prev && cur && prev.selfMute && !cur.selfMute) {
-            let uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
+            let uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             if (!uCooldown) {
-                client.actionlist.voicespam.set(cur.member.user.id, [
+                this.client.actionlist.voicespam.set(cur.member.user.id, [
                     {
                         channel: cur.channel.id,
                         date: Date.now()
                     }
                 ]);
-                uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
+                uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             } else {
                 const reCdwn = uCooldown.push({
                     channel: cur.channel.id,
                     date: Date.now()
                 })
-                client.actionlist.voicespam.set(cur.member.user.id, reCdwn);
-                uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
+                this.client.actionlist.voicespam.set(cur.member.user.id, reCdwn);
+                uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             }
-            uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
+            uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             let uCount = uCooldown.filter(d => d.channel === cur.channel.id && d.date - Date.now() < 5000);
             const count = uCount.size;
             if (count === 3) await cur.guild.channels.cache.get(this.data.channels["chat"]).send(`<@${cur.member.user.id}> Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
