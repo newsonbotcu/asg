@@ -27,7 +27,7 @@ class VoiceStateUpdate extends ClientEvent {
             uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             console.log(uCooldown);
             let uCount = uCooldown.filter(d => d.channel === cur.channel.id && Date.now() - d.date < 5000);
-            const count = uCount.size;
+            const count = uCount.length;
             if (count === 3) await cur.guild.channels.cache.get(this.data.channels["chat"]).send(`<@${cur.member.user.id}> Mikrofonun açıp kapamaya devam edersen sesli kanallardan susturulacaksın.`);
             if (count === 7) {
                 client.handler.emit("vmute", cur.member.user.id, this.client.user.id, "MIC-BUG", 5);
