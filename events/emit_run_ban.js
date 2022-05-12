@@ -23,7 +23,7 @@ class EmitRunBan extends ClientEvent {
             reason: reason,
             extras: [],
             typeOf: "BAN",
-            until: require('moment')(new Date()).add(duration || "0s"),
+            until: require('moment')(new Date()).add(duration || "0s").toDate(),
             created: new Date()
         });
         if (!duration) await this.client.models.penalties.updateOne({ _id: docum._id }, {
