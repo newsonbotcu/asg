@@ -16,27 +16,32 @@ class CMute extends DotCommand {
     async run(client, message, args) {
         let mentioned = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if (!mentioned) {
+            await message.react("🚫");
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setDescription(`Kullanıcı bulunamadı!`).setColor('BLACK')]
             }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         const sebep = args.slice(2).join(" ");
         if (!sebep) {
+            await message.react("🚫");
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Bir sebep girmelisin`)]
             }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         if (message.member.roles.highest.rawPosition <= mentioned.roles.highest.rawPosition) {
+            await message.react("🚫");
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Bunu yapmak için yeterli yetkiye sahip değilsin`)]
             }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         if (!mentioned.bannable) {
+            await message.react("🚫");
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Bu kişiyi mutelemek için yeterli yetkiye sahip değilim`)]
             }).then(msg => msg.delete({ timeout: 10_000 }));
         }
         if (!client.func.sayi(args[1])) {
+            await message.react("🚫");
             return message.reply({
                 embeds: [new Discord.MessageEmbed().setColor('BLACK').setDescription(`Geçerli bir dakika girmelisin`)]
             }).then(msg => msg.delete({ timeout: 10_000 }));
