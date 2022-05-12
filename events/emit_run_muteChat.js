@@ -15,7 +15,7 @@ class EmitRunMuteC extends ClientEvent {
             reason: reason,
             extras: [],
             typeOf: "CMUTE",
-            until: require('moment')().add(`${duration}m`).toDate(),
+            until: duration ? require('moment')(new Date()).add(`${duration}m`).toDate() : null,
             created: new Date()
         });
         if (note) await this.client.models.penalties.updateOne({ _id: docum._id }, {
