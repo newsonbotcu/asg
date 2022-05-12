@@ -532,6 +532,10 @@ const models = {
 		streaming: Boolean,
 		webcam: Boolean,
 		playing: Boolean
+	}, {
+		timestamps: {
+			createdAt: "created"
+		}
 	})),
 	cmd: model("log_cmd", new Schema({
 		_id: Types.ObjectId,
