@@ -20,11 +20,11 @@ class VoiceStateUpdate extends ClientEvent {
             if (!uCooldown) this.client.actionlist.voicespam.set(cur.member.user.id, []);
             console.log(uCooldown);
             uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
-            const reCdwn = uCooldown.push({
+            uCooldown.push({
                 channel: cur.channel.id,
                 date: Date.now()
             })
-            this.client.actionlist.voicespam.set(cur.member.user.id, reCdwn);
+            this.client.actionlist.voicespam.set(cur.member.user.id, uCooldown);
             uCooldown = this.client.actionlist.voicespam.get(cur.member.user.id);
             console.log(uCooldown);
             let uCount = uCooldown.filter(d => d.channel === cur.channel.id && d.date - Date.now() < 5000);
