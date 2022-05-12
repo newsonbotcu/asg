@@ -12,7 +12,7 @@ class vMute extends DotCommand {
             examples: ["vmute 674565119161794560 10 botları kötü yapıyor"],
             category: "Moderasyon",
             aliases: ["sus", "vm"],
-            accaptedPerms: ["root", "owner", "cmd-ceo","cmd-double","cmd-single", "cmd-mute"],
+            accaptedPerms: ["vmute", "yt"],
             cooldown: 10000
         })
     }
