@@ -15,7 +15,7 @@ class VoiceStateUpdate extends ClientEvent {
         if (prev && cur && prev.selfMute && !cur.selfMute) {
             let uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
             if (!uCooldown) {
-                client.trollwait.set(cur.member.user.id, [
+                client.actionlist.voicespam.set(cur.member.user.id, [
                     {
                         channel: cur.channel.id,
                         date: Date.now()
@@ -26,7 +26,7 @@ class VoiceStateUpdate extends ClientEvent {
                     channel: cur.channel.id,
                     date: Date.now()
                 })
-                client.trollwait.set(cur.member.user.id, reCdwn);
+                client.actionlist.voicespam.set(cur.member.user.id, reCdwn);
             }
             uCooldown = client.actionlist.voicespam.get(cur.member.user.id);
             let uCount = uCooldown.filter(d => d.channel === cur.channel.id && d.date - Date.now() < 5000);
