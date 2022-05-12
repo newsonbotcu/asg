@@ -10,7 +10,6 @@ class ControlBan extends ClientEvent {
     }
 
     async run(client) {
-        this.data = await this.init();
         const Banneds = new Map();
         const mapcron = new CronJob('*/1 * * * * *', async () => {
             const now = new Date();
